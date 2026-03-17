@@ -1441,6 +1441,149 @@ body.dark-mode #issues-table thead tr { background: var(--color-bg-grey25); }
 body.dark-mode .info-card { background: var(--color-bg-grey50); }
 body.dark-mode .modal-box { background: var(--color-bg-grey50); }
 
+/* ── Feed Data Tool ─────────────────────────────────────── */
+.stat-cards { display:flex; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+.stat-card { background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; padding:16px 20px; flex:1; min-width:150px; display:flex; flex-direction:column; gap:4px; }
+.stat-card-label { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; color:var(--color-text-caption); text-transform:uppercase; letter-spacing:0.5px; }
+.stat-card-value { font-family:'Instrument Sans',sans-serif; font-size:26px; font-weight:700; color:var(--color-text-primary); line-height:1.1; }
+.stat-card-sub { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-info); margin-top:2px; }
+.feed-action-btn { background:none; border:none; cursor:pointer; padding:4px 8px; border-radius:6px; color:var(--color-text-caption); font-size:18px; line-height:1; display:flex; align-items:center; }
+.feed-action-btn:hover { background:var(--color-bg-grey50); color:var(--color-text-primary); }
+.feed-action-wrap { position:relative; display:inline-block; }
+.feed-action-menu { position:absolute; right:0; top:calc(100% + 4px); background:var(--color-white); border:1px solid var(--color-border); border-radius:10px; box-shadow:0 8px 24px rgba(1,3,7,0.1); padding:4px; z-index:300; min-width:160px; display:none; }
+.feed-action-menu.open { display:block; }
+.feed-action-menu .dd-item { font-size:13px; font-weight:500; }
+.feed-action-menu .dd-item.danger { color:#e53e3e; }
+.feed-action-menu .dd-item.danger:hover { background:#fff0f0; }
+.activity-type { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:var(--color-text-primary); }
+.activity-time { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); }
+.feed-import-count { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:var(--color-text-info); }
+.feed-client-link { font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-text-info); font-weight:500; cursor:pointer; }
+.feed-name { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:var(--color-text-primary); }
+body.dark-mode .stat-card { background:var(--color-bg-grey25); }
+body.dark-mode .feed-action-menu { background:#1a1f2e; }
+/* Feed Data Tool — two-table layout */
+.feed-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+.feed-table thead th { background:var(--color-bg-grey50); padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--color-text-caption); border-bottom:1px solid var(--color-border); white-space:nowrap; text-align:left; overflow:hidden; }
+.feed-table thead th:last-child { text-align:center; }
+.feed-table tbody td { padding:11px 16px; border-bottom:1px solid var(--color-border); font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-text-primary); vertical-align:middle; text-align:left; overflow:hidden; }
+.feed-table tbody td:last-child { text-align:center; }
+.feed-table tbody tr.feed-row:last-child td { border-bottom:none; }
+.feed-table tr.feed-row:hover td { background:var(--color-bg-grey50); }
+.feed-table-heading { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--color-text-caption); padding:14px 16px 8px; }
+.feed-table-divider { height:1px; background:var(--color-border); margin:0; }
+.feed-group-row > td { background:var(--color-white); cursor:pointer; user-select:none; transition:background 0.12s; padding:10px 16px; }
+.feed-group-row:hover > td { background:var(--color-bg-grey50); }
+.feed-group-row-inner { display:flex; align-items:center; gap:8px; }
+.feed-group-chevron { transition:transform 0.18s ease; color:var(--color-text-caption); flex-shrink:0; }
+.feed-group-row.collapsed .feed-group-chevron { transform:rotate(-90deg); }
+.feed-group-label { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--color-text-primary); }
+.feed-group-pill { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500; color:var(--color-text-caption); background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:20px; padding:2px 8px; }
+.feed-table .feed-group-child > td:first-child { padding-left:36px; }
+body.dark-mode .feed-table thead th { background:var(--color-bg-grey25); }
+body.dark-mode .feed-table-divider { background:var(--color-border); }
+body.dark-mode .feed-group-row > td { background:var(--color-bg-primary); }
+body.dark-mode .feed-group-row:hover > td { background:rgba(255,255,255,0.04); }
+body.dark-mode .feed-table tr.feed-row:hover td { background:rgba(255,255,255,0.04); }
+
+/* ── Feed Data Tool — new screens ── */
+.action-cards-row { display:flex; gap:12px; margin-top:16px; }
+.action-card { flex:1; display:flex; align-items:center; gap:12px; padding:14px 16px; border:1px solid var(--color-border); border-radius:8px; background:var(--color-white); cursor:pointer; transition:box-shadow 0.15s; user-select:none; }
+.action-card:hover { box-shadow:0 2px 8px rgba(0,0,0,0.08); border-color:var(--color-blue); }
+.action-card-icon { width:32px; height:32px; border-radius:8px; background:var(--color-bg-grey50); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--color-text-caption); }
+.action-card-title { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--color-text-primary); }
+.action-card-arrow { margin-left:auto; color:var(--color-text-caption); flex-shrink:0; }
+.stats-row { display:flex; gap:12px; margin-top:12px; }
+.stat-block { flex:1; padding:14px 16px; border:1px solid var(--color-border); border-radius:8px; background:var(--color-white); }
+.stat-block-value { font-family:'Instrument Sans',sans-serif; font-size:22px; font-weight:700; color:var(--color-text-primary); line-height:1.2; }
+.stat-block-label { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); margin-top:3px; }
+.stat-block-sub { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); margin-top:2px; }
+.db-pills-row { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+.db-pill { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:20px; padding:3px 10px; }
+.avatar-circle { width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
+.avatar-system { background:var(--color-bg-grey50); border:1px solid var(--color-border); color:var(--color-text-caption); }
+.avatar-person { background:#dbeafe; color:#1d4ed8; }
+.modified-by-cell { display:flex; align-items:center; gap:8px; }
+.modified-by-info { display:flex; flex-direction:column; }
+.modified-by-name { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; color:var(--color-text-primary); }
+.modified-by-time { font-family:'DM Sans',sans-serif; font-size:11px; color:var(--color-text-caption); }
+.source-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; flex-shrink:0; }
+.source-cards-row { display:flex; gap:12px; margin-top:16px; }
+.source-card { flex:1; padding:16px; border:1px solid var(--color-border); border-radius:8px; cursor:pointer; position:relative; transition:border-color 0.15s, background 0.15s; }
+.source-card:hover { border-color:var(--color-blue); }
+.source-card.selected { border:2px solid var(--color-blue); background:#f0f5ff; }
+.source-card-check { position:absolute; top:10px; right:10px; color:var(--color-blue); display:none; }
+.source-card.selected .source-card-check { display:block; }
+.source-card-icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; margin-bottom:10px; }
+.source-card-title { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:var(--color-text-primary); margin-bottom:4px; }
+.source-card-sub { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); }
+.type-cards-row { display:flex; gap:12px; margin-top:16px; }
+.type-card { flex:1; padding:16px; border:1px solid var(--color-border); border-radius:8px; cursor:pointer; position:relative; transition:border-color 0.15s, background 0.15s; }
+.type-card:hover { border-color:var(--color-blue); }
+.type-card.selected { border:2px solid var(--color-blue); background:#f0f5ff; }
+.type-card-check { position:absolute; top:10px; right:10px; color:var(--color-blue); display:none; }
+.type-card.selected .type-card-check { display:block; }
+.type-card-title { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:var(--color-text-primary); margin-bottom:4px; }
+.type-card-sub { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); }
+.wizard-subheader { display:flex; align-items:center; gap:8px; padding:12px 0; border-bottom:1px solid var(--color-border); margin-bottom:20px; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-text-caption); }
+.wizard-subheader strong { color:var(--color-text-primary); }
+.source-badge { padding:2px 10px; border-radius:20px; font-size:12px; font-weight:600; color:#fff; }
+.type-badge { padding:2px 10px; border-radius:20px; font-size:12px; font-weight:600; background:var(--color-bg-grey50); color:var(--color-text-primary); border:1px solid var(--color-border); }
+.wizard-step { display:none; }
+.wizard-step.active { display:block; }
+.input-suffix-wrap { display:flex; align-items:stretch; border:1px solid var(--color-border); border-radius:8px; overflow:hidden; }
+.input-suffix-wrap input { border:none; flex:1; padding:8px 11px; font-size:14px; outline:none; background:var(--color-white); color:var(--color-text-primary); }
+.input-suffix-wrap input:focus { outline:none; }
+.input-suffix-text { padding:8px 10px; background:var(--color-bg-grey50); color:var(--color-text-caption); font-size:13px; white-space:nowrap; border-left:1px solid var(--color-border); display:flex; align-items:center; }
+.info-banner-blue { background:#eff5ff; border:1px solid #c7d9f8; border-radius:8px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:13px; color:#3559a6; margin-bottom:16px; }
+.info-banner-warn { background:var(--color-container-warn); border-radius:8px; padding:10px 14px; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-text-warning); margin-bottom:16px; }
+.checkbox-group { display:flex; flex-direction:column; gap:10px; }
+.checkbox-item { display:flex; align-items:flex-start; gap:10px; }
+.checkbox-item input[type="checkbox"] { margin-top:2px; width:15px; height:15px; cursor:pointer; flex-shrink:0; accent-color:var(--color-blue); }
+.checkbox-label { font-family:'DM Sans',sans-serif; font-size:14px; color:var(--color-text-primary); font-weight:500; }
+.checkbox-sub { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); }
+.checkbox-sub-group { margin-left:25px; margin-top:8px; display:flex; flex-direction:column; gap:8px; }
+.filter-table-wrap { border:1px solid var(--color-border); border-radius:8px; overflow:hidden; margin:10px 0; }
+.filter-table { width:100%; border-collapse:collapse; }
+.filter-table td { padding:9px 12px; border-bottom:1px solid var(--color-border); font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-text-primary); vertical-align:middle; }
+.filter-table tr:last-child td { border-bottom:none; }
+.btn-text-link { background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-blue); font-weight:500; padding:0; display:inline-flex; align-items:center; gap:4px; }
+.btn-text-link:hover { opacity:0.8; }
+.btn-text-link.grey { color:var(--color-text-caption); }
+.btn-danger-icon { background:none; border:none; cursor:pointer; color:#e53e3e; padding:4px; border-radius:4px; display:inline-flex; align-items:center; }
+.btn-danger-icon:hover { background:#fff0f0; }
+.add-db-modal-header { padding:16px 18px; border-bottom:1px solid var(--color-border); background:#f7f7f7; border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:space-between; }
+.add-db-modal-body { padding:18px; display:flex; flex-direction:column; gap:16px; }
+.add-db-modal-footer { padding:14px 18px; border-top:1px solid var(--color-border); display:flex; gap:8px; align-items:center; }
+.field-label { font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--color-text-primary); margin-bottom:6px; display:block; }
+.field-required { color:#d72225; }
+.field-helper { font-family:'DM Sans',sans-serif; font-size:12px; color:var(--color-text-caption); margin-top:5px; }
+.field-error { font-family:'DM Sans',sans-serif; font-size:12px; color:#d72225; margin-top:4px; display:none; }
+.field-error.visible { display:block; }
+.modal-input { width:100%; box-sizing:border-box; border:1px solid var(--color-border); border-radius:8px; padding:8px 11px; font-size:14px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); outline:none; background:var(--color-white); }
+.modal-input:focus { border-color:var(--color-blue); }
+.modal-input.error { border-color:#d72225; }
+.modal-select { width:100%; box-sizing:border-box; border:1px solid var(--color-border); border-radius:8px; padding:8px 11px; font-size:14px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); outline:none; background:var(--color-white); appearance:none; cursor:pointer; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737c8c' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:30px; }
+.modal-select:focus { border-color:var(--color-blue); }
+.new-group-input-row { display:flex; align-items:center; gap:8px; margin-top:8px; }
+.new-group-input-row input { flex:1; }
+.password-input-wrap { position:relative; }
+.password-input-wrap input { padding-right:40px; }
+.password-toggle { position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--color-text-caption); padding:2px; }
+.tooltip-icon { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:var(--color-bg-grey50); border:1px solid var(--color-border); font-size:10px; color:var(--color-text-caption); cursor:help; margin-left:4px; }
+.wizard-btn-row { display:flex; align-items:center; gap:10px; margin-top:24px; }
+.section-block { margin-top:20px; padding-top:20px; border-top:1px solid var(--color-border); }
+.section-block-title { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:var(--color-text-primary); margin-bottom:3px; }
+.section-block-sub { font-family:'DM Sans',sans-serif; font-size:13px; color:var(--color-text-caption); margin-bottom:12px; }
+.btn-primary-sm:disabled { background:#b0b9c8 !important; cursor:not-allowed; pointer-events:none; }
+body.dark-mode .action-card { background:var(--color-bg-primary); }
+body.dark-mode .stat-block { background:var(--color-bg-primary); }
+body.dark-mode .add-db-modal-header { background:#1a1a1a; }
+body.dark-mode .modal-input { background:var(--color-bg-primary); }
+body.dark-mode .modal-select { background:var(--color-bg-primary); }
+body.dark-mode .input-suffix-wrap input { background:var(--color-bg-primary); }
+body.dark-mode .input-suffix-text { background:var(--color-bg-grey25); }
+
 </style>
 </head>
 <body>
@@ -1918,25 +2061,17 @@ body.dark-mode .modal-box { background: var(--color-bg-grey50); }
             <div class="card-desc">Select the GA4 property that matches your website</div>
           </div>
         </div>
-        <div class="account-selector">
-          <div class="account-selector-header">
-            <span class="found-label">FOUND 2 PROPERTIES</span>
-          </div>
+        <div class="account-selector visible">
+          <p class="account-selector-label">FOUND 2 PROPERTIES</p>
           <div class="account-list">
-            <div class="account-item selected">
+            <label class="account-item selected" onclick="toggleAccount(this)">
               <input type="checkbox" checked />
-              <div class="account-info">
-                <div class="account-name">mystore.com</div>
-                <div class="account-id">Measurement ID: G-XXXXXXXXXX</div>
-              </div>
-            </div>
-            <div class="account-item">
+              <div><p class="account-item-name">mystore.com</p><p class="account-item-id">Measurement ID: G-XXXXXXXXXX</p></div>
+            </label>
+            <label class="account-item" onclick="toggleAccount(this)">
               <input type="checkbox" />
-              <div class="account-info">
-                <div class="account-name">mystore.com (old)</div>
-                <div class="account-id">Measurement ID: G-YYYYYYYYYY</div>
-              </div>
-            </div>
+              <div><p class="account-item-name">mystore.com (old)</p><p class="account-item-id">Measurement ID: G-YYYYYYYYYY</p></div>
+            </label>
           </div>
         </div>
       </div>
@@ -2043,6 +2178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     t.classList.add('show');
     setTimeout(function() { t.classList.remove('show'); }, 2500);
   }
+  window.showToast = showToast;
 
   function checkContinueBtn() {
     var btn = document.getElementById('connect-next-btn');
@@ -2154,6 +2290,7 @@ document.addEventListener('DOMContentLoaded', function() {
       else if (action === 'goto-select') { goTo('screen-select'); }
       else if (action === 'finish-onboarding') {
         showToast('Setup complete! Loading your dashboard…');
+        sessionStorage.setItem('newAccountSetup','1');
         setTimeout(function() { goTo('screen-dashboard'); }, 1000);
       }
     });
@@ -2619,6 +2756,27 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         </div>
 
+        <!-- Google Analytics 4 -->
+        <div class="connection-card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div class="card-icon">
+              <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjMiIGhlaWdodD0iMjMiIHZpZXdCb3g9IjAgMCAyMyAyMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjc1ODUgMTEuMjcxOEMyMC43NTg1IDEwLjU1NDEgMjAuNjk0MSA5Ljg2Mzk3IDIwLjU3NDUgOS4yMDE0NkgxMS4wNDE3VjEzLjEyMTNIMTYuNDg5QzE2LjI0OTggMTQuMzgxOSAxNS41MzIxIDE1LjQ0OTIgMTQuNDU1NSAxNi4xNjdWMTguNzE1OEgxNy43NDA0QzE5LjY1NDMgMTYuOTQ5MSAyMC43NTg1IDE0LjM1NDMgMjAuNzU4NSAxMS4yNzE4WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNMTEuMDQxOCAyMS4xNjM0QzEzLjc3NDYgMjEuMTYzNCAxNi4wNjU4IDIwLjI2MTYgMTcuNzQwNSAxOC43MTU4TDE0LjQ1NTUgMTYuMTY3QzEzLjU1MzggMTYuNzc0MyAxMi40MDM2IDE3LjE0MjMgMTEuMDQxOCAxNy4xNDIzQzguNDEwMTkgMTcuMTQyMyA2LjE3NDI0IDE1LjM2NjQgNS4zNzM3MSAxMi45NzQxSDIuMDA1OThWMTUuNTg3M0MzLjY3MTQ0IDE4Ljg5MDYgNy4wODUxOCAyMS4xNjM0IDExLjA0MTggMjEuMTYzNFoiIGZpbGw9IiMzNEE4NTMiLz4KPHBhdGggZD0iTTUuMzczNjcgMTIuOTY0OEM1LjE3MTI0IDEyLjM1NzUgNS4wNTE2MiAxMS43MTM0IDUuMDUxNjIgMTEuMDQxN0M1LjA1MTYyIDEwLjM3IDUuMTcxMjQgOS43MjU5MiA1LjM3MzY3IDkuMTE4NjNWNi41MDU0MkgyLjAwNTk0QzEuMzE1ODMgNy44NjcyMyAwLjkyMDE2NiA5LjQwMzg3IDAuOTIwMTY2IDExLjA0MTdDMC45MjAxNjYgMTIuNjc5NiAxLjMxNTgzIDE0LjIxNjIgMi4wMDU5NCAxNS41NzhMNC42MjgzNSAxMy41MzUzTDUuMzczNjcgMTIuOTY0OFoiIGZpbGw9IiNGQkJDMDUiLz4KPHBhdGggZD0iTTExLjA0MTggNC45NTAzOUMxMi41MzI0IDQuOTUwMzkgMTMuODU3NSA1LjQ2NTY3IDE0LjkxNTYgNi40NTk0M0wxNy44MTQxIDMuNTYwOTdDMTYuMDU2NiAxLjkyMzExIDEzLjc3NDYgMC45MjAxNTEgMTEuMDQxOCAwLjkyMDE1MUM3LjA4NTE4IDAuOTIwMTUxIDMuNjcxNDQgMy4xOTI5MSAyLjAwNTk4IDYuNTA1NDNMNS4zNzM3MSA5LjExODY1QzYuMTc0MjQgNi43MjYyNyA4LjQxMDE5IDQuOTUwMzkgMTEuMDQxOCA0Ljk1MDM5WiIgZmlsbD0iI0VBNDMzNSIvPgo8L3N2Zz4K" width="22" height="22" alt="GA4" />
+            </div>
+            <div class="card-title-group">
+              <div class="card-title">Google Analytics 4</div>
+              <div class="card-desc">GA4 property connected to your website</div>
+            </div>
+            <span class="connected-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Connected
+            </span>
+          </div>
+          <p style="font-size:13px;color:var(--color-text-caption);margin-top:8px;">1 GA4 property · mystore.com (G-XXXXXXXXXX)</p>
+          <div style="text-align:right;margin-top:8px;">
+            <span style="font-size:13px;color:var(--color-text-info);cursor:pointer;">Reconnect</span>
+          </div>
+        </div>
+
         <!-- Microsoft Advertising -->
         <div class="connection-card" style="margin-bottom:16px;">
           <div class="card-header">
@@ -2667,28 +2825,658 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
         </div>
 
-        <!-- Google Merchant Center -->
-        <div class="connection-card" style="margin-bottom:16px;border-left:3px solid #f59e0b;">
-          <div class="card-header">
-            <div class="card-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/><path d="M16 10a4 4 0 01-8 0" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="card-title-group">
-              <div class="card-title">Google Merchant Center</div>
-              <div class="card-desc">Product feed health, Shopping disapprovals, and inventory data</div>
-            </div>
-            <span class="badge badge-warning">Not connected</span>
+      </div>
+
+      <!-- ══ FEED DATA TOOL PAGE ══ -->
+      <div id="feed-data-page" style="display:none;">
+
+        <!-- Page header -->
+        <div class="page-title-row">
+          <div class="page-title-left">
+            <h1 class="page-h1" style="margin-bottom:4px;">Feed Database</h1>
+            <p class="page-subtitle">Manage and transform your product data feeds</p>
           </div>
-          <div class="info-box" style="margin-top:12px;">Link your Google Merchant Center account to monitor feed quality and product disapprovals.</div>
-          <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
-            <div>
-              <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Merchant Center ID</label>
-              <input type="text" placeholder="123456789" style="width:100%;box-sizing:border-box;" />
-            </div>
-            <button class="btn-primary" style="width:100%;">Link Merchant Center</button>
+          <div class="page-title-right">
+            <button class="btn-primary" id="add-feed-btn" style="width:auto;padding:0 18px;display:inline-flex;align-items:center;gap:7px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Database
+            </button>
           </div>
         </div>
+
+        <nav class="breadcrumb" style="margin-bottom:20px;">
+          <span class="bc-item bc-muted">Tools</span>
+          <span class="bc-item bc-muted">›</span>
+          <span class="bc-item bc-muted">Feed Data Tool</span>
+          <span class="bc-item bc-muted">›</span>
+          <span class="bc-item bc-current">Feed Database</span>
+        </nav>
+
+        <!-- Search + Sort + Filters -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+          <div class="search-box" style="flex:1;max-width:100%;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#737c8c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="feed-search" placeholder="Search" />
+          </div>
+          <div class="dd-trigger-wrap" id="feed-sort-wrap">
+            <button class="btn-outline filter-btn" id="feed-sort-btn">
+              <span id="feed-sort-label">Sort by: All</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="dropdown-menu" id="feed-sort-menu" data-dd="feed-sort-wrap" style="min-width:160px;">
+              <div class="dd-item dd-active" data-filter="feed-sort" data-val="">All</div>
+              <div class="dd-item" data-filter="feed-sort" data-val="name">Name</div>
+              <div class="dd-item" data-filter="feed-sort" data-val="client">Client</div>
+              <div class="dd-item" data-filter="feed-sort" data-val="activity">Last Activity</div>
+            </div>
+          </div>
+          <button class="btn-outline" style="display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:36px;white-space:nowrap;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filters
+          </button>
+        </div>
+
+        <!-- ══ FEED TABLES ══ -->
+        <div class="table-card" id="feed-table-card" style="padding:0;overflow:hidden;">
+
+          <!-- shared colgroup template (defines widths used by both tables) -->
+          <!-- NAME 23% | CLIENT 17% | IMPORTS 16% | EXPORTS 16% | LAST ACTIVITY 22% | ACTIONS 6% -->
+
+          <!-- ── GROUPED heading ── -->
+          <div class="feed-table-heading">Grouped</div>
+          <div class="feed-table-divider"></div>
+
+          <!-- ── GROUPED table ── -->
+          <div class="table-scroll" id="feed-grouped-section">
+            <table class="feed-table" id="feed-grouped-table">
+              <colgroup>
+                <col style="width:23%;">
+                <col style="width:17%;">
+                <col style="width:16%;">
+                <col style="width:16%;">
+                <col style="width:22%;">
+                <col style="width:6%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Client</th>
+                  <th>Scheduled Imports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Scheduled Exports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Last Activity <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Group: Monkey Sports -->
+                <tr class="feed-group-row" data-group="monkey-sports"><td colspan="6"><div class="feed-group-row-inner"><svg class="feed-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="feed-group-label">Monkey Sports</span><span class="feed-group-pill">4 feeds</span></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="hockey site – shopping" data-client="monkey sports"><td><span class="feed-name">Hockey Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 4 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="lacrosse site – shopping" data-client="monkey sports"><td><span class="feed-name">Lacrosse Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 12 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="baseball site – shopping" data-client="monkey sports"><td><span class="feed-name">Baseball Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 1 hr ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="goalie site – shopping" data-client="monkey sports"><td><span class="feed-name">Goalie Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 3 hrs ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ── UNGROUPED heading ── -->
+          <div class="feed-table-divider"></div>
+          <div class="feed-table-heading" style="padding-top:18px;">Ungrouped</div>
+          <div class="feed-table-divider"></div>
+
+          <!-- ── UNGROUPED table ── -->
+          <div class="table-scroll" id="feed-ungrouped-section">
+            <table class="feed-table" id="feed-ungrouped-table">
+              <colgroup>
+                <col style="width:23%;">
+                <col style="width:17%;">
+                <col style="width:16%;">
+                <col style="width:16%;">
+                <col style="width:22%;">
+                <col style="width:6%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Client</th>
+                  <th>Scheduled Imports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Scheduled Exports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Last Activity <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="feed-ungrouped-body">
+                <tr class="feed-row" data-name="outdoor research" data-client="outdoor research"><td><span class="feed-name">Outdoor Research</span></td><td><span class="feed-client-link">Outdoor Research</span></td><td><span class="feed-import-count">3 Imports</span></td><td><span class="feed-import-count">2 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 20 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row" data-name="pcbj feed" data-client="people's choice beef jerky"><td><span class="feed-name">PCBJ Feed</span></td><td><span class="feed-client-link">People's Choice Beef Jerky</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 35 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row" data-name="li – new_inkcartridges" data-client="link imaging"><td><span class="feed-name">LI – New_InkCartridges</span></td><td><span class="feed-client-link">Link Imaging</span></td><td><span class="feed-import-count">1 Import</span></td><td><span class="feed-import-count">3 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 1 hr ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+<tr class="feed-row" data-name="all volleyball – shopping" data-client="all volleyball"><td><span class="feed-name">All Volleyball – Shopping</span></td><td><span class="feed-client-link">All Volleyball</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 2 days ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div><!-- /feed-data-page -->
+
+<!-- ══ ADD DATABASE MODAL ══ -->
+<div id="add-db-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.45);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box" style="width:400px;padding:0;max-height:90vh;overflow-y:auto;">
+    <div class="add-db-modal-header">
+      <span class="modal-title" style="font-size:16px;font-weight:600;">Add Database</span>
+      <button onclick="closeAddDbModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--color-text-caption);line-height:1;padding:0 2px;">×</button>
+    </div>
+    <div class="add-db-modal-body">
+      <!-- Database name -->
+      <div>
+        <label class="field-label">Database name <span class="field-required">*</span></label>
+        <input type="text" id="add-db-name" class="modal-input" placeholder="Enter database name">
+        <div class="field-error" id="add-db-name-error">Database name is required.</div>
       </div>
+      <!-- Client -->
+      <div>
+        <label class="field-label">Client</label>
+        <select id="add-db-client" class="modal-select">
+          <option value="">Select client</option>
+        </select>
+      </div>
+      <!-- Group -->
+      <div>
+        <label class="field-label">Group</label>
+        <select id="add-db-group" class="modal-select" onchange="handleAddDbGroupChange(this.value)">
+          <option value="">None (Ungrouped)</option>
+          <option value="monkey-sports">Monkey Sports</option>
+          <option value="__new__">+ Create new group</option>
+        </select>
+        <div id="add-db-new-group-wrap" style="display:none;" class="new-group-input-row">
+          <input type="text" id="add-db-new-group-name" class="modal-input" placeholder="Enter group name" style="margin:0;">
+          <button class="btn-danger-icon" onclick="clearNewGroup()" title="Cancel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </div>
+        <div class="field-helper">Grouping databases allows easier organization for clients with multiple sites.</div>
+      </div>
+    </div>
+    <div class="add-db-modal-footer">
+      <button class="btn-primary-sm" onclick="submitAddDb()">Add Database</button>
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="closeAddDbModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATABASE OVERVIEW PAGE ══ -->
+<div id="db-overview-page" style="display:none;">
+
+  <!-- Page header -->
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1" id="db-overview-title">Database Name</h1>
+      <div class="db-pills-row">
+        <span class="db-pill" id="db-overview-client-pill">Client: —</span>
+        <span class="db-pill" id="db-overview-group-pill">Ungrouped</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="breadcrumb" style="margin-bottom:20px;">
+    <span class="bc-item bc-muted">Tools</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-current" id="db-overview-bc-name">Database</span>
+  </nav>
+
+  <!-- Tab bar -->
+  <div class="detail-tabs-bar" id="db-tabs-bar">
+    <button class="detail-tab active" data-dbtab="overview">Overview</button>
+    <button class="detail-tab" data-dbtab="imports">Imports</button>
+    <button class="detail-tab" data-dbtab="dataview">Data View</button>
+    <button class="detail-tab" data-dbtab="transformers">Transformers</button>
+    <button class="detail-tab" data-dbtab="exports">Exports</button>
+    <button class="detail-tab" data-dbtab="logs">Logs</button>
+  </div>
+
+  <!-- Overview tab panel -->
+  <div class="tab-panel active" id="db-tab-overview">
+    <div style="margin-top:20px;">
+      <p class="page-h1" style="font-size:16px;margin-bottom:2px;">Overview</p>
+      <p class="page-subtitle">A summary of your database activity and health</p>
+    </div>
+
+    <!-- Action cards -->
+    <div class="action-cards-row">
+      <div class="action-card" onclick="switchDbTab('imports')">
+        <div class="action-card-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <span class="action-card-title">Run Import</span>
+        <span class="action-card-arrow">→</span>
+      </div>
+      <div class="action-card" onclick="showToast('Coming soon')">
+        <div class="action-card-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <span class="action-card-title">View Data</span>
+        <span class="action-card-arrow">→</span>
+      </div>
+      <div class="action-card" onclick="showToast('Coming soon')">
+        <div class="action-card-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <span class="action-card-title">Run Export</span>
+        <span class="action-card-arrow">→</span>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-block">
+        <div class="stat-block-value">24,338</div>
+        <div class="stat-block-label">Total SKUs</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block-value">2</div>
+        <div class="stat-block-label">Imports Scheduled</div>
+        <div class="stat-block-sub">Last: 1hr ago</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block-value">2</div>
+        <div class="stat-block-label">Exports Scheduled</div>
+        <div class="stat-block-sub">Last: 1hr ago</div>
+      </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div style="margin-top:24px;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">Recent Activities</p>
+      <div class="table-card" style="padding:0;">
+        <div class="table-scroll">
+          <table class="feed-table" style="table-layout:fixed;width:100%;">
+            <colgroup><col style="width:52%;"><col style="width:16%;"><col style="width:32%;"></colgroup>
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Status</th>
+                <th>Modified By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Export to Google Merchant Center completed · 14,523 items</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-system" style="font-size:9px;">S</span><div class="modified-by-info"><span class="modified-by-name">System</span><span class="modified-by-time">30 mins ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Export to Microsoft Merchant Center completed · 14,521 items</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-system" style="font-size:9px;">S</span><div class="modified-by-info"><span class="modified-by-name">System</span><span class="modified-by-time">32 mins ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Import from Shopify completed · 14,612 items</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-system" style="font-size:9px;">S</span><div class="modified-by-info"><span class="modified-by-name">System</span><span class="modified-by-time">32 mins ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Transformer 'Clear invalid image links' created</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-person">AS</span><div class="modified-by-info"><span class="modified-by-name">Amy Sams</span><span class="modified-by-time">2 hours ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Transformer 'Fix price format USD' modified</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-person">AS</span><div class="modified-by-info"><span class="modified-by-name">Amy Sams</span><span class="modified-by-time">2 hours ago</span></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Imports tab panel -->
+  <div class="tab-panel" id="db-tab-imports">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-top:20px;gap:12px;">
+      <div>
+        <p class="page-h1" style="font-size:16px;margin-bottom:2px;">Imports</p>
+        <p class="page-subtitle">Manage your data sources and import schedules</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+        <button class="btn-outline" style="height:36px;padding:0 14px;">Field Mapping</button>
+        <button class="btn-primary-sm" onclick="showAddImportPage()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Import
+        </button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:16px;margin-bottom:16px;">
+      <div class="search-box" style="flex:1;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#737c8c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search imports...">
+      </div>
+      <button class="btn-outline" style="display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:36px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters
+      </button>
+    </div>
+    <div class="table-card" style="padding:0;">
+      <div class="table-scroll">
+        <table class="feed-table" id="imports-table" style="table-layout:fixed;width:100%;">
+          <colgroup>
+            <col style="width:22%;">
+            <col style="width:16%;">
+            <col style="width:12%;">
+            <col style="width:18%;">
+            <col style="width:10%;">
+            <col style="width:18%;">
+            <col style="width:4%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Source</th>
+              <th>Type</th>
+              <th>Schedule</th>
+              <th>From</th>
+              <th>Last Run</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="imports-tbody">
+            <tr class="feed-row"><td><span class="feed-name">Shopify Products</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#96bf48;"></span>Shopify</span></td><td>Main Feed</td><td>Every four hours</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+            <tr class="feed-row"><td><span class="feed-name">Inventory Levels</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#3b82f6;"></span>EDI</span></td><td>Join</td><td>Every 15 mins</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+            <tr class="feed-row"><td><span class="feed-name">Pricing Override</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#6b7280;"></span>SFTP</span></td><td>Join</td><td>Daily at 9:00 AM</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coming soon tab panels -->
+  <div class="tab-panel" id="db-tab-dataview"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Data View — Coming soon</div></div>
+  <div class="tab-panel" id="db-tab-transformers"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Transformers — Coming soon</div></div>
+  <div class="tab-panel" id="db-tab-exports"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Exports — Coming soon</div></div>
+  <div class="tab-panel" id="db-tab-logs"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Logs — Coming soon</div></div>
+
+</div><!-- /db-overview-page -->
+
+<!-- ══ ADD IMPORT PAGE ══ -->
+<div id="add-import-page" style="display:none;">
+
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Add Import</h1>
+      <p class="page-subtitle">Select an import source for your data</p>
+    </div>
+  </div>
+
+  <nav class="breadcrumb" style="margin-bottom:24px;">
+    <span class="bc-item bc-muted">Tools</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" id="add-import-db-bc" style="cursor:pointer;" onclick="hideAddImportPage();showDbOverviewPage(currentDb);">Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-current">Add Import</span>
+  </nav>
+
+  <!-- Step 1: Source -->
+  <div style="margin-bottom:24px;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Step 1 — Select import source</p>
+    <div class="source-cards-row">
+      <div class="source-card" id="src-shopify" onclick="selectImportSource('Shopify')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#96bf48;">SH</div>
+        <div class="source-card-title">Shopify</div>
+        <div class="source-card-sub">Connect to a Shopify store via API</div>
+      </div>
+      <div class="source-card" id="src-edi" onclick="selectImportSource('EDI')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#3b82f6;">ED</div>
+        <div class="source-card-title">EDI</div>
+        <div class="source-card-sub">Import from a file hosted on the web</div>
+      </div>
+      <div class="source-card" id="src-cdntxt" onclick="selectImportSource('CDNTXT')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#f59e0b;">CD</div>
+        <div class="source-card-title">CDNTXT</div>
+        <div class="source-card-sub">Import from a file hosted on the web</div>
+      </div>
+      <div class="source-card" id="src-sftp" onclick="selectImportSource('SFTP')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#6b7280;">SF</div>
+        <div class="source-card-title">SFTP</div>
+        <div class="source-card-sub">Import from a file on an SFTP server</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Type -->
+  <div style="margin-bottom:28px;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Step 2 — Select import type</p>
+    <div class="type-cards-row">
+      <div class="type-card" id="type-mainfeed" onclick="selectImportType('Main Feed')">
+        <div class="type-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="type-card-title">Main Feed</div>
+        <div class="type-card-sub">The primary data source for this database. It loads into your database.</div>
+      </div>
+      <div class="type-card" id="type-joinfeed" onclick="selectImportType('Join Feed')">
+        <div class="type-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="type-card-title">Join Feed</div>
+        <div class="type-card-sub">Supplements your main feed. It adds into the existing rows in your database with extra data.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="btn-primary-sm" id="add-import-continue-btn" disabled onclick="continueToConfigureImport()">Continue</button>
+    <button class="btn-text-link grey" onclick="cancelAddImport()">Cancel</button>
+  </div>
+
+</div><!-- /add-import-page -->
+
+<!-- ══ CONFIGURE IMPORT PAGE ══ -->
+<div id="configure-import-page" style="display:none;">
+
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Configure Import</h1>
+    </div>
+  </div>
+
+  <nav class="breadcrumb" style="margin-bottom:16px;">
+    <span class="bc-item bc-muted">Tools</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" id="cfg-import-db-bc" style="cursor:pointer;" onclick="hideConfigureImportPage();showDbOverviewPage(currentDb);">Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="hideConfigureImportPage();showAddImportPage();">Add Import</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-current">Configure Import</span>
+  </nav>
+
+  <!-- Sub-header -->
+  <div class="wizard-subheader">
+    <span>Import Source:</span>
+    <span class="source-badge" id="cfg-source-badge">Shopify</span>
+    <span style="margin-left:8px;">Import Type:</span>
+    <span class="type-badge" id="cfg-type-badge">Main Feed</span>
+  </div>
+
+  <!-- Wizard step tabs -->
+  <div class="detail-tabs-bar" id="wizard-tabs-bar" style="margin-bottom:24px;">
+    <button class="detail-tab active" data-wizardtab="1">General Settings</button>
+    <button class="detail-tab" data-wizardtab="2">Connection Settings</button>
+    <button class="detail-tab" data-wizardtab="3">Data Types</button>
+    <button class="detail-tab" data-wizardtab="4">Schedule</button>
+    <button class="detail-tab" data-wizardtab="5">Preprocessing</button>
+  </div>
+
+  <!-- Step 1: General Settings -->
+  <div class="wizard-step active" id="wizard-step-1">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:18px;">
+        <label class="field-label">Import Name <span class="field-required">*</span></label>
+        <input type="text" id="wizard-import-name" class="modal-input" placeholder="e.g. 'Shopify Products'" style="max-width:100%;">
+        <div class="field-error" id="wizard-name-error">Import name is required.</div>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="showAddImportPage();hideConfigureImportPage();">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(2)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Connection Settings -->
+  <div class="wizard-step" id="wizard-step-2">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:18px;">
+        <label class="field-label" style="display:flex;align-items:center;gap:6px;">
+          OAuth token / App password
+          <span class="tooltip-icon" title="Find this in your Shopify admin under Apps > Private apps">?</span>
+        </label>
+        <div class="password-input-wrap">
+          <input type="password" id="wizard-oauth-token" class="modal-input" placeholder="Enter your Shopify access token">
+          <button class="password-toggle" onclick="togglePasswordField('wizard-oauth-token',this)" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div style="margin-bottom:6px;">
+        <label class="field-label">Shop name <span class="field-required">*</span></label>
+        <div class="input-suffix-wrap">
+          <input type="text" id="wizard-shop-name" placeholder="your-store-name">
+          <span class="input-suffix-text">.myshopify.com</span>
+        </div>
+        <button class="btn-text-link" style="margin-top:8px;" type="button">Test Connection</button>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(1)">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(3)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Data Types -->
+  <div class="wizard-step" id="wizard-step-3">
+    <div style="max-width:560px;">
+      <div class="info-banner-blue">These operations run on the file before it's imported into the database. Adjustments you can't change at the source level are easier to make here than try to address after import.</div>
+      <div class="checkbox-group">
+        <div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="dt-products" checked disabled>
+            <div>
+              <label class="checkbox-label" for="dt-products">Products</label>
+              <div class="checkbox-sub">Core product information</div>
+            </div>
+          </div>
+          <div class="checkbox-sub-group" id="products-sub-options">
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Include: GMC Transition ID</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Markets</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Presentation group</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Contextual pricing</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Variant names into individual columns</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Extra parent fields</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Tax rate <span class="checkbox-sub">(Optional as cost)</span></label></div>
+          </div>
+        </div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Collections</label><div class="checkbox-sub">Product collections/categories</div></div></div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Inventory Item</label><div class="checkbox-sub">Inventory data (cost, country of origin)</div></div></div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Inventory Levels</label><div class="checkbox-sub">Stock quantities</div></div></div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Metafields</label><div class="checkbox-sub">Shop-level metadata</div></div></div>
+      </div>
+      <div class="info-banner-warn" style="margin-top:16px;">Every additional data type may increase import run time.</div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(2)">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(4)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Schedule -->
+  <div class="wizard-step" id="wizard-step-4">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:18px;">
+        <label class="field-label">Frequency <span class="field-required">*</span></label>
+        <select id="wizard-frequency" class="modal-select" onchange="handleFrequencyChange(this.value)">
+          <option value="">Select the import schedule</option>
+          <option value="weekdays">Weekdays (Mon–Fri)</option>
+          <option value="weekends">Weekends (Sat–Sun)</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div id="custom-schedule-fields" style="display:none;">
+        <div style="margin-bottom:14px;">
+          <label class="field-label">Day</label>
+          <select class="modal-select">
+            <option value="">Select the import days</option>
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="field-label">Time</label>
+          <select class="modal-select">
+            <option value="">Select the import times</option>
+            <option>12:00 AM</option><option>6:00 AM</option><option>9:00 AM</option>
+            <option>12:00 PM</option><option>3:00 PM</option><option>6:00 PM</option><option>9:00 PM</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="field-label">Timezone</label>
+          <select class="modal-select">
+            <option selected>New York City, United States (EST, UTC -05:00)</option>
+            <option>Los Angeles, United States (PST, UTC -08:00)</option>
+            <option>Chicago, United States (CST, UTC -06:00)</option>
+            <option>London, United Kingdom (GMT, UTC +00:00)</option>
+            <option>Berlin, Germany (CET, UTC +01:00)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(3)">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(5)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Preprocessing -->
+  <div class="wizard-step" id="wizard-step-5">
+    <div style="max-width:600px;">
+      <div class="info-banner-warn">These operations run on the file before it's imported into the database. Unlike when the source file is imported, adjustments you can't change at the source level are easier to make here than try to address after import.</div>
+
+      <!-- Product Filters -->
+      <div class="section-block" style="border-top:none;margin-top:0;padding-top:0;">
+        <div class="section-block-title">Product Filters</div>
+        <div class="section-block-sub">Only import products that match these conditions.</div>
+        <div class="filter-table-wrap">
+          <table class="filter-table">
+            <tbody id="filter-rows-tbody">
+              <tr>
+                <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Filter</td>
+                <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Value</td>
+                <td style="width:36px;"></td>
+              </tr>
+              <tr>
+                <td>Published Status</td>
+                <td>Published Products</td>
+                <td><button class="btn-danger-icon" onclick="removeFilterRow(this)" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="btn-text-link" onclick="addFilterRow()" style="margin-top:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Filter
+        </button>
+      </div>
+
+      <!-- File Actions -->
+      <div class="section-block">
+        <div class="section-block-title">File Actions</div>
+        <div class="section-block-sub">Operations to run on the file before import.</div>
+        <button class="btn-text-link" onclick="showToast('Add header coming soon')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add header
+        </button>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(4)">Back</button>
+      <button class="btn-primary-sm" style="padding:0 20px;" onclick="submitImport()">Save &amp; Import</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+</div><!-- /configure-import-page -->
 
     </div><!-- /page-content -->
   </main>
@@ -3329,6 +4117,7 @@ var ISSUES = [
 
   function backToList() {
     hideIntegrationsPage();
+    hideFeedDataPage();
     $('ic-detail').style.display = 'none';
     $('ic-list').style.display = 'block';
     window.scrollTo(0, 0);
@@ -3338,6 +4127,7 @@ var ISSUES = [
     document.getElementById('ic-list').style.display = 'none';
     document.getElementById('ic-detail').style.display = 'none';
     document.getElementById('integrations-page').style.display = 'block';
+    var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'none';
     window.scrollTo(0, 0);
   }
   window.showIntegrationsPage = showIntegrationsPage;
@@ -3345,6 +4135,489 @@ var ISSUES = [
   function hideIntegrationsPage() {
     document.getElementById('integrations-page').style.display = 'none';
   }
+
+  function showFeedDataPage() {
+    document.getElementById('ic-list').style.display = 'none';
+    document.getElementById('ic-detail').style.display = 'none';
+    document.getElementById('integrations-page').style.display = 'none';
+    var dbp = document.getElementById('db-overview-page'); if (dbp) dbp.style.display = 'none';
+    var aip = document.getElementById('add-import-page'); if (aip) aip.style.display = 'none';
+    var cip = document.getElementById('configure-import-page'); if (cip) cip.style.display = 'none';
+    var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+  function hideFeedDataPage() {
+    var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'none';
+  }
+
+  function initFeedDataPage() {
+
+    /* ── group row collapse/expand ── */
+    document.querySelectorAll('.feed-group-row').forEach(function(grpRow) {
+      grpRow.addEventListener('click', function() {
+        var grp = this.getAttribute('data-group');
+        var isCollapsed = this.classList.toggle('collapsed');
+        document.querySelectorAll('.feed-group-child[data-group="' + grp + '"]').forEach(function(child) {
+          child.style.display = isCollapsed ? 'none' : '';
+        });
+      });
+    });
+
+    /* ── live search ── */
+    var si = document.getElementById('feed-search');
+    if (si) {
+      si.addEventListener('input', function() {
+        var q = this.value.toLowerCase();
+        var fdp = document.getElementById('feed-data-page');
+        if (!fdp) return;
+        fdp.querySelectorAll('.feed-row').forEach(function(row) {
+          var n = (row.getAttribute('data-name') || '').toLowerCase();
+          var c = (row.getAttribute('data-client') || '').toLowerCase();
+          var grpRow = row.closest('tbody') && document.querySelector('.feed-group-row[data-group="' + row.getAttribute('data-group') + '"]');
+          var grpCollapsed = grpRow && grpRow.classList.contains('collapsed');
+          var show = (!q || n.includes(q) || c.includes(q)) && !grpCollapsed;
+          row.style.display = show ? '' : 'none';
+        });
+      });
+    }
+
+    /* ── ⋮ action menus (delegated, feed-data-page only) ── */
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.feed-action-btn')) {
+        e.stopPropagation();
+        var menu = e.target.closest('.feed-action-btn').nextElementSibling;
+        var isOpen = menu && menu.classList.contains('open');
+        document.querySelectorAll('.feed-action-menu.open').forEach(function(m){ m.classList.remove('open'); });
+        if (menu && !isOpen) menu.classList.add('open');
+        return;
+      }
+      if (!e.target.closest('.feed-action-menu')) {
+        document.querySelectorAll('.feed-action-menu.open').forEach(function(m){ m.classList.remove('open'); });
+      }
+    });
+
+    /* ── "Create new group +" prompt ── */
+    var groupSel = document.getElementById('add-feed-group-select');
+    if (groupSel) {
+      groupSel.addEventListener('change', function() {
+        if (this.value === '__new__') {
+          var name = prompt('Group name:');
+          if (name && name.trim()) {
+            var opt = document.createElement('option');
+            opt.value = 'grp-' + name.trim().toLowerCase().replace(/\s+/g,'-');
+            opt.textContent = name.trim();
+            this.insertBefore(opt, this.querySelector('[value="__new__"]'));
+            this.value = opt.value;
+          } else { this.value = ''; }
+        }
+      });
+    }
+
+    /* ── Add Database modal — now handled by openAddDbModal() ── */
+    var addModal = document.getElementById('add-feed-modal');
+    var cancelBtn = document.getElementById('add-feed-cancel');
+    if (addModal && cancelBtn) {
+      cancelBtn.addEventListener('click', function() { addModal.style.display = 'none'; });
+      addModal.addEventListener('click', function(e){ if (e.target === addModal) addModal.style.display = 'none'; });
+    }
+  }
+  initFeedDataPage();
+
+    /* ═══════════════════════════════════════════
+       FEED DATA TOOL — STATE
+    ═══════════════════════════════════════════ */
+    var currentDb = { name:'', client:'', group:'' };
+    var importSource = '';
+    var importType = '';
+    var wizardStep = 1;
+
+    /* ═══════════════════════════════════════════
+       ADD DATABASE MODAL
+    ═══════════════════════════════════════════ */
+    function openAddDbModal() {
+      var modal = document.getElementById('add-db-modal');
+      if (!modal) return;
+      // populate client select
+      var sel = document.getElementById('add-db-client');
+      if (sel && sel.options.length <= 1 && typeof CLIENTS !== 'undefined') {
+        CLIENTS.forEach(function(c) {
+          var opt = document.createElement('option');
+          opt.value = c.name.toLowerCase();
+          opt.textContent = c.name;
+          sel.appendChild(opt);
+        });
+      }
+      // reset fields
+      document.getElementById('add-db-name').value = '';
+      document.getElementById('add-db-name').classList.remove('error');
+      document.getElementById('add-db-name-error').classList.remove('visible');
+      document.getElementById('add-db-group').value = '';
+      document.getElementById('add-db-new-group-wrap').style.display = 'none';
+      modal.style.display = 'flex';
+    }
+    window.openAddDbModal = openAddDbModal;
+
+    function closeAddDbModal() {
+      var modal = document.getElementById('add-db-modal');
+      if (modal) modal.style.display = 'none';
+    }
+    window.closeAddDbModal = closeAddDbModal;
+
+    function handleAddDbGroupChange(val) {
+      var wrap = document.getElementById('add-db-new-group-wrap');
+      if (!wrap) return;
+      wrap.style.display = val === '__new__' ? 'flex' : 'none';
+    }
+    window.handleAddDbGroupChange = handleAddDbGroupChange;
+
+    function clearNewGroup() {
+      document.getElementById('add-db-new-group-name').value = '';
+      document.getElementById('add-db-group').value = '';
+      document.getElementById('add-db-new-group-wrap').style.display = 'none';
+    }
+    window.clearNewGroup = clearNewGroup;
+
+    function submitAddDb() {
+      var nameEl = document.getElementById('add-db-name');
+      var nameErr = document.getElementById('add-db-name-error');
+      var dbName = (nameEl.value || '').trim();
+      if (!dbName) {
+        nameEl.classList.add('error');
+        nameErr.classList.add('visible');
+        return;
+      }
+      nameEl.classList.remove('error');
+      nameErr.classList.remove('visible');
+
+      var clientVal = document.getElementById('add-db-client');
+      var clientName = clientVal ? clientVal.options[clientVal.selectedIndex].text : '';
+      if (clientVal && clientVal.value === '') clientName = '';
+
+      var groupSel = document.getElementById('add-db-group');
+      var groupVal = groupSel ? groupSel.value : '';
+      var isNewGroup = groupVal === '__new__';
+      var newGroupName = isNewGroup ? (document.getElementById('add-db-new-group-name').value || '').trim() : '';
+
+      var actionMenu = '<div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div>';
+
+      if (isNewGroup && newGroupName) {
+        // Add to grouped table as a new group
+        var grpTbody = document.querySelector('#feed-grouped-table tbody');
+        if (grpTbody) {
+          var grpId = 'grp-' + newGroupName.toLowerCase().replace(/\s+/g, '-');
+          var grpRow = '<tr class="feed-group-row" data-group="' + grpId + '"><td colspan="6"><div class="feed-group-row-inner"><svg class="feed-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="feed-group-label">' + newGroupName + '</span><span class="feed-group-pill">1 feed</span></div></td></tr>';
+          var childRow = '<tr class="feed-row feed-group-child" data-group="' + grpId + '" data-name="' + dbName.toLowerCase() + '" data-client="' + (clientName || newGroupName).toLowerCase() + '"><td><span class="feed-name">' + dbName + '</span></td><td><span class="feed-client-link">' + (clientName || '—') + '</span></td><td><span class="feed-import-count">0 Imports</span></td><td><span class="feed-import-count">0 Exports</span></td><td><span class="activity-type">—</span><span class="activity-time"> Just now</span></td><td>' + actionMenu + '</td></tr>';
+          grpTbody.insertAdjacentHTML('beforeend', grpRow + childRow);
+          // wire up group toggle
+          var newGrpRow = grpTbody.querySelector('[data-group="' + grpId + '"].feed-group-row');
+          if (newGrpRow) {
+            newGrpRow.addEventListener('click', function() {
+              var grp = this.getAttribute('data-group');
+              var isCollapsed = this.classList.toggle('collapsed');
+              document.querySelectorAll('.feed-group-child[data-group="' + grp + '"]').forEach(function(child) {
+                child.style.display = isCollapsed ? 'none' : '';
+              });
+            });
+          }
+        }
+      } else {
+        // Add to ungrouped table
+        var ungTbody = document.getElementById('feed-ungrouped-body');
+        if (ungTbody) {
+          var newRow = '<tr class="feed-row" data-name="' + dbName.toLowerCase() + '" data-client="' + clientName.toLowerCase() + '"><td><span class="feed-name">' + dbName + '</span></td><td><span class="feed-client-link">' + (clientName || '—') + '</span></td><td><span class="feed-import-count">0 Imports</span></td><td><span class="feed-import-count">0 Exports</span></td><td><span class="activity-type">—</span><span class="activity-time"> Just now</span></td><td>' + actionMenu + '</td></tr>';
+          ungTbody.insertAdjacentHTML('beforeend', newRow);
+        }
+      }
+
+      showToast('Database added successfully');
+      closeAddDbModal();
+    }
+    window.submitAddDb = submitAddDb;
+
+    /* Backdrop click to close add-db-modal */
+    (function() {
+      var m = document.getElementById('add-db-modal');
+      if (m) m.addEventListener('click', function(e) { if (e.target === this) closeAddDbModal(); });
+    })();
+
+    /* Wire up #add-feed-btn to openAddDbModal */
+    (function() {
+      var btn = document.getElementById('add-feed-btn');
+      if (btn) btn.onclick = openAddDbModal;
+    })();
+
+    /* ═══════════════════════════════════════════
+       DATABASE OVERVIEW
+    ═══════════════════════════════════════════ */
+    function showDbOverviewPage(db) {
+      currentDb = db || currentDb;
+      hideFeedDataPage();
+      hideAddImportPage();
+      hideConfigureImportPage();
+      var page = document.getElementById('db-overview-page');
+      if (!page) return;
+      // populate header
+      var titleEl = document.getElementById('db-overview-title');
+      if (titleEl) titleEl.textContent = currentDb.name || 'Database';
+      var clientPill = document.getElementById('db-overview-client-pill');
+      if (clientPill) clientPill.textContent = 'Client: ' + (currentDb.client || '—');
+      var groupPill = document.getElementById('db-overview-group-pill');
+      if (groupPill) groupPill.textContent = currentDb.group || 'Ungrouped';
+      var bcName = document.getElementById('db-overview-bc-name');
+      if (bcName) bcName.textContent = currentDb.name || 'Database';
+      // update add-import breadcrumb
+      var aiBc = document.getElementById('add-import-db-bc');
+      if (aiBc) aiBc.textContent = currentDb.name || 'Database';
+      var cfgBc = document.getElementById('cfg-import-db-bc');
+      if (cfgBc) cfgBc.textContent = currentDb.name || 'Database';
+      // activate overview tab
+      switchDbTab('overview');
+      page.style.display = 'block';
+      window.scrollTo(0,0);
+    }
+    window.showDbOverviewPage = showDbOverviewPage;
+
+    function hideDbOverviewPage() {
+      var page = document.getElementById('db-overview-page');
+      if (page) page.style.display = 'none';
+    }
+    window.hideDbOverviewPage = hideDbOverviewPage;
+
+    function switchDbTab(tabName) {
+      document.querySelectorAll('#db-tabs-bar .detail-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('#db-overview-page .tab-panel').forEach(function(p) { p.classList.remove('active'); });
+      var activeTab = document.querySelector('#db-tabs-bar [data-dbtab="' + tabName + '"]');
+      if (activeTab) activeTab.classList.add('active');
+      var activePanel = document.getElementById('db-tab-' + tabName);
+      if (activePanel) activePanel.classList.add('active');
+    }
+    window.switchDbTab = switchDbTab;
+
+    /* DB tab bar click wiring */
+    document.addEventListener('click', function(e) {
+      var tab = e.target.closest('#db-tabs-bar .detail-tab');
+      if (!tab) return;
+      switchDbTab(tab.getAttribute('data-dbtab'));
+    });
+
+    /* Feed table row click → DB Overview */
+    (function() {
+      var card = document.getElementById('feed-table-card');
+      if (!card) return;
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.feed-action-btn') || e.target.closest('.feed-group-row')) return;
+        var row = e.target.closest('.feed-row');
+        if (!row) return;
+        var nameEl = row.querySelector('.feed-name');
+        var clientEl = row.querySelector('.feed-client-link');
+        var isGrouped = row.classList.contains('feed-group-child');
+        var groupName = 'Ungrouped';
+        if (isGrouped) {
+          var grpLabelEl = row.closest('tbody') && row.closest('tbody').querySelector('.feed-group-label');
+          groupName = grpLabelEl ? grpLabelEl.textContent : 'Grouped';
+        }
+        showDbOverviewPage({
+          name: nameEl ? nameEl.textContent : '',
+          client: clientEl ? clientEl.textContent : (row.getAttribute('data-client') || ''),
+          group: groupName
+        });
+      });
+    })();
+
+    /* ═══════════════════════════════════════════
+       ADD IMPORT PAGE
+    ═══════════════════════════════════════════ */
+    function showAddImportPage() {
+      hideDbOverviewPage();
+      hideConfigureImportPage();
+      importSource = '';
+      importType = '';
+      // reset card selections
+      document.querySelectorAll('.source-card').forEach(function(c){ c.classList.remove('selected'); });
+      document.querySelectorAll('.type-card').forEach(function(c){ c.classList.remove('selected'); });
+      updateContinueBtn();
+      var page = document.getElementById('add-import-page');
+      if (page) page.style.display = 'block';
+      window.scrollTo(0,0);
+    }
+    window.showAddImportPage = showAddImportPage;
+
+    function hideAddImportPage() {
+      var page = document.getElementById('add-import-page');
+      if (page) page.style.display = 'none';
+    }
+    window.hideAddImportPage = hideAddImportPage;
+
+    function selectImportSource(src) {
+      importSource = src;
+      document.querySelectorAll('.source-card').forEach(function(c){ c.classList.remove('selected'); });
+      var map = {Shopify:'src-shopify', EDI:'src-edi', CDNTXT:'src-cdntxt', SFTP:'src-sftp'};
+      var el = document.getElementById(map[src]);
+      if (el) el.classList.add('selected');
+      updateContinueBtn();
+    }
+    window.selectImportSource = selectImportSource;
+
+    function selectImportType(type) {
+      importType = type;
+      document.querySelectorAll('.type-card').forEach(function(c){ c.classList.remove('selected'); });
+      var map = {'Main Feed':'type-mainfeed', 'Join Feed':'type-joinfeed'};
+      var el = document.getElementById(map[type]);
+      if (el) el.classList.add('selected');
+      updateContinueBtn();
+    }
+    window.selectImportType = selectImportType;
+
+    function updateContinueBtn() {
+      var btn = document.getElementById('add-import-continue-btn');
+      if (!btn) return;
+      if (importSource && importType) {
+        btn.disabled = false;
+        btn.classList.remove('disabled');
+      } else {
+        btn.disabled = true;
+        btn.classList.add('disabled');
+      }
+    }
+
+    function continueToConfigureImport() {
+      if (!importSource || !importType) return;
+      showConfigureImportPage(importSource, importType);
+    }
+    window.continueToConfigureImport = continueToConfigureImport;
+
+    function cancelAddImport() {
+      hideAddImportPage();
+      showDbOverviewPage(currentDb);
+      switchDbTab('imports');
+    }
+    window.cancelAddImport = cancelAddImport;
+
+    /* ═══════════════════════════════════════════
+       CONFIGURE IMPORT WIZARD
+    ═══════════════════════════════════════════ */
+    var sourceColors = {Shopify:'#96bf48', EDI:'#3b82f6', CDNTXT:'#f59e0b', SFTP:'#6b7280'};
+
+    function showConfigureImportPage(src, type) {
+      importSource = src || importSource;
+      importType = type || importType;
+      hideAddImportPage();
+      hideDbOverviewPage();
+      // populate sub-header badges
+      var srcBadge = document.getElementById('cfg-source-badge');
+      if (srcBadge) {
+        srcBadge.textContent = importSource;
+        srcBadge.style.background = sourceColors[importSource] || '#6b7280';
+      }
+      var typeBadge = document.getElementById('cfg-type-badge');
+      if (typeBadge) typeBadge.textContent = importType;
+      // reset to step 1
+      goWizardStepDirect(1);
+      var page = document.getElementById('configure-import-page');
+      if (page) page.style.display = 'block';
+      window.scrollTo(0,0);
+    }
+    window.showConfigureImportPage = showConfigureImportPage;
+
+    function hideConfigureImportPage() {
+      var page = document.getElementById('configure-import-page');
+      if (page) page.style.display = 'none';
+    }
+    window.hideConfigureImportPage = hideConfigureImportPage;
+
+    function goWizardStepDirect(n) {
+      wizardStep = n;
+      document.querySelectorAll('.wizard-step').forEach(function(s){ s.classList.remove('active'); });
+      var step = document.getElementById('wizard-step-' + n);
+      if (step) step.classList.add('active');
+      // update wizard tab active state
+      document.querySelectorAll('#wizard-tabs-bar .detail-tab').forEach(function(t){ t.classList.remove('active'); });
+      var activeWizTab = document.querySelector('#wizard-tabs-bar [data-wizardtab="' + n + '"]');
+      if (activeWizTab) activeWizTab.classList.add('active');
+    }
+
+    function goWizardStep(n) {
+      // validate current step
+      if (wizardStep === 1) {
+        var nameEl = document.getElementById('wizard-import-name');
+        var nameErr = document.getElementById('wizard-name-error');
+        if (n > 1 && nameEl && !nameEl.value.trim()) {
+          nameEl.classList.add('error');
+          nameErr.classList.add('visible');
+          return;
+        }
+        if (nameEl) nameEl.classList.remove('error');
+        if (nameErr) nameErr.classList.remove('visible');
+      }
+      goWizardStepDirect(n);
+    }
+    window.goWizardStep = goWizardStep;
+
+    /* Wizard tab clicks */
+    document.addEventListener('click', function(e) {
+      var wTab = e.target.closest('#wizard-tabs-bar .detail-tab');
+      if (!wTab) return;
+      var n = parseInt(wTab.getAttribute('data-wizardtab'), 10);
+      if (n && n <= wizardStep + 1) goWizardStep(n);
+    });
+
+    function togglePasswordField(inputId, btn) {
+      var input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      }
+    }
+    window.togglePasswordField = togglePasswordField;
+
+    function handleFrequencyChange(val) {
+      var fields = document.getElementById('custom-schedule-fields');
+      if (fields) fields.style.display = val === 'custom' ? 'block' : 'none';
+    }
+    window.handleFrequencyChange = handleFrequencyChange;
+
+    function addFilterRow() {
+      var tbody = document.getElementById('filter-rows-tbody');
+      if (!tbody) return;
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><input type="text" class="modal-input" placeholder="Filter" style="padding:5px 8px;font-size:13px;"></td><td><input type="text" class="modal-input" placeholder="Value" style="padding:5px 8px;font-size:13px;"></td><td><button class="btn-danger-icon" onclick="removeFilterRow(this)" title="Remove"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></td>';
+      tbody.appendChild(tr);
+    }
+    window.addFilterRow = addFilterRow;
+
+    function removeFilterRow(btn) {
+      var tr = btn.closest('tr');
+      if (tr) tr.remove();
+    }
+    window.removeFilterRow = removeFilterRow;
+
+    function cancelConfigureImport() {
+      hideConfigureImportPage();
+      showDbOverviewPage(currentDb);
+      switchDbTab('imports');
+    }
+    window.cancelConfigureImport = cancelConfigureImport;
+
+    function submitImport() {
+      var importName = (document.getElementById('wizard-import-name') && document.getElementById('wizard-import-name').value.trim()) || 'New Import';
+      // add row to imports table
+      var tbody = document.getElementById('imports-tbody');
+      if (tbody) {
+        var dot = sourceColors[importSource] || '#6b7280';
+        var actionMenu = '<div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div>';
+        var row = '<tr class="feed-row"><td><span class="feed-name">' + importName + '</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:' + dot + ';"></span>' + importSource + '</span></td><td>' + importType + '</td><td>—</td><td>—</td><td>Just configured</td><td>' + actionMenu + '</td></tr>';
+        tbody.insertAdjacentHTML('beforeend', row);
+      }
+      hideConfigureImportPage();
+      showDbOverviewPage(currentDb);
+      switchDbTab('imports');
+      showToast('Import configured successfully');
+    }
+    window.submitImport = submitImport;
 
   /* ── build client/website dropdowns ── */
   function buildClientMenu() {
@@ -3421,6 +4694,9 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'integrations') {
           showIntegrationsPage();
+        }
+        if (this.getAttribute('data-nav') === 'feed-data') {
+          showFeedDataPage();
         }
       });
     });
@@ -3589,10 +4865,10 @@ var ISSUES = [
 </script>
 
 <!-- Shopify Setup Modal -->
-<div id="shopify-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.3);z-index:9998;align-items:flex-end;justify-content:flex-start;padding-left:220px;padding-bottom:22px;opacity:0;transition:opacity 0.22s ease;">
+<div id="shopify-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.3);z-index:9998;align-items:flex-start;justify-content:flex-start;padding-left:228px;opacity:0;transition:opacity 0.22s ease;">
   <div class="modal-box" style="position:relative;max-width:380px;transform:translateX(-12px);transition:transform 0.25s ease;">
     <!-- Speech bubble tail pointing left toward Settings in sidebar -->
-    <div style="position:absolute;left:-9px;bottom:40px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:9px solid var(--color-white);pointer-events:none;"></div>
+    <div style="position:absolute;left:-9px;top:18px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:9px solid var(--color-white);pointer-events:none;"></div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
       <div style="width:32px;height:32px;border-radius:8px;background:var(--color-container-warn);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -3626,10 +4902,6 @@ var ISSUES = [
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           Feed Quality Check and Feed Data Tool
         </div>
-        <div style="display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:13px;color:var(--color-text-subtitle);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          SEM Overview revenue reporting
-        </div>
       </div>
     </div>
     <div class="modal-footer" style="align-items:center;">
@@ -3643,6 +4915,8 @@ var ISSUES = [
 (function() {
   function initShopifyModal() {
     if (sessionStorage.getItem('shopifyModalDismissed')) return;
+    if (!sessionStorage.getItem('newAccountSetup')) return;
+    sessionStorage.removeItem('newAccountSetup');
     var modal = document.getElementById('shopify-modal');
     if (!modal) return;
     // Only show when the dashboard screen is actually visible
@@ -3654,6 +4928,13 @@ var ISSUES = [
       if (dash && getComputedStyle(dash).display !== 'none') {
         clearInterval(poll);
         setTimeout(function() {
+          // Dynamically position tail to point at Settings group
+          var settingsEl = document.getElementById('grp-settings');
+          if (settingsEl) {
+            var rect = settingsEl.getBoundingClientRect();
+            var tailCenter = rect.top + rect.height / 2;
+            modal.style.paddingTop = Math.max(8, tailCenter - 27) + 'px';
+          }
           modal.style.display = 'flex';
           requestAnimationFrame(function() {
             requestAnimationFrame(function() {
@@ -3698,5 +4979,43 @@ var ISSUES = [
   initShopifyModal();
 })();
 </script>
+
+<!-- Add Feed Database Modal -->
+<div id="add-feed-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.45);z-index:9999;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s ease;">
+  <div class="modal-box" style="max-width:460px;width:90%;transform:translateY(8px);transition:transform 0.2s ease;">
+    <h3 class="modal-title">Add Database</h3>
+    <p class="modal-desc">Add a new feed database to manage product data imports and exports.</p>
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:20px;">
+      <div>
+        <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Database name</label>
+        <input type="text" placeholder="e.g. Outdoor Research – Shopping" style="width:100%;box-sizing:border-box;" />
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Client</label>
+        <select style="width:100%;box-sizing:border-box;">
+          <option value="" disabled selected>Select client…</option>
+          <option>All Volleyball</option><option>Backcountry</option><option>Craft Brew Alliance</option>
+          <option>Goal Zero</option><option>Link Imaging</option><option>Monkey Sports</option>
+          <option>NW Sportswear</option><option>Outdoor Research</option>
+          <option>People's Choice Beef Jerky</option><option>Trijicon</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Group</label>
+        <select id="add-feed-group-select" style="width:100%;box-sizing:border-box;">
+          <option value="" selected>None (Ungrouped)</option>
+          <option value="grp-monkey-sports">Monkey Sports</option>
+          <option value="grp-backcountry">Backcountry</option>
+          <option value="grp-goal-zero">Goal Zero</option>
+          <option value="__new__">Create new group +</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer" style="margin-top:24px;">
+      <button id="add-feed-cancel" class="btn-secondary" style="width:auto;padding:0 20px;">Cancel</button>
+      <button class="btn-primary" style="width:auto;padding:0 20px;">Add Database</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
