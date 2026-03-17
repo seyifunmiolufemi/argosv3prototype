@@ -9,7 +9,7 @@ a prototype only — no backend, no real data, everything is hardcoded/simulated
 - **Single HTML file** — everything lives in one file (HTML + CSS + JS inline)
 - No frameworks, no build tools, no package.json
 - Deployed to Netlify via GitHub (repo: argosv3prototype, branch: main)
-- Live URL: https://argosv3.netlify.app
+- Live URL: https://argosv3prototype.netlify.app
 
 ## Current File
 `index.html` — this is the only file that matters
@@ -55,7 +55,7 @@ git add .
 git commit -m "describe what changed"
 git push
 ```
-Netlify auto-deploys within seconds. Live at https://argosv3.netlify.app
+Netlify auto-deploys within seconds. Live at https://argosv3prototype.netlify.app
 
 ## What to Build Next
 The following sections still need to be built (in rough priority order):
