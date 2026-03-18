@@ -1584,6 +1584,29 @@ body.dark-mode .modal-select { background:var(--color-bg-primary); }
 body.dark-mode .input-suffix-wrap input { background:var(--color-bg-primary); }
 body.dark-mode .input-suffix-text { background:var(--color-bg-grey25); }
 
+/* ── btn-primary-sm design system update ── */
+.btn-primary-sm { border: 1px solid #1d56c1; box-shadow: 0px 1px 1.7px rgba(13,66,164,0.18), inset 0px 2px 0px rgba(255,255,255,0.25), inset 0px -2px 2.7px rgba(255,255,255,0.28); }
+
+/* ── Filter/dropdown button ── */
+.btn-filter { display:inline-flex; align-items:center; gap:6px; background:#f9fafb; border:1px solid var(--color-border); color:var(--color-text-accent); border-radius:8px; padding:8px 11px; font-size:14px; font-weight:500; cursor:pointer; white-space:nowrap; }
+.btn-filter:hover { background:#f3f4f6; }
+.btn-filter svg { flex-shrink:0; }
+
+/* ── Chip corrections ── */
+.chip-field { background:#dbeafe !important; color:#1d4ed8 !important; border-radius:4px; padding:2px 6px; font-size:12px; font-family:monospace; display:inline-block; }
+.chip-value { background:#dcfce7 !important; color:#166534 !important; border-radius:4px; padding:2px 6px; font-size:12px; font-family:monospace; display:inline-block; }
+.chip-fn    { background:#fef9c3 !important; color:#854d0e !important; border-radius:4px; padding:2px 6px; font-size:12px; font-family:monospace; display:inline-block; }
+.chip-if   { background:#fef3c7; color:#92400e; border-radius:4px; padding:1px 5px; font-size:11px; font-weight:600; display:inline-block; margin-right:4px; }
+.chip-then { background:#dbeafe; color:#1e40af; border-radius:4px; padding:1px 5px; font-size:11px; font-weight:600; display:inline-block; margin-right:4px; }
+.transformer-row--inactive td:not(:first-child) { opacity:0.4; }
+
+/* ── Custom dropdown panel ── */
+.custom-dd-panel { display:none; position:absolute; top:calc(100% + 4px); left:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.10); z-index:500; min-width:200px; padding:8px; }
+.custom-dd-panel.open { display:block; }
+.custom-dd-item { display:flex; align-items:center; gap:8px; padding:7px 10px; cursor:pointer; border-radius:6px; font-size:13px; color:var(--color-text-primary); white-space:nowrap; }
+.custom-dd-item:hover { background:var(--color-bg-grey50); }
+.custom-dd-item.active { color:var(--color-blue); font-weight:500; }
+
 /* ── Toggle switch ── */
 .toggle-switch{position:relative;display:inline-block;width:36px;height:20px;}
 .toggle-switch input{opacity:0;width:0;height:0;}
@@ -1593,7 +1616,7 @@ input:checked+.toggle-slider{background:var(--color-blue);}
 input:checked+.toggle-slider:before{transform:translateX(16px);}
 /* ── Autocomplete ── */
 .autocomplete-wrapper{position:relative;}
-.autocomplete-dropdown{display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1px solid var(--color-border);border-radius:8px;max-height:180px;overflow-y:auto;z-index:200;list-style:none;padding:4px 0;margin:2px 0 0;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.autocomplete-dropdown{display:none;position:fixed;background:white;border:1px solid var(--color-border);border-radius:8px;max-height:180px;overflow-y:auto;z-index:9999;list-style:none;padding:4px 0;margin:0;box-shadow:0 4px 12px rgba(0,0,0,.08);}
 .autocomplete-dropdown li{padding:8px 12px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;}
 .autocomplete-dropdown li:hover{background:var(--color-bg-grey50);}
 /* ── Transformer chips ── */
@@ -3079,14 +3102,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="action-card-title">Run Import</span>
         <span class="action-card-arrow">→</span>
       </div>
-      <div class="action-card" onclick="showToast('Coming soon')">
+      <div class="action-card" onclick="switchDbTab('dataview')">
         <div class="action-card-icon">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         </div>
         <span class="action-card-title">View Data</span>
         <span class="action-card-arrow">→</span>
       </div>
-      <div class="action-card" onclick="showToast('Coming soon')">
+      <div class="action-card" onclick="switchDbTab('exports')">
         <div class="action-card-icon">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
         </div>
@@ -3200,43 +3223,185 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <!-- ══ DATA VIEW TAB ══ -->
   <div class="tab-panel" id="db-tab-dataview">
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+    <!-- top bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
       <div>
-        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Data View</h3>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 3px;">Data View</h3>
         <p style="font-size:13px;color:var(--color-text-caption);margin:0;">View and search your product data</p>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span style="font-size:13px;color:var(--color-text-caption);">Data View <strong style="color:var(--color-text-primary);">51,395</strong> rows</span>
-        <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;">
-          <option>Raw Data</option>
-          <option>Transformed Data</option>
-        </select>
-        <button class="btn-primary-sm" onclick="showToast('Downloading data...')">Download Data</button>
+        <!-- View dropdown -->
+        <div style="position:relative;" id="dv-view-wrap">
+          <button class="btn-filter" id="dv-view-btn" onclick="toggleDvPanel('view')">
+            <span id="dv-view-label">View: Raw Data</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="custom-dd-panel" id="dv-view-panel" style="min-width:160px;">
+            <div class="custom-dd-item active" onclick="setDvView('Raw Data')">Raw Data</div>
+            <div class="custom-dd-item" onclick="setDvView('Transformed Data')">Transformed Data</div>
+          </div>
+        </div>
+        <button class="btn-primary-sm" onclick="dvDownloadAll()">Download Data</button>
       </div>
     </div>
-    <!-- search compound row -->
+    <!-- search row -->
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-      <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;"><option>2 selected</option><option>All fields</option></select>
-      <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;"><option>Contains</option><option>Does not contain</option><option>Equals</option><option>Starts with</option><option>Is empty</option><option>Is not empty</option></select>
-      <input type="text" class="modal-input" placeholder="Enter keyword..." style="padding:6px 10px;font-size:13px;flex:1;min-width:140px;">
-      <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;"><option>Columns: All</option></select>
-      <button class="btn-primary-sm" onclick="showToast('Searching...')">Search</button>
+      <!-- Fields dropdown -->
+      <div style="position:relative;" id="dv-fields-wrap">
+        <button class="btn-filter" id="dv-fields-btn" onclick="toggleDvPanel('fields')">
+          <span id="dv-fields-label">All fields</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="dv-fields-panel" style="min-width:220px;max-height:280px;overflow-y:auto;">
+          <label style="display:flex;align-items:center;gap:8px;padding:5px 4px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dv-fields-all" checked onchange="dvToggleAllFields(this)"> <strong>All fields</strong></label>
+          <hr style="border:none;border-top:1px solid var(--color-border);margin:4px 0;">
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="id" checked> id</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="title" checked> title</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="price" checked> price</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="sale_price" checked> sale_price</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="brand" checked> brand</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="availability" checked> availability</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="condition" checked> condition</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="product_type" checked> product_type</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="google_product_category" checked> google_product_category</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="item_group_id" checked> item_group_id</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="color" checked> color</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="description" checked> description</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="link" checked> link</label>
+        </div>
+      </div>
+      <!-- Operator dropdown -->
+      <div style="position:relative;" id="dv-op-wrap">
+        <button class="btn-filter" id="dv-op-btn" onclick="toggleDvPanel('op')">
+          <span id="dv-op-label">Contains</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="dv-op-panel" style="min-width:180px;">
+          <div class="custom-dd-item active" onclick="setDvOp('Contains')">Contains</div>
+          <div class="custom-dd-item" onclick="setDvOp('Does not contain')">Does not contain</div>
+          <div class="custom-dd-item" onclick="setDvOp('Equals')">Equals</div>
+          <div class="custom-dd-item" onclick="setDvOp('Starts with')">Starts with</div>
+          <div class="custom-dd-item" onclick="setDvOp('Is empty')">Is empty</div>
+          <div class="custom-dd-item" onclick="setDvOp('Is not empty')">Is not empty</div>
+        </div>
+      </div>
+      <input type="text" id="dv-keyword" class="modal-input" placeholder="Enter keyword..." style="padding:8px 11px;font-size:14px;flex:1;min-width:140px;" onkeydown="if(event.key==='Enter')dvSearch()">
+      <!-- Columns dropdown -->
+      <div style="position:relative;" id="dv-cols-wrap">
+        <button class="btn-filter" id="dv-cols-btn" onclick="toggleDvPanel('cols')">
+          Columns: All
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="dv-cols-panel" style="min-width:240px;max-height:340px;overflow-y:auto;right:0;left:auto;">
+          <input type="text" class="modal-input" placeholder="Search columns" style="padding:6px 9px;font-size:13px;margin-bottom:6px;width:100%;box-sizing:border-box;" oninput="dvFilterColPanel(this.value)">
+          <label style="display:flex;align-items:center;gap:8px;padding:5px 4px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dv-cols-all" checked onchange="dvToggleAllCols(this)"> <strong>Select all</strong></label>
+          <hr style="border:none;border-top:1px solid var(--color-border);margin:4px 0;">
+          <div id="dv-col-rows">
+            <div class="dv-col-row" data-col-name="id"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="2" checked> id</label><button onclick="dvDownloadCol('id')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="title"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="3" checked> title</label><button onclick="dvDownloadCol('title')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="price"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="4" checked> price</label><button onclick="dvDownloadCol('price')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="sale_price"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="5" checked> sale_price</label><button onclick="dvDownloadCol('sale_price')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="brand"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="6" checked> brand</label><button onclick="dvDownloadCol('brand')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="availability"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="7" checked> availability</label><button onclick="dvDownloadCol('availability')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="condition"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="8" checked> condition</label><button onclick="dvDownloadCol('condition')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="product_type"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="9" checked> product_type</label><button onclick="dvDownloadCol('product_type')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="google_product_category"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="10" checked> google_product_category</label><button onclick="dvDownloadCol('google_product_category')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="item_group_id"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="11" checked> item_group_id</label><button onclick="dvDownloadCol('item_group_id')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="color"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="12" checked> color</label><button onclick="dvDownloadCol('color')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="description"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="13" checked> description</label><button onclick="dvDownloadCol('description')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="link"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="14" checked> link</label><button onclick="dvDownloadCol('link')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+          </div>
+          <button class="btn-primary-sm" style="width:100%;margin-top:8px;justify-content:center;" onclick="dvDownloadAll()">Download (All)</button>
+        </div>
+      </div>
+      <button class="btn-primary-sm" onclick="dvSearch()">Search</button>
     </div>
+    <!-- data table -->
     <div class="table-card" style="padding:0;overflow:hidden;">
-      <div class="table-scroll">
-        <table class="feed-table" style="font-size:13px;">
-          <colgroup><col style="width:40px;"><col style="width:52px;"><col style="width:9%;"><col style="width:15%;"><col style="width:13%;"><col style="width:16%;"><col style="width:12%;"><col style="width:auto;"></colgroup>
-          <thead><tr><th>#</th><th>Image</th><th>ID</th><th>Title</th><th>Product Type</th><th>Google Product Category</th><th>Description</th><th>Link</th></tr></thead>
-          <tbody>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>1</td><td><div class="img-placeholder">🖼</div></td><td>MVBSUT</td><td>Molten MVB Set Suitcase</td><td>Volleyball &gt; Bags and Backpacks</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Molten</td><td style="color:var(--color-blue);">molten...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>2</td><td><div class="img-placeholder">🖼</div></td><td>TVB-BLU</td><td>Tachikara TVB Set Suitcase</td><td>Volleyball &gt; Bags and Backpacks &gt; Bat Suitcases</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tachikara</td><td style="color:var(--color-blue);">tachikara...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>3</td><td><div class="img-placeholder">🖼</div></td><td>BLCKBLSTR</td><td>Block Blaster Training Aid</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>4</td><td><div class="img-placeholder">🖼</div></td><td>BUMBLCK</td><td>Bumper Blocker</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>5</td><td><div class="img-placeholder">🖼</div></td><td>BLZ4000</td><td>Coaches Spike Set Stand with Ball Nets</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Blizter</td><td style="color:var(--color-blue);">blizter...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>6</td><td><div class="img-placeholder">🖼</div></td><td>FNGRSUP</td><td>Finger Supports 10-Pack</td><td>Volleyball &gt; Accessories &gt; Finger Protection</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Mikasa</td><td style="color:var(--color-blue);">mikasa...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>7</td><td><div class="img-placeholder">🖼</div></td><td>NETXT</td><td>Net Extender Training Aid</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>8</td><td><div class="img-placeholder">🖼</div></td><td>PASSCHR</td><td>Pass Catcher Target</td><td>Volleyball &gt; Coaching Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
-            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>9</td><td><div class="img-placeholder">🖼</div></td><td>SPIKCHGR</td><td>Spike Challenger Pro</td><td>Volleyball &gt; Spiking Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
+      <div style="overflow-x:auto;">
+        <table class="feed-table" id="dv-table" style="font-size:13px;min-width:1200px;">
+          <colgroup>
+            <col style="width:36px;"><!-- # -->
+            <col style="width:48px;"><!-- image -->
+            <col style="width:90px;"><!-- id -->
+            <col style="width:160px;"><!-- title -->
+            <col style="width:72px;"><!-- price -->
+            <col style="width:80px;"><!-- sale_price -->
+            <col style="width:100px;"><!-- brand -->
+            <col style="width:90px;"><!-- availability -->
+            <col style="width:60px;"><!-- condition -->
+            <col style="width:160px;"><!-- product_type -->
+            <col style="width:200px;"><!-- google_product_category -->
+            <col style="width:100px;"><!-- item_group_id -->
+            <col style="width:80px;"><!-- color -->
+            <col style="width:120px;"><!-- description -->
+            <col style="width:90px;"><!-- link -->
+          </colgroup>
+          <thead><tr>
+            <th>#</th><th>Image</th><th>ID</th><th>Title</th>
+            <th>Price</th><th>Sale Price</th><th>Brand</th>
+            <th>Availability</th><th>Condition</th>
+            <th>Product Type</th><th>Google Product Category</th>
+            <th>Item Group ID</th><th>Color</th>
+            <th>Description</th><th>Link</th>
+          </tr></thead>
+          <tbody id="dv-tbody">
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="mvbsut molten mvb set suitcase 49.95 44.95 molten in stock new volleyball bags backpacks sporting goods team sports mvbsut-grp blue/white">
+              <td>1</td><td><div class="img-placeholder">🖼</div></td><td>MVBSUT</td><td>Molten MVB Set Suitcase</td>
+              <td>$49.95</td><td>$44.95</td><td>Molten</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Bags and Backpacks</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>MVBSUT-GRP</td><td>Blue/White</td><td>Molten ball bag</td><td style="color:var(--color-blue);">molten...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="tvb-blu tachikara tvb set suitcase 34.99 tachikara in stock new volleyball bags backpacks bat suitcases sporting goods team sports tvb-blu-grp blue">
+              <td>2</td><td><div class="img-placeholder">🖼</div></td><td>TVB-BLU</td><td>Tachikara TVB Set Suitcase</td>
+              <td>$34.99</td><td></td><td>Tachikara</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Bags &gt; Bat Suitcases</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>TVB-BLU-GRP</td><td>Blue</td><td>Tachikara ball bag</td><td style="color:var(--color-blue);">tachikara...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="blckblstr block blaster training aid 89.00 79.00 tandem sport out of stock new volleyball training blck-grp black">
+              <td>3</td><td><div class="img-placeholder">🖼</div></td><td>BLCKBLSTR</td><td>Block Blaster Training Aid</td>
+              <td>$89.00</td><td>$79.00</td><td>Tandem Sport</td><td>Out of Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>BLCK-GRP</td><td>Black</td><td>Training aid</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="bumblck bumper blocker 24.95 tandem sport in stock new volleyball training bumblck-grp yellow">
+              <td>4</td><td><div class="img-placeholder">🖼</div></td><td>BUMBLCK</td><td>Bumper Blocker</td>
+              <td>$24.95</td><td></td><td>Tandem Sport</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>BUMBLCK-GRP</td><td>Yellow</td><td>Blocker trainer</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="blz4000 coaches spike set stand ball nets 149.99 129.99 blitzter in stock new volleyball training blz4000-grp red">
+              <td>5</td><td><div class="img-placeholder">🖼</div></td><td>BLZ4000</td><td>Coaches Spike Set Stand with Ball Nets</td>
+              <td>$149.99</td><td>$129.99</td><td>Blitzter</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>BLZ4000-GRP</td><td>Red</td><td>Spike stand</td><td style="color:var(--color-blue);">blizter...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="fngrsup finger supports 10-pack 12.99 9.99 mikasa in stock new volleyball accessories finger protection fngrsup-grp white">
+              <td>6</td><td><div class="img-placeholder">🖼</div></td><td>FNGRSUP</td><td>Finger Supports 10-Pack</td>
+              <td>$12.99</td><td>$9.99</td><td>Mikasa</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Accessories &gt; Finger Protection</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>FNGRSUP-GRP</td><td>White</td><td>Finger supports</td><td style="color:var(--color-blue);">mikasa...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="netxt net extender training aid 39.95 tandem sport out of stock new volleyball training netxt-grp black">
+              <td>7</td><td><div class="img-placeholder">🖼</div></td><td>NETXT</td><td>Net Extender Training Aid</td>
+              <td>$39.95</td><td></td><td>Tandem Sport</td><td>Out of Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>NETXT-GRP</td><td>Black</td><td>Net extender</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="passchr pass catcher target 19.99 17.99 tandem sport in stock new volleyball coaching passchr-grp orange">
+              <td>8</td><td><div class="img-placeholder">🖼</div></td><td>PASSCHR</td><td>Pass Catcher Target</td>
+              <td>$19.99</td><td>$17.99</td><td>Tandem Sport</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Coaching Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>PASSCHR-GRP</td><td>Orange</td><td>Pass catcher</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="spikchgr spike challenger pro 64.95 54.95 tandem sport in stock new volleyball spiking spikchgr-grp green">
+              <td>9</td><td><div class="img-placeholder">🖼</div></td><td>SPIKCHGR</td><td>Spike Challenger Pro</td>
+              <td>$64.95</td><td>$54.95</td><td>Tandem Sport</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Spiking Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>SPIKCHGR-GRP</td><td>Green</td><td>Spike trainer</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr id="dv-no-results" style="display:none;"><td colspan="15" style="text-align:center;padding:24px;color:var(--color-text-caption);">No results found</td></tr>
           </tbody>
         </table>
       </div>
@@ -3244,14 +3409,14 @@ document.addEventListener('DOMContentLoaded', function() {
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;font-size:13px;color:var(--color-text-caption);">
       <span>Showing 1 to 9 of 100 results</span>
       <div style="display:flex;align-items:center;gap:8px;">
-        <select class="modal-select" style="padding:4px 8px;font-size:12px;width:auto;"><option>10 per page</option><option>25 per page</option><option>50 per page</option></select>
+        <button class="btn-filter" style="font-size:12px;padding:4px 8px;height:28px;">10 per page <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
         <div style="display:flex;gap:4px;">
-          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Previous page')">‹</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">‹</button>
           <button class="btn-primary-sm" style="padding:4px 8px;font-size:12px;height:28px;">1</button>
-          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Page 2')">2</button>
-          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Page 3')">3</button>
-          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Page 4')">4</button>
-          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Next page')">›</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">2</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">3</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">4</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">›</button>
         </div>
       </div>
     </div>
@@ -3269,26 +3434,45 @@ document.addEventListener('DOMContentLoaded', function() {
         <button class="btn-primary-sm" onclick="openAddTransformerModal()">+ Add Transformer</button>
       </div>
     </div>
+    <!-- filter row -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;position:relative;">
         <span style="font-size:13px;color:var(--color-text-caption);">Filter by field:</span>
-        <select class="modal-select" style="padding:5px 10px;font-size:13px;width:auto;"><option>All Fields</option></select>
+        <button class="btn-filter" id="tf-filter-btn" onclick="toggleTfFilterPanel()">
+          <span id="tf-filter-label">All Fields</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="tf-filter-panel" style="top:calc(100% + 4px);left:100px;min-width:180px;">
+          <div class="custom-dd-item active" onclick="filterTransformerByField('')">All Fields</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('description')">description</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('title')">title</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('brand')">brand</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('salePriceEffectiveDate')">salePriceEffectiveDate</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('product_type')">product_type</div>
+        </div>
       </div>
-      <span style="font-size:13px;color:var(--color-text-caption);margin-left:auto;">7 transformers · 5 active</span>
+      <span style="font-size:13px;color:var(--color-text-caption);margin-left:auto;" id="tf-count">7 transformers · 5 active</span>
     </div>
     <div class="table-card" style="padding:0;overflow:hidden;">
       <div class="table-scroll">
-        <table class="feed-table">
-          <colgroup><col style="width:70px;"><col style="width:auto;"><col style="width:auto;"><col style="width:110px;"><col style="width:70px;"><col style="width:70px;"></colgroup>
-          <thead><tr><th>Status</th><th>Condition (If)</th><th>Action (Then)</th><th>Exports</th><th>Reorder</th><th>Actions</th></tr></thead>
-          <tbody>
-            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[description]</span> contains <span class="chip-value">"Tandem"</span></td><td>set <span class="chip-field">[description]</span> to <span class="chip-field">[description]</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
-            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[title]</span> ≠ <span class="chip-value">"al mflds"</span></td><td>set <span class="chip-field">[sale_price]</span> to <span class="chip-fn">{custom_label_0}</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
-            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[brand]</span> equals <span class="chip-value">"Tandem"</span></td><td>set <span class="chip-field">[brand]</span> to <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
-            <tr><td><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></td><td><span class="chip-fn">{toLowerCase}</span> <span class="chip-field">[title]</span> are <span class="chip-value">"thinking"</span></td><td>set <span class="chip-field">[brand]</span> to <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
-            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>if <span class="chip-field">[salePriceEffectiveDate]</span> are <span class="chip-value">""</span></td><td>set <span class="chip-field">[salePriceEffectiveDate]</span> to <span class="chip-value">"null_alt_check"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
-            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[product_type]</span> contains <span class="chip-value">"Training"</span></td><td>set <span class="chip-field">[condition]</span> to <span class="chip-value">"new"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
-            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[title]</span> contains <span class="chip-value">"Volleyball"</span></td><td>set <span class="chip-field">[google_product_category]</span> to <span class="chip-value">"Sporting Goods"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+        <table class="feed-table" id="tf-table">
+          <colgroup><col style="width:70px;"><col style="width:auto;"><col style="width:auto;"><col style="width:110px;"><col style="width:90px;"><col style="width:80px;"></colgroup>
+          <thead><tr>
+            <th>Status</th>
+            <th>Condition (IF)</th>
+            <th>Action (THEN)</th>
+            <th>Exports</th>
+            <th>Reorder</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody id="tf-tbody">
+            <tr data-if="description"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[description]</span> <span style="font-size:13px;color:var(--color-text-caption);">contains</span> <span class="chip-value">"Tandem"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[description]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-field">[description]</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="title"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[title]</span> <span style="font-size:13px;color:var(--color-text-caption);">≠</span> <span class="chip-value">"al mflds"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[sale_price]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-fn">{custom_label_0}</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="brand"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[brand]</span> <span style="font-size:13px;color:var(--color-text-caption);">equals</span> <span class="chip-value">"Tandem"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[brand]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="title" class="transformer-row--inactive"><td><label class="toggle-switch"><input type="checkbox" onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-fn">{toLowerCase}</span> <span class="chip-field">[title]</span> <span style="font-size:13px;color:var(--color-text-caption);">are</span> <span class="chip-value">"thinking"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[brand]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="salePriceEffectiveDate"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[salePriceEffectiveDate]</span> <span style="font-size:13px;color:var(--color-text-caption);">are</span> <span class="chip-value">""</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[salePriceEffectiveDate]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"null_alt_check"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="product_type"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[product_type]</span> <span style="font-size:13px;color:var(--color-text-caption);">contains</span> <span class="chip-value">"Training"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[condition]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"new"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="title"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[title]</span> <span style="font-size:13px;color:var(--color-text-caption);">contains</span> <span class="chip-value">"Volleyball"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[google_product_category]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"Sporting Goods"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -3339,16 +3523,54 @@ document.addEventListener('DOMContentLoaded', function() {
       <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showToast('Exporting logs...')">⬇ Export Logs</button>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <!-- Name filter -->
       <span style="font-size:13px;color:var(--color-text-caption);">Name:</span>
-      <select class="modal-select" style="padding:5px 9px;font-size:13px;width:auto;"><option>All</option></select>
+      <div style="position:relative;">
+        <button class="btn-filter" style="font-size:13px;padding:6px 10px;" onclick="toggleLogFilter('name')">
+          <span id="lf-name-label">All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="lf-name-panel" style="min-width:200px;">
+          <div class="custom-dd-item active" onclick="setLogFilter('name','','All')">All</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Google Export_Opt','Google Export_Opt')">Google Export_Opt</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Bing','Bing')">Bing</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Facebook','Facebook')">Facebook</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','All Imports','All Imports')">All Imports</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Netsuite Product Feed','Netsuite Product Feed')">Netsuite Product Feed</div>
+        </div>
+      </div>
+      <!-- Operation filter -->
       <span style="font-size:13px;color:var(--color-text-caption);">Operation:</span>
-      <select class="modal-select" style="padding:5px 9px;font-size:13px;width:auto;"><option>All</option><option>Import</option><option>Export</option><option>Download</option></select>
+      <div style="position:relative;">
+        <button class="btn-filter" style="font-size:13px;padding:6px 10px;" onclick="toggleLogFilter('op')">
+          <span id="lf-op-label">All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="lf-op-panel" style="min-width:160px;">
+          <div class="custom-dd-item active" onclick="setLogFilter('op','','All')">All</div>
+          <div class="custom-dd-item" onclick="setLogFilter('op','Export','Export')">Export</div>
+          <div class="custom-dd-item" onclick="setLogFilter('op','Import','Import')">Import</div>
+          <div class="custom-dd-item" onclick="setLogFilter('op','Download','Download')">Download</div>
+        </div>
+      </div>
+      <!-- Status filter -->
       <span style="font-size:13px;color:var(--color-text-caption);">Status:</span>
-      <select class="modal-select" style="padding:5px 9px;font-size:13px;width:auto;"><option>All</option><option>Successful</option><option>Failed</option><option>Running</option></select>
+      <div style="position:relative;">
+        <button class="btn-filter" style="font-size:13px;padding:6px 10px;" onclick="toggleLogFilter('status')">
+          <span id="lf-status-label">All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="lf-status-panel" style="min-width:160px;">
+          <div class="custom-dd-item active" onclick="setLogFilter('status','','All')">All</div>
+          <div class="custom-dd-item" onclick="setLogFilter('status','Successful','Successful')">Successful</div>
+          <div class="custom-dd-item" onclick="setLogFilter('status','Failed','Failed')">Failed</div>
+          <div class="custom-dd-item" onclick="setLogFilter('status','Running','Running')">Running</div>
+        </div>
+      </div>
       <span style="font-size:13px;color:var(--color-text-caption);">From:</span>
-      <input type="date" class="modal-input" value="2026-01-02" style="padding:5px 9px;font-size:13px;width:auto;">
+      <input type="date" id="lf-from" class="modal-input" value="2026-01-02" style="padding:6px 9px;font-size:13px;width:auto;" onchange="filterLogs()">
       <span style="font-size:13px;color:var(--color-text-caption);">To:</span>
-      <input type="date" class="modal-input" value="2026-01-02" style="padding:5px 9px;font-size:13px;width:auto;">
+      <input type="date" id="lf-to" class="modal-input" value="2026-01-02" style="padding:6px 9px;font-size:13px;width:auto;" onchange="filterLogs()">
     </div>
     <div class="table-card" style="padding:0;overflow:hidden;">
       <div class="table-scroll">
@@ -3356,12 +3578,12 @@ document.addEventListener('DOMContentLoaded', function() {
           <colgroup><col style="width:22%;"><col style="width:10%;"><col style="width:10%;"><col style="width:auto;"></colgroup>
           <thead><tr><th>Name</th><th>Operation</th><th>Status</th><th>Result</th></tr></thead>
           <tbody>
-            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Google Export_Opt</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
-            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Bing</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
-            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Facebook</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
-            <tr><td><span id="log-expand-btn" onclick="toggleLogExpand()" style="cursor:pointer;color:var(--color-text-caption);font-size:11px;margin-right:4px;">∨</span><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">All Imports</a></td><td>Import</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Importing 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="Google Export_Opt" data-log-op="Export" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Google Export_Opt</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="Bing" data-log-op="Export" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Bing</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="Facebook" data-log-op="Export" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Facebook</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="All Imports" data-log-op="Import" data-log-status="Successful" data-log-date="2026-01-02" id="log-imports-row"><td><span id="log-expand-btn" onclick="toggleLogExpand()" style="cursor:pointer;color:var(--color-text-caption);font-size:11px;margin-right:4px;">∨</span><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">All Imports</a></td><td>Import</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Importing 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
             <tr class="log-sub-row" style="display:none;"><td colspan="4"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Name</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Type</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Load</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 0;text-align:left;">Update</th></tr></thead><tbody><tr><td style="padding:4px 12px 4px 0;">Shopify Products</td><td style="padding:4px 12px 4px 0;">Main feed</td><td style="padding:4px 12px 4px 0;">24,013</td><td style="padding:4px 0;">0</td></tr><tr><td style="padding:4px 12px 4px 0;">Inventory Levels</td><td style="padding:4px 12px 4px 0;">Join</td><td style="padding:4px 12px 4px 0;">45,465</td><td style="padding:4px 0;">33,224</td></tr><tr><td style="padding:4px 12px 4px 0;">Pricing Override</td><td style="padding:4px 12px 4px 0;">Join</td><td style="padding:4px 12px 4px 0;">3,344</td><td style="padding:4px 0;">5,675</td></tr></tbody></table></td></tr>
-            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Netsuite Product Feed</a></td><td>Download</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Downloading Import File · 5:20:32 PM</td></tr>
+            <tr data-log-name="Netsuite Product Feed" data-log-op="Download" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Netsuite Product Feed</a></td><td>Download</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Downloading Import File · 5:20:32 PM</td></tr>
           </tbody>
         </table>
       </div>
@@ -4090,59 +4312,70 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- ══ ADD TRANSFORMER MODAL ══ -->
 <div id="add-transformer-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
-  <div class="modal-box" style="max-width:540px;width:92%;">
+  <div class="modal-box" style="max-width:480px;width:92%;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
       <h3 class="modal-title" style="margin:0;">Add Transformer</h3>
       <button onclick="closeAddTransformerModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-text-caption);line-height:1;">×</button>
     </div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:200px;">
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);margin-bottom:10px;">Condition (If)</div>
-        <div style="margin-bottom:10px;">
+    <!-- IF section -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:12px;">
+        <span class="chip-if" style="font-size:12px;padding:2px 7px;">IF</span>
+        <span>Condition</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <div style="flex:1;">
           <label class="field-label" style="font-size:12px;">Field</label>
-          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
-            <option>title</option><option>description</option><option>brand</option><option>id</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option><option>mpn</option><option>gtin</option><option>color</option><option>size</option><option>material</option><option>custom_label_0</option><option>custom_label_1</option><option>custom_label_2</option>
+          <select class="modal-select" id="tf-modal-if-field" style="font-size:13px;padding:7px 10px;">
+            <option>title</option><option>description</option><option>brand</option><option>id</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option><option>item_group_id</option><option>color</option><option>custom_label_0</option><option>custom_label_1</option><option>custom_label_2</option>
           </select>
         </div>
-        <div style="margin-bottom:10px;">
+        <div style="flex:1;">
           <label class="field-label" style="font-size:12px;">Operator</label>
-          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+          <select class="modal-select" id="tf-modal-if-op" style="font-size:13px;padding:7px 10px;">
             <option>contains</option><option>does not contain</option><option>equals</option><option>does not equal</option><option>starts with</option><option>ends with</option><option>is empty</option><option>is not empty</option><option>matches regex</option>
           </select>
         </div>
-        <div>
-          <label class="field-label" style="font-size:12px;">Value</label>
-          <input type="text" class="modal-input" placeholder="e.g. Tandem" style="font-size:13px;padding:7px 10px;">
-        </div>
       </div>
-      <div style="flex:1;min-width:200px;">
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);margin-bottom:10px;">Action (Then)</div>
-        <div style="margin-bottom:10px;">
+      <div>
+        <label class="field-label" style="font-size:12px;">Value</label>
+        <input type="text" id="tf-modal-if-val" class="modal-input" placeholder='e.g. "Tandem"' style="font-size:13px;padding:7px 10px;">
+      </div>
+    </div>
+    <div style="height:1px;background:var(--color-border);margin-bottom:16px;"></div>
+    <!-- THEN section -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:12px;">
+        <span class="chip-then" style="font-size:12px;padding:2px 7px;">THEN</span>
+        <span>Action</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <div style="flex:1;">
           <label class="field-label" style="font-size:12px;">Target Field</label>
-          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
-            <option>title</option><option>description</option><option>brand</option><option>id</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option>
+          <select class="modal-select" id="tf-modal-then-field" style="font-size:13px;padding:7px 10px;">
+            <option>title</option><option>description</option><option>brand</option><option>id</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option>
           </select>
         </div>
-        <div style="margin-bottom:10px;">
+        <div style="flex:1;">
           <label class="field-label" style="font-size:12px;">Action</label>
-          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+          <select class="modal-select" id="tf-modal-then-action" style="font-size:13px;padding:7px 10px;">
             <option>Set to</option><option>Replace</option><option>Append</option><option>Prepend</option><option>To lowercase</option><option>To uppercase</option><option>Remove HTML</option><option>Truncate to</option><option>Set to empty</option>
           </select>
         </div>
-        <div>
-          <label class="field-label" style="font-size:12px;">Set to</label>
-          <input type="text" class="modal-input" placeholder="Value or field reference" style="font-size:13px;padding:7px 10px;">
-        </div>
+      </div>
+      <div>
+        <label class="field-label" style="font-size:12px;">Value</label>
+        <input type="text" id="tf-modal-then-val" class="modal-input" placeholder='e.g. "Tandem Sport"' style="font-size:13px;padding:7px 10px;">
       </div>
     </div>
-    <div style="margin-top:14px;">
+    <div style="margin-bottom:16px;">
       <label class="field-label" style="font-size:12px;">Apply to Exports</label>
       <select class="modal-select" style="font-size:13px;padding:7px 10px;">
         <option selected>All Exports</option><option>Google Shopping</option><option>Bing Ads</option><option>Facebook</option><option>Klorija</option>
       </select>
     </div>
-    <div class="modal-footer" style="margin-top:18px;display:flex;gap:10px;align-items:center;">
-      <button class="btn-primary-sm" onclick="closeAddTransformerModal();showToast('Transformer added')">Add Transformer</button>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:4px;">
+      <button class="btn-primary-sm" onclick="submitAddTransformer()">Add Transformer</button>
       <button class="btn-text-link grey" onclick="closeAddTransformerModal()">Cancel</button>
     </div>
   </div>
@@ -4827,13 +5060,16 @@ var ISSUES = [
     document.getElementById('integrations-page').style.display = 'none';
   }
 
+  function hideFeedDetailPages() {
+    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+  }
+  window.hideFeedDetailPages = hideFeedDetailPages;
+
   function showFeedDataPage() {
     document.getElementById('ic-list').style.display = 'none';
     document.getElementById('ic-detail').style.display = 'none';
     document.getElementById('integrations-page').style.display = 'none';
-    var dbp = document.getElementById('db-overview-page'); if (dbp) dbp.style.display = 'none';
-    var aip = document.getElementById('add-import-page'); if (aip) aip.style.display = 'none';
-    var cip = document.getElementById('configure-import-page'); if (cip) cip.style.display = 'none';
+    hideFeedDetailPages();
     var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'block';
     window.scrollTo(0, 0);
   }
@@ -5380,6 +5616,9 @@ var ISSUES = [
         e.stopPropagation();
         document.querySelectorAll('.sb-kid').forEach(function (k) { k.classList.remove('sb-kid-active'); });
         this.classList.add('sb-kid-active');
+        // hide all feed sub-pages on any nav click
+        if (typeof hideFeedDetailPages === 'function') hideFeedDetailPages();
+        var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'none';
         if (this.getAttribute('data-nav') === 'issue-center') {
           backToList();
         }
@@ -5667,6 +5906,205 @@ var ISSUES = [
       }, 250);
     });
   }
+/* ══════════════════════════════════════════
+   FIX EXTENSIONS (Fixes 1–9)
+══════════════════════════════════════════ */
+
+/* ── close all custom dropdown panels on outside click ── */
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('[id$="-wrap"]') && !e.target.closest('.custom-dd-panel') &&
+      !e.target.closest('#tf-filter-btn') && !e.target.closest('#tf-filter-panel') &&
+      !e.target.closest('[id^="lf-"]')) {
+    document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+  }
+});
+
+/* ── Data View panel toggles ── */
+var _dvOpenPanel = null;
+window.toggleDvPanel = function(which) {
+  var panel = document.getElementById('dv-' + which + '-panel');
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+  if (!isOpen) panel.classList.add('open');
+};
+window.setDvView = function(val) {
+  document.getElementById('dv-view-label').textContent = 'View: ' + val;
+  document.querySelectorAll('#dv-view-panel .custom-dd-item').forEach(function(el){ el.classList.toggle('active', el.textContent===val); });
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+};
+window.setDvOp = function(val) {
+  document.getElementById('dv-op-label').textContent = val;
+  document.querySelectorAll('#dv-op-panel .custom-dd-item').forEach(function(el){ el.classList.toggle('active', el.textContent===val); });
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+};
+window.dvToggleAllFields = function(cb) {
+  document.querySelectorAll('.dv-field-cb').forEach(function(c){ c.checked = cb.checked; });
+};
+window.dvToggleAllCols = function(cb) {
+  document.querySelectorAll('.dv-col-toggle').forEach(function(c){ c.checked = cb.checked; c.dispatchEvent(new Event('change')); });
+};
+window.dvFilterColPanel = function(q) {
+  document.querySelectorAll('.dv-col-row').forEach(function(row){
+    row.style.display = row.getAttribute('data-col-name').includes(q.toLowerCase()) ? '' : 'none';
+  });
+};
+
+/* column visibility */
+document.addEventListener('change', function(e) {
+  var cb = e.target;
+  if (!cb.classList.contains('dv-col-toggle')) return;
+  var idx = parseInt(cb.getAttribute('data-col-index'), 10);
+  var table = document.getElementById('dv-table');
+  if (!table) return;
+  var cols = table.querySelectorAll('colgroup col');
+  var ths = table.querySelectorAll('thead th');
+  var tds = table.querySelectorAll('tbody td:nth-child(' + (idx+1) + ')');
+  var vis = cb.checked;
+  if (cols[idx]) cols[idx].style.display = vis ? '' : 'none';
+  if (ths[idx]) ths[idx].style.display = vis ? '' : 'none';
+  table.querySelectorAll('tbody tr').forEach(function(tr){
+    var td = tr.querySelectorAll('td')[idx];
+    if (td) td.style.display = vis ? '' : 'none';
+  });
+});
+
+/* ── Data View search ── */
+window.dvSearch = function() {
+  var q = (document.getElementById('dv-keyword') ? document.getElementById('dv-keyword').value : '').toLowerCase().trim();
+  var rows = document.querySelectorAll('#dv-tbody tr:not(#dv-no-results)');
+  var any = false;
+  rows.forEach(function(tr) {
+    var data = (tr.getAttribute('data-search') || '').toLowerCase();
+    var show = !q || data.includes(q);
+    tr.style.display = show ? '' : 'none';
+    if (show) any = true;
+  });
+  var nr = document.getElementById('dv-no-results');
+  if (nr) nr.style.display = (!any && q) ? '' : 'none';
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+};
+
+/* ── Data View download ── */
+var DV_ROWS = [
+  ['1','MVBSUT','Molten MVB Set Suitcase','$49.95','$44.95','Molten','In Stock','New','Volleyball > Bags and Backpacks','Sporting Goods > Team Sports > Volleyball','MVBSUT-GRP','Blue/White','Molten ball bag','https://allvolleyball.com/mvbsut'],
+  ['2','TVB-BLU','Tachikara TVB Set Suitcase','$34.99','','Tachikara','In Stock','New','Volleyball > Bags > Bat Suitcases','Sporting Goods > Team Sports > Volleyball','TVB-BLU-GRP','Blue','Tachikara ball bag','https://allvolleyball.com/tvb-blu'],
+  ['3','BLCKBLSTR','Block Blaster Training Aid','$89.00','$79.00','Tandem Sport','Out of Stock','New','Volleyball > Training Equipment','Sporting Goods > Team Sports > Volleyball','BLCK-GRP','Black','Training aid','https://allvolleyball.com/blckblstr'],
+  ['4','BUMBLCK','Bumper Blocker','$24.95','','Tandem Sport','In Stock','New','Volleyball > Training Equipment','Sporting Goods > Team Sports > Volleyball','BUMBLCK-GRP','Yellow','Blocker trainer','https://allvolleyball.com/bumblck'],
+  ['5','BLZ4000','Coaches Spike Set Stand','$149.99','$129.99','Blitzter','In Stock','New','Volleyball > Training Equipment','Sporting Goods > Team Sports > Volleyball','BLZ4000-GRP','Red','Spike stand','https://allvolleyball.com/blz4000'],
+  ['6','FNGRSUP','Finger Supports 10-Pack','$12.99','$9.99','Mikasa','In Stock','New','Volleyball > Accessories > Finger Protection','Sporting Goods > Team Sports > Volleyball','FNGRSUP-GRP','White','Finger supports','https://allvolleyball.com/fngrsup'],
+  ['7','NETXT','Net Extender Training Aid','$39.95','','Tandem Sport','Out of Stock','New','Volleyball > Training Equipment','Sporting Goods > Team Sports > Volleyball','NETXT-GRP','Black','Net extender','https://allvolleyball.com/netxt'],
+  ['8','PASSCHR','Pass Catcher Target','$19.99','$17.99','Tandem Sport','In Stock','New','Volleyball > Coaching Equipment','Sporting Goods > Team Sports > Volleyball','PASSCHR-GRP','Orange','Pass catcher','https://allvolleyball.com/passchr'],
+  ['9','SPIKCHGR','Spike Challenger Pro','$64.95','$54.95','Tandem Sport','In Stock','New','Volleyball > Spiking Equipment','Sporting Goods > Team Sports > Volleyball','SPIKCHGR-GRP','Green','Spike trainer','https://allvolleyball.com/spikchgr']
+];
+var DV_HEADERS = ['#','id','title','price','sale_price','brand','availability','condition','product_type','google_product_category','item_group_id','color','description','link'];
+window.dvDownloadAll = function() {
+  var csv = DV_HEADERS.join(',') + '\n' + DV_ROWS.map(function(r){ return r.map(function(c){ return '"'+c+'"'; }).join(','); }).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'data-view.csv'; a.click();
+};
+window.dvDownloadCol = function(colName) {
+  var idx = DV_HEADERS.indexOf(colName);
+  if (idx < 0) return;
+  var csv = colName + '\n' + DV_ROWS.map(function(r){ return '"' + (r[idx]||'') + '"'; }).join('\n');
+  var blob = new Blob([csv], {type:'text/csv'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = colName + '.csv'; a.click();
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+};
+
+/* ── Transformers ── */
+window.toggleTransformerRow = function(cb) {
+  var tr = cb.closest('tr');
+  if (!tr) return;
+  tr.classList.toggle('transformer-row--inactive', !cb.checked);
+};
+window.moveTransformerRow = function(btn, dir) {
+  var tr = btn.closest('tr');
+  var tbody = tr.parentNode;
+  if (dir === -1 && tr.previousElementSibling) tbody.insertBefore(tr, tr.previousElementSibling);
+  else if (dir === 1 && tr.nextElementSibling) tbody.insertBefore(tr.nextElementSibling, tr);
+};
+window.updateTfCount = function() {
+  var rows = document.querySelectorAll('#tf-tbody tr');
+  var active = document.querySelectorAll('#tf-tbody tr input:checked').length;
+  var el = document.getElementById('tf-count');
+  if (el) el.textContent = rows.length + ' transformers · ' + active + ' active';
+};
+window.toggleTfFilterPanel = function() {
+  var panel = document.getElementById('tf-filter-panel');
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+  if (!isOpen) panel.classList.add('open');
+};
+window.filterTransformerByField = function(field) {
+  document.getElementById('tf-filter-label').textContent = field || 'All Fields';
+  document.querySelectorAll('#tf-tbody tr').forEach(function(tr){
+    var ifField = tr.getAttribute('data-if') || '';
+    tr.style.display = (!field || ifField === field) ? '' : 'none';
+  });
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+};
+window.submitAddTransformer = function() {
+  var ifField = document.getElementById('tf-modal-if-field') ? document.getElementById('tf-modal-if-field').value : 'title';
+  var ifOp    = document.getElementById('tf-modal-if-op') ? document.getElementById('tf-modal-if-op').value : 'contains';
+  var ifVal   = document.getElementById('tf-modal-if-val') ? document.getElementById('tf-modal-if-val').value.trim() : '';
+  var thenField = document.getElementById('tf-modal-then-field') ? document.getElementById('tf-modal-then-field').value : 'title';
+  var thenAction = document.getElementById('tf-modal-then-action') ? document.getElementById('tf-modal-then-action').value : 'Set to';
+  var thenVal = document.getElementById('tf-modal-then-val') ? document.getElementById('tf-modal-then-val').value.trim() : '';
+  if (!ifVal && ifOp !== 'is empty' && ifOp !== 'is not empty') { showToast('Please enter a condition value'); return; }
+  var tbody = document.getElementById('tf-tbody');
+  if (tbody) {
+    var tr = document.createElement('tr');
+    tr.setAttribute('data-if', ifField);
+    tr.innerHTML = '<td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td>'
+      + '<td><span class="chip-if">IF</span><span class="chip-field">[' + ifField + ']</span> <span style="font-size:13px;color:var(--color-text-caption);">' + ifOp + '</span> <span class="chip-value">"' + ifVal + '"</span></td>'
+      + '<td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[' + thenField + ']</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"' + thenVal + '"</span></td>'
+      + '<td style="font-size:12px;color:var(--color-text-caption);">All Exports</td>'
+      + '<td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td>'
+      + '<td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest(\'tr\').remove();updateTfCount()">Delete</div></div></div></td>';
+    tbody.insertBefore(tr, tbody.firstChild);
+  }
+  closeAddTransformerModal();
+  updateTfCount();
+  showToast('Transformer added');
+};
+
+/* ── Logs filters ── */
+var _logFilters = {name:'', op:'', status:''};
+window.toggleLogFilter = function(which) {
+  var panel = document.getElementById('lf-' + which + '-panel');
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+  if (!isOpen) panel.classList.add('open');
+};
+window.setLogFilter = function(type, val, label) {
+  _logFilters[type] = val;
+  var lbl = {name:'lf-name-label', op:'lf-op-label', status:'lf-status-label'}[type];
+  var labelEl = document.getElementById(lbl);
+  if (labelEl) labelEl.textContent = label;
+  document.querySelectorAll('.custom-dd-panel.open').forEach(function(p){ p.classList.remove('open'); });
+  filterLogs();
+};
+window.filterLogs = function() {
+  var fromVal = document.getElementById('lf-from') ? document.getElementById('lf-from').value : '';
+  var toVal   = document.getElementById('lf-to')   ? document.getElementById('lf-to').value   : '';
+  document.querySelectorAll('#db-tab-logs .feed-table tbody tr:not(.log-sub-row)').forEach(function(tr){
+    var n = tr.getAttribute('data-log-name') || '';
+    var o = tr.getAttribute('data-log-op') || '';
+    var s = tr.getAttribute('data-log-status') || '';
+    var d = tr.getAttribute('data-log-date') || '';
+    var pass = true;
+    if (_logFilters.name && n !== _logFilters.name) pass = false;
+    if (_logFilters.op   && o !== _logFilters.op)   pass = false;
+    if (_logFilters.status && s !== _logFilters.status) pass = false;
+    if (fromVal && d < fromVal) pass = false;
+    if (toVal   && d > toVal)   pass = false;
+    tr.style.display = pass ? '' : 'none';
+  });
+};
+
   initShopifyModal();
 })();
 
@@ -5690,14 +6128,21 @@ var ISSUES = [
       if (!wrapper) return;
       var dd = wrapper.querySelector('.autocomplete-dropdown');
       if (!dd) return;
+      function positionDd() {
+        var rect = input.getBoundingClientRect();
+        dd.style.top = (rect.bottom + 2) + 'px';
+        dd.style.left = rect.left + 'px';
+        dd.style.width = rect.width + 'px';
+      }
       function render(val) {
         var q = (val || '').toLowerCase();
         var filtered = FEED_FIELDS.filter(function(f){ return !q || f.includes(q); });
         dd.innerHTML = filtered.map(function(f){ return '<li onmousedown="window.pickAC(this)">' + f + '</li>'; }).join('');
+        positionDd();
         dd.style.display = filtered.length ? 'block' : 'none';
       }
-      input.addEventListener('focus', function(){ render(input.value); });
-      input.addEventListener('input', function(){ render(input.value); });
+      input.addEventListener('focus', function(){ positionDd(); render(input.value); });
+      input.addEventListener('input', function(){ positionDd(); render(input.value); });
       input.addEventListener('blur', function(){ setTimeout(function(){ dd.style.display='none'; }, 160); });
     });
   }
