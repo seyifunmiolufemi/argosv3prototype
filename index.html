@@ -1584,6 +1584,33 @@ body.dark-mode .modal-select { background:var(--color-bg-primary); }
 body.dark-mode .input-suffix-wrap input { background:var(--color-bg-primary); }
 body.dark-mode .input-suffix-text { background:var(--color-bg-grey25); }
 
+/* ── Toggle switch ── */
+.toggle-switch{position:relative;display:inline-block;width:36px;height:20px;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#e2e5ed;border-radius:20px;transition:.2s;cursor:pointer;}
+.toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:2px;bottom:2px;background:white;border-radius:50%;transition:.2s;}
+input:checked+.toggle-slider{background:var(--color-blue);}
+input:checked+.toggle-slider:before{transform:translateX(16px);}
+/* ── Autocomplete ── */
+.autocomplete-wrapper{position:relative;}
+.autocomplete-dropdown{display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1px solid var(--color-border);border-radius:8px;max-height:180px;overflow-y:auto;z-index:200;list-style:none;padding:4px 0;margin:2px 0 0;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.autocomplete-dropdown li{padding:8px 12px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;}
+.autocomplete-dropdown li:hover{background:var(--color-bg-grey50);}
+/* ── Transformer chips ── */
+.chip-field{background:#e8f0fe;color:#1a56db;border-radius:4px;padding:2px 6px;font-size:12px;font-family:monospace;}
+.chip-value{background:#e8f9ef;color:#289253;border-radius:4px;padding:2px 6px;font-size:12px;font-family:monospace;}
+.chip-fn{background:#fff3e0;color:#b45309;border-radius:4px;padding:2px 6px;font-size:12px;font-family:monospace;}
+/* ── Data view ── */
+.img-placeholder{width:40px;height:40px;background:#f0f0f0;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;color:#ccc;font-size:16px;flex-shrink:0;}
+/* ── Row detail ── */
+.field-changed{color:#d72225;}
+/* ── Logs ── */
+.log-sub-row td{background:#fafafa;font-size:12px;padding:7px 16px 7px 40px;}
+/* ── Export wizard field mapping table ── */
+.fm-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.fm-table th{background:var(--color-bg-grey50);padding:10px 12px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text-caption);border-bottom:1px solid var(--color-border);text-align:left;}
+.fm-table td{padding:9px 12px;border-bottom:1px solid var(--color-border);vertical-align:middle;}
+
 </style>
 </head>
 <body>
@@ -3121,7 +3148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <p class="page-subtitle">Manage your data sources and import schedules</p>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-        <button class="btn-outline" style="height:36px;padding:0 14px;">Field Mapping</button>
+        <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="showFieldMappingPage()">Field Mapping</button>
         <button class="btn-primary-sm" onclick="showAddImportPage()">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Import
@@ -3171,11 +3198,176 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </div>
 
-  <!-- Coming soon tab panels -->
-  <div class="tab-panel" id="db-tab-dataview"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Data View — Coming soon</div></div>
-  <div class="tab-panel" id="db-tab-transformers"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Transformers — Coming soon</div></div>
-  <div class="tab-panel" id="db-tab-exports"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Exports — Coming soon</div></div>
-  <div class="tab-panel" id="db-tab-logs"><div style="padding:40px 0;text-align:center;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;">Logs — Coming soon</div></div>
+  <!-- ══ DATA VIEW TAB ══ -->
+  <div class="tab-panel" id="db-tab-dataview">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Data View</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">View and search your product data</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:13px;color:var(--color-text-caption);">Data View <strong style="color:var(--color-text-primary);">51,395</strong> rows</span>
+        <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;">
+          <option>Raw Data</option>
+          <option>Transformed Data</option>
+        </select>
+        <button class="btn-primary-sm" onclick="showToast('Downloading data...')">Download Data</button>
+      </div>
+    </div>
+    <!-- search compound row -->
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;"><option>2 selected</option><option>All fields</option></select>
+      <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;"><option>Contains</option><option>Does not contain</option><option>Equals</option><option>Starts with</option><option>Is empty</option><option>Is not empty</option></select>
+      <input type="text" class="modal-input" placeholder="Enter keyword..." style="padding:6px 10px;font-size:13px;flex:1;min-width:140px;">
+      <select class="modal-select" style="padding:6px 10px;font-size:13px;width:auto;"><option>Columns: All</option></select>
+      <button class="btn-primary-sm" onclick="showToast('Searching...')">Search</button>
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table" style="font-size:13px;">
+          <colgroup><col style="width:40px;"><col style="width:52px;"><col style="width:9%;"><col style="width:15%;"><col style="width:13%;"><col style="width:16%;"><col style="width:12%;"><col style="width:auto;"></colgroup>
+          <thead><tr><th>#</th><th>Image</th><th>ID</th><th>Title</th><th>Product Type</th><th>Google Product Category</th><th>Description</th><th>Link</th></tr></thead>
+          <tbody>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>1</td><td><div class="img-placeholder">🖼</div></td><td>MVBSUT</td><td>Molten MVB Set Suitcase</td><td>Volleyball &gt; Bags and Backpacks</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Molten</td><td style="color:var(--color-blue);">molten...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>2</td><td><div class="img-placeholder">🖼</div></td><td>TVB-BLU</td><td>Tachikara TVB Set Suitcase</td><td>Volleyball &gt; Bags and Backpacks &gt; Bat Suitcases</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tachikara</td><td style="color:var(--color-blue);">tachikara...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>3</td><td><div class="img-placeholder">🖼</div></td><td>BLCKBLSTR</td><td>Block Blaster Training Aid</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>4</td><td><div class="img-placeholder">🖼</div></td><td>BUMBLCK</td><td>Bumper Blocker</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>5</td><td><div class="img-placeholder">🖼</div></td><td>BLZ4000</td><td>Coaches Spike Set Stand with Ball Nets</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Blizter</td><td style="color:var(--color-blue);">blizter...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>6</td><td><div class="img-placeholder">🖼</div></td><td>FNGRSUP</td><td>Finger Supports 10-Pack</td><td>Volleyball &gt; Accessories &gt; Finger Protection</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Mikasa</td><td style="color:var(--color-blue);">mikasa...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>7</td><td><div class="img-placeholder">🖼</div></td><td>NETXT</td><td>Net Extender Training Aid</td><td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>8</td><td><div class="img-placeholder">🖼</div></td><td>PASSCHR</td><td>Pass Catcher Target</td><td>Volleyball &gt; Coaching Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)"><td>9</td><td><div class="img-placeholder">🖼</div></td><td>SPIKCHGR</td><td>Spike Challenger Pro</td><td>Volleyball &gt; Spiking Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td><td>Tandem</td><td style="color:var(--color-blue);">tandem...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;font-size:13px;color:var(--color-text-caption);">
+      <span>Showing 1 to 9 of 100 results</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <select class="modal-select" style="padding:4px 8px;font-size:12px;width:auto;"><option>10 per page</option><option>25 per page</option><option>50 per page</option></select>
+        <div style="display:flex;gap:4px;">
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Previous page')">‹</button>
+          <button class="btn-primary-sm" style="padding:4px 8px;font-size:12px;height:28px;">1</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Page 2')">2</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Page 3')">3</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Page 4')">4</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;" onclick="showToast('Next page')">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TRANSFORMERS TAB ══ -->
+  <div class="tab-panel" id="db-tab-transformers">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Transformers</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">Create rules to transform your product data</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="openFieldExecOrderModal()">Field Execution Order</button>
+        <button class="btn-primary-sm" onclick="openAddTransformerModal()">+ Add Transformer</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:13px;color:var(--color-text-caption);">Filter by field:</span>
+        <select class="modal-select" style="padding:5px 10px;font-size:13px;width:auto;"><option>All Fields</option></select>
+      </div>
+      <span style="font-size:13px;color:var(--color-text-caption);margin-left:auto;">7 transformers · 5 active</span>
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table">
+          <colgroup><col style="width:70px;"><col style="width:auto;"><col style="width:auto;"><col style="width:110px;"><col style="width:70px;"><col style="width:70px;"></colgroup>
+          <thead><tr><th>Status</th><th>Condition (If)</th><th>Action (Then)</th><th>Exports</th><th>Reorder</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[description]</span> contains <span class="chip-value">"Tandem"</span></td><td>set <span class="chip-field">[description]</span> to <span class="chip-field">[description]</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[title]</span> ≠ <span class="chip-value">"al mflds"</span></td><td>set <span class="chip-field">[sale_price]</span> to <span class="chip-fn">{custom_label_0}</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[brand]</span> equals <span class="chip-value">"Tandem"</span></td><td>set <span class="chip-field">[brand]</span> to <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></td><td><span class="chip-fn">{toLowerCase}</span> <span class="chip-field">[title]</span> are <span class="chip-value">"thinking"</span></td><td>set <span class="chip-field">[brand]</span> to <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>if <span class="chip-field">[salePriceEffectiveDate]</span> are <span class="chip-value">""</span></td><td>set <span class="chip-field">[salePriceEffectiveDate]</span> to <span class="chip-value">"null_alt_check"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[product_type]</span> contains <span class="chip-value">"Training"</span></td><td>set <span class="chip-field">[condition]</span> to <span class="chip-value">"new"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td><span class="chip-field">[title]</span> contains <span class="chip-value">"Volleyball"</span></td><td>set <span class="chip-field">[google_product_category]</span> to <span class="chip-value">"Sporting Goods"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td style="text-align:center;cursor:grab;color:var(--color-text-caption);">⋮⋮</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:12px 0;font-size:13px;color:var(--color-text-caption);">Showing 1 to 7 of 7 results · 10 per page</div>
+  </div>
+
+  <!-- ══ EXPORTS TAB ══ -->
+  <div class="tab-panel" id="db-tab-exports">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Exports</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">Manage your data export destinations</p>
+      </div>
+      <button class="btn-primary-sm" onclick="showAddExportPage()">+ Add Export</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="position:relative;flex:1;max-width:280px;">
+        <input type="text" class="modal-input" placeholder="🔍 Search..." style="padding:7px 11px;font-size:13px;">
+      </div>
+      <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showToast('Filters coming soon')">Filters</button>
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table">
+          <colgroup><col style="width:70px;"><col style="width:auto;"><col style="width:180px;"><col style="width:130px;"><col style="width:200px;"><col style="width:70px;"></colgroup>
+          <thead><tr><th>Status</th><th>Name</th><th>Destination</th><th>Schedule</th><th>Last Run</th><th>Actions</th></tr></thead>
+          <tbody id="exports-tbody">
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Google Shopping</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#34a853;margin-right:6px;vertical-align:middle;"></span>Google Merchant Center</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC · <strong>14,423</strong></td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Bing Ads</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0078d4;margin-right:6px;vertical-align:middle;"></span>Microsoft Ads</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC · <strong>14,423</strong></td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Facebook</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1877f2;margin-right:6px;vertical-align:middle;"></span>Meta</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC · <strong>14,423</strong></td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Klorija</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7280;margin-right:6px;vertical-align:middle;"></span>SFTP</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></td><td>ShopAGain</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff4500;margin-right:6px;vertical-align:middle;"></span>Reddit</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:12px 0;font-size:13px;color:var(--color-text-caption);">Showing 1 to 5 of 5 results · 10 per page</div>
+  </div>
+
+  <!-- ══ LOGS TAB ══ -->
+  <div class="tab-panel" id="db-tab-logs">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Logs</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">View import and export activity</p>
+      </div>
+      <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showToast('Exporting logs...')">⬇ Export Logs</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <span style="font-size:13px;color:var(--color-text-caption);">Name:</span>
+      <select class="modal-select" style="padding:5px 9px;font-size:13px;width:auto;"><option>All</option></select>
+      <span style="font-size:13px;color:var(--color-text-caption);">Operation:</span>
+      <select class="modal-select" style="padding:5px 9px;font-size:13px;width:auto;"><option>All</option><option>Import</option><option>Export</option><option>Download</option></select>
+      <span style="font-size:13px;color:var(--color-text-caption);">Status:</span>
+      <select class="modal-select" style="padding:5px 9px;font-size:13px;width:auto;"><option>All</option><option>Successful</option><option>Failed</option><option>Running</option></select>
+      <span style="font-size:13px;color:var(--color-text-caption);">From:</span>
+      <input type="date" class="modal-input" value="2026-01-02" style="padding:5px 9px;font-size:13px;width:auto;">
+      <span style="font-size:13px;color:var(--color-text-caption);">To:</span>
+      <input type="date" class="modal-input" value="2026-01-02" style="padding:5px 9px;font-size:13px;width:auto;">
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table">
+          <colgroup><col style="width:22%;"><col style="width:10%;"><col style="width:10%;"><col style="width:auto;"></colgroup>
+          <thead><tr><th>Name</th><th>Operation</th><th>Status</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Google Export_Opt</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Bing</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Facebook</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr><td><span id="log-expand-btn" onclick="toggleLogExpand()" style="cursor:pointer;color:var(--color-text-caption);font-size:11px;margin-right:4px;">∨</span><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">All Imports</a></td><td>Import</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Importing 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr class="log-sub-row" style="display:none;"><td colspan="4"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Name</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Type</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Load</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 0;text-align:left;">Update</th></tr></thead><tbody><tr><td style="padding:4px 12px 4px 0;">Shopify Products</td><td style="padding:4px 12px 4px 0;">Main feed</td><td style="padding:4px 12px 4px 0;">24,013</td><td style="padding:4px 0;">0</td></tr><tr><td style="padding:4px 12px 4px 0;">Inventory Levels</td><td style="padding:4px 12px 4px 0;">Join</td><td style="padding:4px 12px 4px 0;">45,465</td><td style="padding:4px 0;">33,224</td></tr><tr><td style="padding:4px 12px 4px 0;">Pricing Override</td><td style="padding:4px 12px 4px 0;">Join</td><td style="padding:4px 12px 4px 0;">3,344</td><td style="padding:4px 0;">5,675</td></tr></tbody></table></td></tr>
+            <tr><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Netsuite Product Feed</a></td><td>Download</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Downloading Import File · 5:20:32 PM</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:12px 0;font-size:13px;color:var(--color-text-caption);">Showing 1 to 5 of 5 results · 10 per page</div>
+  </div>
 
 </div><!-- /db-overview-page -->
 
@@ -3298,6 +3490,17 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type="text" id="wizard-import-name" class="modal-input" placeholder="e.g. 'Shopify Products'" style="max-width:100%;">
         <div class="field-error" id="wizard-name-error">Import name is required.</div>
       </div>
+      <!-- SFTP-only: Platform dropdown -->
+      <div id="wizard-step1-sftp-platform" style="display:none;margin-bottom:18px;">
+        <label class="field-label">Platform <span class="field-required">*</span></label>
+        <select class="modal-select">
+          <option selected>Shopify</option>
+          <option>WooCommerce</option>
+          <option>Magento</option>
+          <option>BigCommerce</option>
+          <option>Custom</option>
+        </select>
+      </div>
     </div>
     <div class="wizard-btn-row">
       <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="showAddImportPage();hideConfigureImportPage();">Back</button>
@@ -3309,26 +3512,111 @@ document.addEventListener('DOMContentLoaded', function() {
   <!-- Step 2: Connection Settings -->
   <div class="wizard-step" id="wizard-step-2">
     <div style="max-width:520px;">
-      <div style="margin-bottom:18px;">
-        <label class="field-label" style="display:flex;align-items:center;gap:6px;">
-          OAuth token / App password
-          <span class="tooltip-icon" title="Find this in your Shopify admin under Apps > Private apps">?</span>
-        </label>
-        <div class="password-input-wrap">
-          <input type="password" id="wizard-oauth-token" class="modal-input" placeholder="Enter your Shopify access token">
-          <button class="password-toggle" onclick="togglePasswordField('wizard-oauth-token',this)" type="button">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+
+      <!-- Shopify fields -->
+      <div id="wizard-step2-shopify">
+        <div style="margin-bottom:18px;">
+          <label class="field-label" style="display:flex;align-items:center;gap:6px;">
+            OAuth token / App password
+            <span class="tooltip-icon" title="Find this in your Shopify admin under Apps > Private apps">?</span>
+          </label>
+          <div class="password-input-wrap">
+            <input type="password" id="wizard-oauth-token" class="modal-input" placeholder="Enter your Shopify access token">
+            <button class="password-toggle" onclick="togglePasswordField('wizard-oauth-token',this)" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div style="margin-bottom:6px;">
+          <label class="field-label">Shop name <span class="field-required">*</span></label>
+          <div class="input-suffix-wrap">
+            <input type="text" id="wizard-shop-name" placeholder="your-store-name">
+            <span class="input-suffix-text">.myshopify.com</span>
+          </div>
+          <button class="btn-text-link" style="margin-top:8px;" type="button">Test Connection</button>
+        </div>
+      </div>
+
+      <!-- CSV fields -->
+      <div id="wizard-step2-csv" style="display:none;">
+        <div style="margin-bottom:18px;">
+          <label class="field-label">URL <span class="field-required">*</span></label>
+          <input type="text" class="modal-input" placeholder="https://www.content.docs/yourFeed.csv">
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Import a file from a URL. Supported types: CSV, TXT</div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">URL Parameters <span style="font-weight:400;color:var(--color-text-caption);">(Optional)</span></div>
+          <div style="font-size:12px;color:var(--color-text-caption);margin-bottom:10px;">Add parameters if the URL requires authentication or additional values</div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-caption);padding:0 8px 6px 0;text-align:left;">Parameter Name</th>
+                <th style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-caption);padding:0 8px 6px 0;text-align:left;">Parameter Value</th>
+                <th style="width:32px;"></th>
+              </tr>
+            </thead>
+            <tbody id="csv-params-tbody">
+              <tr>
+                <td style="padding:0 8px 6px 0;"><input type="text" class="modal-input" placeholder="e.g. username" style="padding:6px 9px;font-size:13px;"></td>
+                <td style="padding:0 8px 6px 0;"><input type="text" class="modal-input" placeholder="e.g. mypassword" style="padding:6px 9px;font-size:13px;"></td>
+                <td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;padding:0;">🗑</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn-text-link" style="margin-top:4px;" onclick="addCsvParam()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add parameter
           </button>
         </div>
-      </div>
-      <div style="margin-bottom:6px;">
-        <label class="field-label">Shop name <span class="field-required">*</span></label>
-        <div class="input-suffix-wrap">
-          <input type="text" id="wizard-shop-name" placeholder="your-store-name">
-          <span class="input-suffix-text">.myshopify.com</span>
+        <div style="margin-bottom:18px;">
+          <label class="field-label">User Agent <span style="font-weight:400;color:var(--color-text-caption);">(Optional)</span></label>
+          <textarea class="modal-input" rows="3" placeholder="Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0" style="resize:vertical;"></textarea>
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Provide a user agent if the host server requires one</div>
         </div>
-        <button class="btn-text-link" style="margin-top:8px;" type="button">Test Connection</button>
       </div>
+
+      <!-- SFTP fields -->
+      <div id="wizard-step2-sftp" style="display:none;">
+        <div style="margin-bottom:16px;">
+          <label class="field-label">FTP Protocol <span class="field-required">*</span></label>
+          <select class="modal-select">
+            <option selected>SFTP</option>
+            <option>FTP</option>
+            <option>FTPS</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+          <div style="flex:7;">
+            <label class="field-label">Host <span class="field-required">*</span></label>
+            <input type="text" class="modal-input" placeholder="e.g., sftp.example.com">
+          </div>
+          <div style="flex:3;">
+            <label class="field-label">Port <span class="field-required">*</span></label>
+            <input type="text" class="modal-input" placeholder="22">
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+          <div style="flex:1;">
+            <label class="field-label">Username <span class="field-required">*</span></label>
+            <input type="text" class="modal-input" placeholder="username">
+          </div>
+          <div style="flex:1;">
+            <label class="field-label">Password <span class="field-required">*</span></label>
+            <input type="password" class="modal-input" placeholder="••••••••">
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Private Key <span style="font-weight:400;color:var(--color-text-caption);">(Optional)</span></label>
+          <textarea class="modal-input" rows="3" placeholder="Paste private key here..." style="resize:vertical;"></textarea>
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Use instead of password for key-based authentication.</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Directory <span class="field-required">*</span></label>
+          <input type="text" class="modal-input" placeholder="/feeds/">
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Path to the folder containing the file</div>
+        </div>
+      </div>
+
     </div>
     <div class="wizard-btn-row">
       <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(1)">Back</button>
@@ -3453,6 +3741,25 @@ document.addEventListener('DOMContentLoaded', function() {
         </button>
       </div>
 
+      <!-- File Actions — CSV only -->
+      <div id="wizard-step5-file-actions" style="display:none;">
+        <div class="section-block">
+          <div class="section-block-title">File Actions</div>
+          <div class="section-block-sub">Operations to run on the file before import.</div>
+          <select class="modal-select" style="margin-top:8px;max-width:300px;">
+            <option>Remove BOM</option>
+            <option>Strip quotes</option>
+            <option>Normalize line endings</option>
+            <option>Remove empty rows</option>
+          </select>
+          <br>
+          <button class="btn-text-link" style="margin-top:8px;" onclick="showToast('Add header coming soon')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add header
+          </button>
+        </div>
+      </div>
+
     </div>
     <div class="wizard-btn-row">
       <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(4)">Back</button>
@@ -3463,11 +3770,410 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div><!-- /configure-import-page -->
 
+<!-- ══ FIELD MAPPING PAGE ══ -->
+<div id="field-mapping-page" style="display:none;">
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Field Mapping</h1>
+      <p class="page-subtitle" style="text-align:left;">Map source fields to the database fields</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="background:#e8f5e2;color:#3a7d0a;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Shopify</span>
+      <button class="btn-text-link" style="font-size:13px;" onclick="showToast('Parse settings coming soon')">⚙ Parse Settings</button>
+    </div>
+  </div>
+  <nav class="breadcrumb" style="margin-bottom:12px;">
+    <span class="bc-item bc-muted">Tools</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage()">Feed Database</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage();switchDbTab('imports')">Imports</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item">Field Mapping</span>
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);">45/48 fields mapped</span>
+    <button class="btn-text-link" style="font-size:13px;" onclick="showToast('Unmapped fields coming soon')">View unmapped ∨</button>
+  </div>
+  <div class="table-card" style="padding:0;overflow:hidden;">
+    <div class="table-scroll">
+      <table class="feed-table">
+        <colgroup><col style="width:35%;"><col style="width:28%;"><col style="width:28%;"><col style="width:9%;"></colgroup>
+        <thead><tr>
+          <th>Internal Fields</th>
+          <th>Source Fields <span style="font-size:11px;cursor:help;" title="The field name from the source data">ⓘ</span></th>
+          <th>Value</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="field-mapping-tbody">
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="id" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">product_id</td><td style="font-size:13px;color:var(--color-text-caption);">47728851222814</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="title" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">product_title</td><td style="font-size:13px;color:var(--color-text-caption);">9005505052958</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="cost" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">price</td><td style="font-size:13px;color:var(--color-text-caption);">49.95</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="availability" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">stock_status</td><td style="font-size:13px;color:var(--color-text-caption);">out of stock</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="link" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">product_link</td><td style="font-size:13px;color:var(--color-text-caption);">https://www.allvolleyball.com/...</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="brand" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">manufacturer</td><td style="font-size:13px;color:var(--color-text-caption);">Wilson Team Sports</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="description" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">body_html</td><td style="font-size:13px;color:var(--color-text-caption);">Volleyball Bags and Backpacks...</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="image_link" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">featured_image</td><td style="font-size:13px;color:var(--color-text-caption);">https://cdn.shopify.com/...</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="google_product_category" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">product_category</td><td style="font-size:13px;color:var(--color-text-caption);">Sporting Goods &gt; Team Sports</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
+    <button class="btn-text-link" onclick="showToast('Field mapping row added')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Field Mapping
+    </button>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-primary-sm" onclick="showToast('Field mapping saved')">💾 Save field mapping</button>
+      <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showDbOverviewPage();switchDbTab('transformers')">Go to Transformers</button>
+    </div>
+  </div>
+</div><!-- /field-mapping-page -->
+
+<!-- ══ ROW DETAIL PAGE ══ -->
+<div id="row-detail-page" style="display:none;">
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1" id="row-detail-title">Molten MVB Set Suitcase</h1>
+    </div>
+  </div>
+  <nav class="breadcrumb" style="margin-bottom:16px;">
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="hideRowDetailPage();switchDbTab('dataview');">← Back to Data View</span>
+  </nav>
+  <div class="detail-tabs-bar" id="row-detail-tabs-bar" style="margin-bottom:20px;">
+    <button class="detail-tab active" onclick="showToast('Raw Data view active')">Raw Data</button>
+    <button class="detail-tab" onclick="showToast('Transformed Data view active')">Transformed Data</button>
+  </div>
+  <div class="table-card" style="padding:0;overflow:hidden;">
+    <div class="table-scroll">
+      <table class="feed-table">
+        <colgroup><col style="width:22%;"><col style="width:39%;"><col style="width:39%;"></colgroup>
+        <thead><tr><th>Field</th><th>Transformed Data</th><th>Raw Data</th></tr></thead>
+        <tbody id="row-detail-tbody">
+          <tr><td>image_link</td><td>https://d2.amazonaws.com/shops/...</td><td>https://d2.amazonaws.com/shops/...</td></tr>
+          <tr><td>id</td><td>MVBSUT</td><td>MVBSUT</td></tr>
+          <tr><td>title</td><td class="field-changed">Molten MVB Set Suitcase</td><td>Molten MVB Ball Suitcase</td></tr>
+          <tr><td>product_type</td><td class="field-changed">Equipment &gt; Bags and Backpacks &gt; molten-mvb-ball-suitc...</td><td>Equipment &gt; Bags and Backpacks &gt; molten-mvb-ball-suitcase &gt; ...</td></tr>
+          <tr><td>google_product_category</td><td class="field-changed">Sporting Goods &gt; Team Sports &gt; Indoor Volleyball &gt; Volleyball...</td><td>Sporting Goods &gt; Team Sports &gt; Indoor Volleyball bag</td></tr>
+          <tr><td>description</td><td>Volleyball Bags and Backpacks. Rectangular nylon ball bag...</td><td>Volleyball Bags and Backpacks. Rectangular nylon ball bag...</td></tr>
+          <tr><td>link</td><td>https://www.allvolleyball.com/products/...</td><td>https://www.allvolleyball.com/products/...</td></tr>
+          <tr><td>additional_image_link_opt</td><td style="color:var(--color-text-caption);">(empty)</td><td style="color:var(--color-text-caption);">(empty)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn-outline" style="height:36px;padding:0 16px;font-size:13px;" onclick="hideRowDetailPage();switchDbTab('dataview');">← Back</button>
+  </div>
+</div><!-- /row-detail-page -->
+
+<!-- ══ ADD EXPORT PAGE ══ -->
+<div id="add-export-page" style="display:none;">
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Add Export</h1>
+      <p class="page-subtitle" style="text-align:left;">Set up your export settings</p>
+    </div>
+  </div>
+  <nav class="breadcrumb" style="margin-bottom:16px;">
+    <span class="bc-item bc-muted">Tools</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage()">Feed Database</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage();switchDbTab('exports')">Exports</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item">Add Export</span>
+  </nav>
+
+  <!-- Wizard tabs -->
+  <div class="detail-tabs-bar" id="export-wizard-tabs-bar" style="margin-bottom:24px;">
+    <button class="detail-tab active" data-exporttab="1">General</button>
+    <button class="detail-tab" data-exporttab="2">Connection</button>
+    <button class="detail-tab" data-exporttab="3">Schedule</button>
+    <button class="detail-tab" data-exporttab="4">Filters</button>
+    <button class="detail-tab" data-exporttab="5">Field Mapping</button>
+  </div>
+
+  <!-- Step 1: General -->
+  <div class="wizard-step active" id="export-step-1">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Export Name <span class="field-required">*</span></label>
+        <input type="text" id="export-name-input" class="modal-input" placeholder="e.g. Google Shopping Feed">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Destination <span class="field-required">*</span></label>
+        <select class="modal-select" id="export-destination-select">
+          <option value="">Select destination</option>
+          <option>Google Merchant Center</option>
+          <option>Microsoft Ads</option>
+          <option>Meta / Facebook</option>
+          <option>Reddit</option>
+          <option>SFTP</option>
+          <option>FTP</option>
+          <option>Custom URL</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">File Name <span class="field-required">*</span></label>
+        <input type="text" class="modal-input" placeholder="e.g. products-feed">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">File Format <span class="field-required">*</span></label>
+        <select class="modal-select"><option>CSV</option><option>TSV</option><option>XML</option><option>TXT</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Compression <span class="field-required">*</span></label>
+        <select class="modal-select"><option>None</option><option>Gzip</option><option>Zip</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Rule Delimiter <span class="field-required">*</span></label>
+        <select class="modal-select"><option>Tab</option><option>Comma</option><option>Pipe</option><option>Semicolon</option></select>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(2)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Connection -->
+  <div class="wizard-step" id="export-step-2" style="display:none;">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Google Merchant Center ID <span class="field-required">*</span></label>
+        <input type="text" class="modal-input" placeholder="e.g. 123456789">
+        <button class="btn-text-link" style="margin-top:8px;" onclick="showToast('Testing connection...')">Test Connection</button>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(1)">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(3)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Schedule -->
+  <div class="wizard-step" id="export-step-3" style="display:none;">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Frequency <span class="field-required">*</span></label>
+        <select class="modal-select"><option>Hourly</option><option selected>Every 6 hours</option><option>Every 12 hours</option><option>Daily</option><option>Weekly</option><option>Custom</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Time <span class="field-required">*</span></label>
+        <select class="modal-select">
+          <option>12:00 AM</option><option>1:00 AM</option><option>2:00 AM</option><option>3:00 AM</option><option>4:00 AM</option><option>5:00 AM</option>
+          <option selected>6:00 AM</option><option>7:00 AM</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+          <option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option><option>5:00 PM</option>
+          <option>6:00 PM</option><option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option><option>10:00 PM</option><option>11:00 PM</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Time Zone <span class="field-required">*</span></label>
+        <select class="modal-select">
+          <option selected>New York City, United States (EST, UTC -05:00)</option>
+          <option>Los Angeles, United States (PST, UTC -08:00)</option>
+          <option>Chicago, United States (CST, UTC -06:00)</option>
+          <option>London, United Kingdom (GMT, UTC +00:00)</option>
+        </select>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(2)">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(4)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Filters -->
+  <div class="wizard-step" id="export-step-4" style="display:none;">
+    <div style="max-width:600px;">
+      <div class="section-block" style="border-top:none;margin-top:0;padding-top:0;">
+        <div class="section-block-title">Product Filters</div>
+        <div class="section-block-sub">Only export products that match ALL these conditions.</div>
+        <table class="filter-table" style="margin-top:8px;">
+          <tbody id="export-filter-tbody">
+            <tr>
+              <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Field</td>
+              <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Operator</td>
+              <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Value</td>
+              <td style="width:36px;"></td>
+            </tr>
+            <tr>
+              <td><select class="modal-select" style="padding:7px 10px;font-size:13px;"><option>title</option><option>id</option><option>brand</option><option>availability</option><option>price</option></select></td>
+              <td><select class="modal-select" style="padding:7px 10px;font-size:13px;"><option>contains</option><option selected>is not empty</option><option>equals</option><option>starts with</option></select></td>
+              <td><input type="text" class="modal-input" placeholder="Value" style="padding:7px 10px;font-size:13px;"></td>
+              <td><button onclick="this.closest('tr').remove()" class="btn-danger-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-text-link" style="margin-top:6px;" onclick="showToast('Filter added')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Filter
+        </button>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Safety Thresholds</div>
+        <div style="margin-bottom:12px;">
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
+            <input type="checkbox" checked style="margin-top:2px;">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Minimum product count</div>
+              <div style="font-size:12px;color:var(--color-text-caption);margin-bottom:8px;">Only export if the total number of products meets a minimum</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:13px;color:var(--color-text-caption);">Product count must be:</span>
+                <select class="modal-select" style="padding:5px 8px;font-size:13px;width:auto;"><option>greater than</option><option>equal to</option></select>
+                <input type="number" class="modal-input" value="20000" style="padding:5px 8px;font-size:13px;width:90px;">
+              </div>
+            </div>
+          </label>
+        </div>
+        <div>
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
+            <input type="checkbox" checked style="margin-top:2px;">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Threshold protection</div>
+              <div style="font-size:12px;color:var(--color-text-caption);margin-bottom:8px;">Block export if product count drops significantly from last export</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:13px;color:var(--color-text-caption);">Block export if count drops below:</span>
+                <input type="number" class="modal-input" value="90" style="padding:5px 8px;font-size:13px;width:70px;">
+                <span style="font-size:13px;color:var(--color-text-caption);">% of last export</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(3)">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(5)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Field Mapping -->
+  <div class="wizard-step" id="export-step-5" style="display:none;">
+    <p style="font-size:13px;color:var(--color-text-caption);margin:0 0 14px;">Map your database fields to export column names</p>
+    <div class="table-card" style="padding:0;overflow:hidden;max-width:640px;">
+      <div class="table-scroll">
+        <table class="fm-table">
+          <colgroup><col style="width:38%;"><col style="width:38%;"><col style="width:24%;"></colgroup>
+          <thead><tr><th>Database Field</th><th>Export Name</th><th>Action</th></tr></thead>
+          <tbody id="export-fm-tbody">
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option><option>condition</option><option>availability</option><option>product_type</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="id" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option selected>title</option><option>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="title" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option selected>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="description" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option selected>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="link" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option selected>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="image_link" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option>image_link</option><option selected>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="price" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option selected>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="brand" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="btn-text-link" style="margin-top:8px;" onclick="showToast('Field mapping row added')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Field Mapping
+    </button>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(4)">Back</button>
+      <button class="btn-primary-sm" onclick="createExport()">Create Export</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+</div><!-- /add-export-page -->
+
     </div><!-- /page-content -->
   </main>
 
 </div><!-- /app-shell -->
 </div><!-- /screen-dashboard -->
+
+<!-- ══ ADD TRANSFORMER MODAL ══ -->
+<div id="add-transformer-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box" style="max-width:540px;width:92%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 class="modal-title" style="margin:0;">Add Transformer</h3>
+      <button onclick="closeAddTransformerModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-text-caption);line-height:1;">×</button>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);margin-bottom:10px;">Condition (If)</div>
+        <div style="margin-bottom:10px;">
+          <label class="field-label" style="font-size:12px;">Field</label>
+          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+            <option>title</option><option>description</option><option>brand</option><option>id</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option><option>mpn</option><option>gtin</option><option>color</option><option>size</option><option>material</option><option>custom_label_0</option><option>custom_label_1</option><option>custom_label_2</option>
+          </select>
+        </div>
+        <div style="margin-bottom:10px;">
+          <label class="field-label" style="font-size:12px;">Operator</label>
+          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+            <option>contains</option><option>does not contain</option><option>equals</option><option>does not equal</option><option>starts with</option><option>ends with</option><option>is empty</option><option>is not empty</option><option>matches regex</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" style="font-size:12px;">Value</label>
+          <input type="text" class="modal-input" placeholder="e.g. Tandem" style="font-size:13px;padding:7px 10px;">
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);margin-bottom:10px;">Action (Then)</div>
+        <div style="margin-bottom:10px;">
+          <label class="field-label" style="font-size:12px;">Target Field</label>
+          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+            <option>title</option><option>description</option><option>brand</option><option>id</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option>
+          </select>
+        </div>
+        <div style="margin-bottom:10px;">
+          <label class="field-label" style="font-size:12px;">Action</label>
+          <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+            <option>Set to</option><option>Replace</option><option>Append</option><option>Prepend</option><option>To lowercase</option><option>To uppercase</option><option>Remove HTML</option><option>Truncate to</option><option>Set to empty</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" style="font-size:12px;">Set to</label>
+          <input type="text" class="modal-input" placeholder="Value or field reference" style="font-size:13px;padding:7px 10px;">
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <label class="field-label" style="font-size:12px;">Apply to Exports</label>
+      <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+        <option selected>All Exports</option><option>Google Shopping</option><option>Bing Ads</option><option>Facebook</option><option>Klorija</option>
+      </select>
+    </div>
+    <div class="modal-footer" style="margin-top:18px;display:flex;gap:10px;align-items:center;">
+      <button class="btn-primary-sm" onclick="closeAddTransformerModal();showToast('Transformer added')">Add Transformer</button>
+      <button class="btn-text-link grey" onclick="closeAddTransformerModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FIELD EXECUTION ORDER MODAL ══ -->
+<div id="field-exec-order-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box" style="max-width:400px;width:92%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 class="modal-title" style="margin:0;">Field Execution Order</h3>
+      <button onclick="closeFieldExecOrderModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-text-caption);line-height:1;">×</button>
+    </div>
+    <table class="feed-table" style="font-size:13px;">
+      <colgroup><col style="width:36px;"><col style="width:auto;"><col style="width:60px;"></colgroup>
+      <thead><tr><th></th><th>Field Name</th><th>Order</th></tr></thead>
+      <tbody id="exec-order-tbody">
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>id</td><td class="exec-order-num">0</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>title</td><td class="exec-order-num">1</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>description</td><td class="exec-order-num">2</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>brand</td><td class="exec-order-num">3</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>product_type</td><td class="exec-order-num">4</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>condition</td><td class="exec-order-num">5</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>google_product_category</td><td class="exec-order-num">6</td></tr>
+      </tbody>
+    </table>
+    <div class="modal-footer" style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+      <button class="btn-primary-sm" onclick="closeFieldExecOrderModal();showToast('Execution order saved')">Save Order</button>
+      <button class="btn-text-link grey" onclick="closeFieldExecOrderModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══ RESOLVE MODAL ══ -->
 <div id="resolve-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
@@ -4962,6 +5668,237 @@ var ISSUES = [
     });
   }
   initShopifyModal();
+})();
+
+/* ══════════════════════════════════════════
+   FEED DATA TOOL — EXTENDED SCREENS
+══════════════════════════════════════════ */
+(function() {
+
+  var FEED_FIELDS = ['id','title','description','link','image_link','additional_image_link',
+    'price','sale_price','brand','condition','availability','product_type',
+    'google_product_category','mpn','gtin','item_group_id','color','size','material',
+    'gender','age_group','shipping','tax',
+    'custom_label_0','custom_label_1','custom_label_2','custom_label_3','custom_label_4'];
+
+  /* ── Autocomplete ── */
+  function initAutocompletes() {
+    document.querySelectorAll('.autocomplete-input').forEach(function(input) {
+      if (input._acInited) return;
+      input._acInited = true;
+      var wrapper = input.closest('.autocomplete-wrapper');
+      if (!wrapper) return;
+      var dd = wrapper.querySelector('.autocomplete-dropdown');
+      if (!dd) return;
+      function render(val) {
+        var q = (val || '').toLowerCase();
+        var filtered = FEED_FIELDS.filter(function(f){ return !q || f.includes(q); });
+        dd.innerHTML = filtered.map(function(f){ return '<li onmousedown="window.pickAC(this)">' + f + '</li>'; }).join('');
+        dd.style.display = filtered.length ? 'block' : 'none';
+      }
+      input.addEventListener('focus', function(){ render(input.value); });
+      input.addEventListener('input', function(){ render(input.value); });
+      input.addEventListener('blur', function(){ setTimeout(function(){ dd.style.display='none'; }, 160); });
+    });
+  }
+  window.pickAC = function(li) {
+    var input = li.closest('.autocomplete-wrapper').querySelector('.autocomplete-input');
+    if (input) { input.value = li.textContent; }
+    li.closest('.autocomplete-dropdown').style.display = 'none';
+  };
+
+  /* ── Field Mapping Page ── */
+  window.showFieldMappingPage = function() {
+    document.querySelectorAll('#page-content > div[id$="-page"], #page-content > div[id="ic-list"], #page-content > div[id="ic-detail"]').forEach(function(p){ p.style.display='none'; });
+    ['db-overview-page','add-import-page','configure-import-page','add-export-page','row-detail-page','feed-data-page'].forEach(function(id){
+      var el = document.getElementById(id); if (el) el.style.display='none';
+    });
+    var p = document.getElementById('field-mapping-page');
+    if (p) p.style.display = 'block';
+    window.scrollTo(0,0);
+    setTimeout(initAutocompletes, 60);
+  };
+  window.hideFieldMappingPage = function() {
+    var p = document.getElementById('field-mapping-page'); if (p) p.style.display='none';
+  };
+
+  /* ── Row Detail Page ── */
+  window.showRowDetailPage = function(idx) {
+    var page = document.getElementById('row-detail-page');
+    if (!page) return;
+    var dbp = document.getElementById('db-overview-page');
+    if (dbp) dbp.style.display = 'none';
+    page.style.display = 'block';
+    window.scrollTo(0,0);
+  };
+  window.hideRowDetailPage = function() {
+    var p = document.getElementById('row-detail-page'); if (p) p.style.display='none';
+    var dbp = document.getElementById('db-overview-page');
+    if (dbp) dbp.style.display = 'block';
+    if (typeof switchDbTab === 'function') switchDbTab('dataview');
+  };
+
+  /* ── Add Export Page ── */
+  var exportWizardStep = 1;
+  window.showAddExportPage = function() {
+    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page'].forEach(function(id){
+      var el = document.getElementById(id); if (el) el.style.display='none';
+    });
+    var p = document.getElementById('add-export-page');
+    if (p) p.style.display = 'block';
+    window.goExportStepDirect(1);
+    window.scrollTo(0,0);
+    setTimeout(initAutocompletes, 60);
+  };
+  window.hideAddExportPage = function() {
+    var p = document.getElementById('add-export-page'); if (p) p.style.display='none';
+  };
+  window.goExportStepDirect = function(n) {
+    exportWizardStep = n;
+    document.querySelectorAll('#add-export-page .wizard-step').forEach(function(s){ s.style.display='none'; s.classList.remove('active'); });
+    var step = document.getElementById('export-step-' + n);
+    if (step) { step.style.display='block'; step.classList.add('active'); }
+    document.querySelectorAll('#export-wizard-tabs-bar .detail-tab').forEach(function(t,i){ t.classList.toggle('active', i===n-1); });
+  };
+  window.goExportStep = function(n) {
+    if (n > exportWizardStep) {
+      var nameEl = document.getElementById('export-name-input');
+      if (exportWizardStep===1 && nameEl && !nameEl.value.trim()) {
+        window.showToast('Please enter an export name'); return;
+      }
+    }
+    window.goExportStepDirect(n);
+  };
+  window.createExport = function() {
+    var nameEl = document.getElementById('export-name-input');
+    var name = (nameEl && nameEl.value.trim()) || 'New Export';
+    var tbody = document.getElementById('exports-tbody');
+    if (tbody) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td>'
+        + '<td>' + name + '</td>'
+        + '<td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#346ed9;margin-right:6px;vertical-align:middle;"></span>Custom</td>'
+        + '<td>Every 6 hours</td><td>—</td>'
+        + '<td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td>';
+      tbody.appendChild(tr);
+    }
+    window.hideAddExportPage();
+    if (typeof window.showDbOverviewPage === 'function') window.showDbOverviewPage();
+    if (typeof window.switchDbTab === 'function') window.switchDbTab('exports');
+    window.showToast('Export created successfully');
+  };
+
+  /* Export wizard tab clicks */
+  document.addEventListener('click', function(e) {
+    var tab = e.target.closest('#export-wizard-tabs-bar .detail-tab');
+    if (!tab) return;
+    var n = parseInt(tab.getAttribute('data-exporttab'), 10);
+    if (n && n <= exportWizardStep + 1) window.goExportStep(n);
+  });
+
+  /* ── Transformer Modals ── */
+  window.openAddTransformerModal = function() {
+    var m = document.getElementById('add-transformer-modal'); if (m) m.style.display='flex';
+  };
+  window.closeAddTransformerModal = function() {
+    var m = document.getElementById('add-transformer-modal'); if (m) m.style.display='none';
+  };
+  window.openFieldExecOrderModal = function() {
+    var m = document.getElementById('field-exec-order-modal'); if (m) m.style.display='flex';
+    setTimeout(initAutocompletes, 60);
+  };
+  window.closeFieldExecOrderModal = function() {
+    var m = document.getElementById('field-exec-order-modal'); if (m) m.style.display='none';
+  };
+
+  /* ── Drag-and-drop for Field Execution Order ── */
+  var dragSrcRow = null;
+  window.execOrderDragStart = function(e, row) {
+    dragSrcRow = row;
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  window.execOrderDragOver = function(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+  window.execOrderDrop = function(e, row) {
+    e.preventDefault();
+    if (!dragSrcRow || dragSrcRow === row) return;
+    var tbody = row.parentNode;
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+    var si = rows.indexOf(dragSrcRow);
+    var ti = rows.indexOf(row);
+    if (si < ti) tbody.insertBefore(dragSrcRow, row.nextSibling);
+    else tbody.insertBefore(dragSrcRow, row);
+    Array.from(tbody.querySelectorAll('tr')).forEach(function(r,i){
+      var cell = r.querySelector('.exec-order-num');
+      if (cell) cell.textContent = i;
+    });
+  };
+
+  /* ── Logs expand ── */
+  var logExpanded = false;
+  window.toggleLogExpand = function() {
+    logExpanded = !logExpanded;
+    document.querySelectorAll('.log-sub-row').forEach(function(r){
+      r.style.display = logExpanded ? 'table-row' : 'none';
+    });
+    var btn = document.getElementById('log-expand-btn');
+    if (btn) btn.textContent = logExpanded ? '∧' : '∨';
+  };
+
+  /* ── Source-aware wizard ── */
+  window.showWizardStep2ForSource = function(src) {
+    var s = src || (typeof importSource !== 'undefined' ? importSource : 'Shopify');
+    var shopify = document.getElementById('wizard-step2-shopify');
+    var csv = document.getElementById('wizard-step2-csv');
+    var sftp = document.getElementById('wizard-step2-sftp');
+    if (shopify) shopify.style.display = s==='Shopify' ? 'block' : 'none';
+    if (csv) csv.style.display = s==='CSV' ? 'block' : 'none';
+    if (sftp) sftp.style.display = s==='SFTP' ? 'block' : 'none';
+    var fa = document.getElementById('wizard-step5-file-actions');
+    if (fa) fa.style.display = s==='CSV' ? 'block' : 'none';
+    var platform = document.getElementById('wizard-step1-sftp-platform');
+    if (platform) platform.style.display = s==='SFTP' ? 'block' : 'none';
+  };
+
+  /* ── CSV param add ── */
+  window.addCsvParam = function() {
+    var tbody = document.getElementById('csv-params-tbody');
+    if (!tbody) return;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td style="padding:0 8px 6px 0;"><input type="text" class="modal-input" placeholder="e.g. username" style="padding:6px 9px;font-size:13px;"></td>'
+      + '<td style="padding:0 8px 6px 0;"><input type="text" class="modal-input" placeholder="e.g. mypassword" style="padding:6px 9px;font-size:13px;"></td>'
+      + '<td><button onclick="this.closest(\'tr\').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;padding:0;">🗑</button></td>';
+    tbody.appendChild(tr);
+  };
+
+  /* ── Patch showFeedDataPage to hide new pages ── */
+  var _origShowFeed = window.showFeedDataPage;
+  if (_origShowFeed) {
+    window.showFeedDataPage = function() {
+      ['field-mapping-page','row-detail-page','add-export-page'].forEach(function(id){
+        var el = document.getElementById(id); if (el) el.style.display='none';
+      });
+      _origShowFeed();
+    };
+  }
+
+  /* ── Patch showConfigureImportPage to call showWizardStep2ForSource ── */
+  var _origShowCfg = window.showConfigureImportPage;
+  if (_origShowCfg) {
+    window.showConfigureImportPage = function(src, type) {
+      _origShowCfg(src, type);
+      window.showWizardStep2ForSource(src || (typeof importSource !== 'undefined' ? importSource : 'Shopify'));
+    };
+  }
+
+  /* ── Wire Field Mapping button in Imports tab ── */
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-action="field-mapping"]');
+    if (btn) { window.showFieldMappingPage(); }
+  });
+
 })();
 </script>
 
