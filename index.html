@@ -1749,6 +1749,118 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
   border-color:#eff1f5 !important; cursor:not-allowed !important; opacity:1 !important; box-shadow:none !important;
 }
 
+/* ═══════════════════════════════════════════════
+   ANNOTATIONS & ALERTS MANAGEMENT
+═══════════════════════════════════════════════ */
+#ann-action-dd, #alerts-action-dd {
+  position:fixed; background:white;
+  border:1px solid var(--color-border); border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  z-index:1000; padding:4px 0; min-width:160px; display:none;
+}
+.badge-active {
+  display:inline-block; background:var(--color-container-success);
+  color:var(--color-text-success); border-radius:20px;
+  padding:2px 8px; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:500;
+}
+.badge-draft {
+  display:inline-block; background:var(--color-bg-grey50);
+  color:var(--color-text-subtitle); border-radius:20px;
+  padding:2px 8px; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:500;
+}
+.metric-chip {
+  display:inline-flex; align-items:center; gap:4px;
+  background:#edf3ff; color:var(--color-blue); border-radius:20px;
+  padding:2px 8px; font-size:12px; font-family:'DM Sans',sans-serif; margin:2px;
+}
+.metric-chip-x { cursor:pointer; font-size:13px; color:var(--color-blue); line-height:1; }
+.condition-rule {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  background:var(--color-bg-grey50); border:1px solid var(--color-border);
+  border-radius:8px; padding:10px 12px; margin-bottom:8px;
+}
+.condition-rule select, .condition-rule input[type="text"], .condition-rule input[type="number"] {
+  padding:6px 8px; border:1px solid var(--color-border); border-radius:6px;
+  font-size:13px; color:var(--color-text-primary); background:white;
+  font-family:'DM Sans',sans-serif; outline:none;
+}
+.condition-rule select { cursor:pointer; }
+.condition-rule input { width:100px; }
+.logic-connector { display:flex; gap:4px; margin:4px 0 4px 0; align-items:center; }
+.logic-pill {
+  padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600;
+  cursor:pointer; border:1px solid var(--color-border);
+  background:var(--color-bg-grey50); color:var(--color-text-caption);
+}
+.logic-pill.active { background:var(--color-blue); color:white; border-color:var(--color-blue); }
+.alert-summary-box {
+  background:#eff6ff; border:1px solid #c7d9f8; border-radius:8px;
+  padding:10px 14px; font-size:13px; color:#2563eb; margin-top:10px; line-height:1.5;
+}
+.alert-summary-box.muted {
+  background:var(--color-bg-grey50); border-color:var(--color-border);
+  color:var(--color-text-caption);
+}
+.condition-display {
+  background:var(--color-bg-grey50); border:1px solid var(--color-border);
+  border-radius:8px; padding:10px 14px; margin-bottom:6px;
+  font-size:13px; color:var(--color-text-primary);
+}
+.slack-preview-card {
+  background:#1a1d21; color:#d1d2d3; border-radius:10px;
+  padding:16px 20px; font-family:'DM Sans',sans-serif; font-size:13px;
+}
+.slack-preview-title { color:#fff; font-weight:700; font-size:15px; margin-bottom:12px; }
+.slack-preview-row { display:flex; gap:8px; margin:5px 0; }
+.slack-preview-label { color:#8a8c8e; min-width:90px; flex-shrink:0; }
+.form-section-label {
+  font-size:14px; font-weight:500; color:var(--color-text-subtitle);
+  margin:24px 0 10px; display:block;
+}
+.form-hr { border:none; border-top:1px solid var(--color-border); margin:20px 0; }
+.scope-radio-group { display:flex; gap:0; }
+.scope-radio-option {
+  display:flex; align-items:center; gap:8px; padding:10px 16px;
+  border:1px solid var(--color-border); cursor:pointer; font-size:14px;
+  font-family:'DM Sans',sans-serif; color:var(--color-text-primary);
+  background:var(--color-bg-grey50);
+}
+.scope-radio-option:first-child { border-radius:8px 0 0 8px; }
+.scope-radio-option:last-child  { border-radius:0 8px 8px 0; border-left:none; }
+.scope-radio-option.selected { background:white; border-color:var(--color-blue); color:var(--color-blue); }
+.scope-radio-dot {
+  width:14px; height:14px; border-radius:50%; border:2px solid var(--color-border);
+  flex-shrink:0; background:white; position:relative;
+}
+.scope-radio-option.selected .scope-radio-dot { border-color:var(--color-blue); }
+.scope-radio-option.selected .scope-radio-dot::after {
+  content:''; position:absolute; inset:2px; border-radius:50%; background:var(--color-blue);
+}
+.metrics-dd-panel {
+  position:absolute; top:calc(100% + 4px); left:0;
+  background:white; border:1px solid var(--color-border); border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,.10); z-index:600;
+  max-height:220px; overflow-y:auto; display:none; min-width:220px;
+}
+.metrics-dd-panel.open { display:block; }
+.metrics-dd-item {
+  display:flex; align-items:center; gap:8px; padding:8px 14px;
+  cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif;
+}
+.metrics-dd-item:hover { background:var(--color-bg-grey50); }
+.alerts-filter-panel {
+  position:absolute; top:calc(100% + 4px); left:0;
+  background:white; border:1px solid var(--color-border); border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,.10); z-index:600;
+  min-width:180px; display:none;
+}
+.alerts-filter-panel.open { display:block; }
+.alerts-filter-item {
+  padding:8px 14px; cursor:pointer; font-size:13px;
+  font-family:'DM Sans',sans-serif; color:var(--color-text-primary);
+}
+.alerts-filter-item:hover { background:var(--color-bg-grey50); }
+
 </style>
 </head>
 <body>
@@ -4498,11 +4610,639 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div><!-- /permission-manager-page -->
 
+<!-- ═══════════════════════════════════════════
+     ANNOTATIONS PAGE
+═══════════════════════════════════════════ -->
+<div id="annotations-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- LIST VIEW -->
+  <div id="ann-list-view">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1">Annotations</h1>
+        <span class="count-badge" id="ann-count-badge">10</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="annShowAddView()" style="display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add Annotation
+        </button>
+      </div>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Track campaign events, site changes, and other notes tied to specific dates.</p>
+    <nav class="breadcrumb" style="margin-bottom:20px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Annotations</span>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div style="position:relative;flex:1;max-width:320px;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--color-text-caption)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="var(--color-text-caption)" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="ann-search" class="search-box" style="padding-left:32px;width:100%;box-sizing:border-box;" placeholder="Search annotations…" oninput="annSearch()">
+      </div>
+    </div>
+    <div class="table-card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Title ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Client ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Website ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Date ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Modified ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="ann-tbody"></tbody>
+      </table>
+    </div>
+  </div><!-- /ann-list-view -->
+
+  <!-- ADD ANNOTATION VIEW -->
+  <div id="ann-add-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <h1 class="page-h1">Add Annotation</h1>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Add a new annotation to track a campaign event or site change.</p>
+    <nav class="breadcrumb" style="margin-bottom:24px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="annShowListView()">Annotations</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Add Annotation</span>
+    </nav>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <!-- Client & Website -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Client <span style="color:#d72225;">*</span></label>
+            <select class="modal-select" id="ann-form-client" onchange="annOnClientChange()" style="width:100%;">
+              <option value="">Select Client</option>
+              <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+              <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+              <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+              <option>Harbor Light</option><option>Sunset Brands</option><option>Blue Ridge Co.</option>
+              <option>Crestwood Market</option><option>Elm &amp; Oak</option><option>Frost &amp; Co.</option>
+              <option>Golden Gate Goods</option><option>Hillside Home</option><option>Iron Ridge</option>
+              <option>Juniper Lane</option><option>Keystone Shop</option><option>Lakeside Living</option>
+              <option>Maple Grove</option><option>Northpoint</option><option>Orchard Street</option>
+              <option>Pinecrest Supply</option><option>Quarry Stone</option><option>Ridgeline Retail</option>
+              <option>Summit Supply</option><option>Thornwood Co.</option><option>Upland Goods</option>
+              <option>Valley View</option><option>Westbrook</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Website <span style="color:#d72225;">*</span></label>
+            <select class="modal-select" id="ann-form-website" disabled style="width:100%;opacity:0.6;">
+              <option value="">Select Website</option>
+            </select>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <!-- Date -->
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Date <span style="color:#d72225;">*</span></label>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <input type="date" class="modal-input" id="ann-form-date" style="width:180px;">
+            <span id="ann-add-end-link" style="font-size:13px;color:var(--color-blue);cursor:pointer;" onclick="annToggleEndDate(true)">+ Add end date (optional)</span>
+          </div>
+          <div id="ann-end-date-row" style="display:none;align-items:center;gap:8px;margin-top:8px;">
+            <span style="font-size:13px;color:var(--color-text-caption);">to</span>
+            <input type="date" class="modal-input" id="ann-form-end-date" style="width:180px;">
+            <span style="font-size:13px;color:#d72225;cursor:pointer;" onclick="annToggleEndDate(false)">× Remove</span>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <!-- Title -->
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Title <span style="color:#d72225;">*</span></label>
+          <input type="text" class="modal-input" id="ann-form-title" placeholder="e.g. Black Friday campaign launched" style="width:100%;box-sizing:border-box;">
+        </div>
+        <!-- Notes -->
+        <div style="margin-bottom:24px;">
+          <label class="field-label">Additional Notes</label>
+          <textarea class="modal-textarea" id="ann-form-notes" placeholder="Optional notes about this annotation…" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;"></textarea>
+        </div>
+        <!-- Buttons -->
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-primary-sm" onclick="annSubmitAdd()">Add Annotation</button>
+          <button class="btn-outline" onclick="annShowListView()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /ann-add-view -->
+
+  <!-- DETAIL / EDIT VIEW -->
+  <div id="ann-detail-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;align-items:flex-start;">
+      <div>
+        <h1 class="page-h1" id="ann-detail-heading">Annotation</h1>
+      </div>
+      <div id="ann-detail-edit-btns" style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="annEnableEdit()">Edit</button>
+        <button class="btn-outline" style="border-color:#d72225;color:#d72225;" onclick="annConfirmDelete(_annActiveId)">Delete</button>
+      </div>
+      <div id="ann-detail-save-btns" style="display:none;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="annSaveEdit()">Save Changes</button>
+        <button class="btn-outline" onclick="annCancelEdit()">Cancel</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" style="margin-bottom:8px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="annShowListView()">Annotations</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="ann-detail-bc-title" style="color:var(--color-text-primary);">Detail</span>
+    </nav>
+    <p id="ann-detail-modified" style="font-size:12px;color:var(--color-text-caption);margin-bottom:24px;"></p>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Client</label>
+            <select class="modal-select" id="ann-detail-client-input" style="width:100%;" disabled>
+              <option value="">Select Client</option>
+              <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+              <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+              <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+              <option>Harbor Light</option><option>Sunset Brands</option><option>Blue Ridge Co.</option>
+              <option>Crestwood Market</option><option>Elm &amp; Oak</option><option>Frost &amp; Co.</option>
+              <option>Golden Gate Goods</option><option>Hillside Home</option><option>Iron Ridge</option>
+              <option>Juniper Lane</option><option>Keystone Shop</option><option>Lakeside Living</option>
+              <option>Maple Grove</option><option>Northpoint</option><option>Orchard Street</option>
+              <option>Pinecrest Supply</option><option>Quarry Stone</option><option>Ridgeline Retail</option>
+              <option>Summit Supply</option><option>Thornwood Co.</option><option>Upland Goods</option>
+              <option>Valley View</option><option>Westbrook</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Website</label>
+            <select class="modal-select" id="ann-detail-website-input" style="width:100%;" disabled>
+              <option value="">Select Website</option>
+              <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+              <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+              <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+              <option>Harbor Light</option><option>Sunset Brands</option><option>Blue Ridge Co.</option>
+              <option>Crestwood Market</option><option>Elm &amp; Oak</option><option>Frost &amp; Co.</option>
+              <option>Golden Gate Goods</option><option>Hillside Home</option><option>Iron Ridge</option>
+              <option>Juniper Lane</option><option>Keystone Shop</option><option>Lakeside Living</option>
+              <option>Maple Grove</option><option>Northpoint</option><option>Orchard Street</option>
+              <option>Pinecrest Supply</option><option>Quarry Stone</option><option>Ridgeline Retail</option>
+              <option>Summit Supply</option><option>Thornwood Co.</option><option>Upland Goods</option>
+              <option>Valley View</option><option>Westbrook</option>
+            </select>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Date</label>
+          <input type="date" class="modal-input" id="ann-detail-date-input" style="width:180px;" disabled>
+        </div>
+        <hr class="form-hr">
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Title</label>
+          <input type="text" class="modal-input" id="ann-detail-title-input" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+        <div>
+          <label class="field-label">Additional Notes</label>
+          <textarea class="modal-textarea" id="ann-detail-notes-input" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;" disabled></textarea>
+        </div>
+      </div>
+    </div>
+  </div><!-- /ann-detail-view -->
+
+</div><!-- /annotations-page -->
+
+<!-- ═══════════════════════════════════════════
+     ALERTS PAGE
+═══════════════════════════════════════════ -->
+<div id="alerts-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- LIST VIEW -->
+  <div id="alerts-list-view">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1">Alerts Management</h1>
+        <span class="count-badge" id="alerts-count-badge">9</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="alertsShowCreate(null)" style="display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Create Alert
+        </button>
+      </div>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Set up automated alerts to monitor key metrics and get notified when thresholds are breached.</p>
+    <nav class="breadcrumb" style="margin-bottom:20px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Alerts Management</span>
+    </nav>
+    <!-- Filter bar -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="position:relative;flex:1;max-width:280px;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--color-text-caption)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="var(--color-text-caption)" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="alerts-search" class="search-box" style="padding-left:32px;width:100%;box-sizing:border-box;" placeholder="Search alerts…" oninput="alertsSearch()">
+      </div>
+      <div id="alerts-ds-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('alerts-ds-panel').classList.toggle('open');document.getElementById('alerts-status-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:160px;justify-content:space-between;">
+          <span id="alerts-ds-btn-label">Data Source: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="alerts-ds-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('','')">All</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Google Ads','')">Google Ads</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Meta Ads','')">Meta Ads</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Organic Search (SEO)','')">Organic Search (SEO)</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Microsoft Ads','')">Microsoft Ads</div>
+        </div>
+      </div>
+      <div id="alerts-status-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('alerts-status-panel').classList.toggle('open');document.getElementById('alerts-ds-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:130px;justify-content:space-between;">
+          <span id="alerts-status-btn-label">Status: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="alerts-status-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="alertsSetFilterStatus('')">All</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterStatus('Active')">Active</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterStatus('Draft')">Draft</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Alert ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Data Source ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Scope ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Status ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Run ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Triggered ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Modified ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="alerts-tbody"></tbody>
+      </table>
+    </div>
+  </div><!-- /alerts-list-view -->
+
+  <!-- CREATE ALERT VIEW -->
+  <div id="alerts-create-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <h1 class="page-h1" id="alerts-create-heading">Create Alert</h1>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Configure the conditions, schedule, and notification settings for your alert.</p>
+    <nav class="breadcrumb" style="margin-bottom:24px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="alertsBackToList()">Alerts Management</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="alerts-create-bc-label" style="color:var(--color-text-primary);">Create Alert</span>
+    </nav>
+    <div style="max-width:680px;">
+      <div class="table-card" style="padding:24px 28px;">
+
+        <!-- Alert Identity -->
+        <span class="form-section-label" style="margin-top:0;">Alert Identity</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Alert Name <span style="color:#d72225;">*</span></label>
+          <input type="text" class="modal-input" id="alerts-form-name" placeholder="e.g. Budget Alert" style="width:100%;box-sizing:border-box;" oninput="alertsFormDirty();alertsUpdateCreateBtn()">
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Data Source -->
+        <span class="form-section-label">Data Source</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Data Source <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="alerts-form-ds" onchange="alertsFormDirty();alertsOnDataSourceChange()" style="width:100%;">
+            <option value="">Select Data Source</option>
+            <option>Google Ads</option>
+            <option>Meta Ads</option>
+            <option>Organic Search (SEO)</option>
+            <option>Microsoft Ads</option>
+          </select>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Scope -->
+        <span class="form-section-label">Scope</span>
+        <div style="margin-bottom:8px;">
+          <label class="field-label">Apply To <span style="color:#d72225;">*</span></label>
+          <div class="scope-radio-group">
+            <div class="scope-radio-option selected" data-scope="All Clients" onclick="alertsSelectScope(this)">
+              <span class="scope-radio-dot"></span>All Clients
+            </div>
+            <div class="scope-radio-option" data-scope="Specific Clients" onclick="alertsSelectScope(this)">
+              <span class="scope-radio-dot"></span>Specific Clients
+            </div>
+          </div>
+        </div>
+        <div id="alerts-client-select-row" style="display:none;margin-top:10px;margin-bottom:8px;">
+          <label class="field-label">Select Clients</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;" id="alerts-client-chips"></div>
+          <select class="modal-select" id="alerts-client-dd" onchange="alertsAddClient(this.value);this.value='';" style="width:240px;">
+            <option value="">+ Add client…</option>
+            <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+            <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+            <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+            <option>Harbor Light</option>
+          </select>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Metrics -->
+        <span class="form-section-label">Metrics</span>
+        <div style="margin-bottom:8px;">
+          <label class="field-label">Select Metrics <span style="color:#d72225;">*</span></label>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;min-height:28px;" id="alerts-metric-chips"></div>
+          <div id="alerts-metrics-wrap" style="position:relative;display:inline-block;">
+            <button class="btn-filter" id="alerts-metrics-btn" onclick="alertsToggleMetricsPanel()" style="display:flex;align-items:center;gap:6px;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Add Metric
+            </button>
+            <div id="alerts-metrics-panel" class="metrics-dd-panel"></div>
+          </div>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Conditions -->
+        <span class="form-section-label">Conditions</span>
+        <div id="alerts-conditions-container" style="margin-bottom:8px;">
+          <p style="font-size:13px;color:var(--color-text-caption);margin:0;">Select at least one metric to define alert conditions.</p>
+        </div>
+        <div id="alerts-summary-box" class="alert-summary-box muted" style="margin-bottom:0;">
+          Set up the alert conditions in order to view the alert summary.
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Schedule -->
+        <span class="form-section-label">Schedule</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Check Frequency <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="alerts-form-freq" onchange="alertsFormDirty()" style="width:220px;">
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+          </select>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Alert Message Preview -->
+        <span class="form-section-label">Alert Message Preview</span>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0 0 8px;">
+          <span style="color:var(--color-blue);cursor:pointer;text-decoration:underline;" onclick="alertsShowPreview()">Preview alert message</span> — see how the notification will look in Slack.
+        </p>
+
+        <hr class="form-hr">
+
+        <!-- Notifications -->
+        <span class="form-section-label">Notifications</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+          <div>
+            <label class="field-label">Slack Channel</label>
+            <select class="modal-select" id="alerts-form-slack-ch" onchange="alertsFormDirty()" style="width:100%;">
+              <option value="">None</option>
+              <option>#alerts-general</option>
+              <option>#alerts-budget</option>
+              <option>#alerts-performance</option>
+              <option>#team-paid-search</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Slack DM</label>
+            <select class="modal-select" id="alerts-form-slack-dm" onchange="alertsFormDirty()" style="width:100%;">
+              <option value="">None</option>
+              <option>Shilo Jones</option>
+              <option>Seyifunmi Olufemi</option>
+              <option>Marcus Reid</option>
+              <option>Priya Nair</option>
+              <option>Devon Blake</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Button row -->
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--color-border);padding-top:20px;">
+          <button class="btn-primary-sm pm-btn-disabled" id="alerts-create-btn" disabled onclick="alertsSubmitCreate()">Create Alert</button>
+          <button class="btn-outline" onclick="alertsBackToList()">Cancel</button>
+          <button class="btn-outline" style="margin-left:auto;" onclick="alertsShowPreview()">Test Alert</button>
+          <button class="btn-outline" onclick="alertsSaveDraft()">Save to Drafts</button>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /alerts-create-view -->
+
+  <!-- ALERT DETAIL VIEW -->
+  <div id="alerts-detail-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1" id="alerts-detail-heading">Alert</h1>
+        <span id="alerts-detail-status"></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="btn-outline" id="alerts-detail-toggle-btn" onclick="alertsDetailToggle()">Disable</button>
+        <button class="btn-outline" onclick="alertsShowCreate(_alertsActiveId)">Edit</button>
+        <button class="btn-outline" onclick="alertsOpenDuplicate(_alertsActiveId)">Duplicate</button>
+        <button class="btn-outline" style="border-color:#d72225;color:#d72225;" onclick="alertsConfirmDelete(_alertsActiveId)">Delete</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" style="margin-bottom:8px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="alertsShowListView()">Alerts Management</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="alerts-detail-bc-title" style="color:var(--color-text-primary);">Detail</span>
+    </nav>
+    <p id="alerts-detail-modified" style="font-size:12px;color:var(--color-text-caption);margin-bottom:24px;"></p>
+
+    <div style="max-width:700px;">
+      <!-- Detail sections rendered by JS -->
+      <div id="alerts-detail-sections" class="table-card" style="padding:24px 28px;margin-bottom:20px;"></div>
+
+      <!-- Activity -->
+      <div>
+        <h2 style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin-bottom:16px;">Alert Activity</h2>
+        <div class="table-card">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Client</th>
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Triggered At</th>
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Condition</th>
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">View</th>
+              </tr>
+            </thead>
+            <tbody id="alerts-activity-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div><!-- /alerts-detail-view -->
+
+</div><!-- /alerts-page -->
+
     </div><!-- /page-content -->
   </main>
 
 </div><!-- /app-shell -->
 </div><!-- /screen-dashboard -->
+
+<!-- ANN ACTION DROPDOWN -->
+<div id="ann-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="annMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="var(--color-text-primary)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    Edit
+  </div>
+  <div class="pm-dd-item" onclick="annMenuAction('delete')" style="color:#d72225;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete
+  </div>
+</div>
+
+<!-- ALERTS ACTION DROPDOWN -->
+<div id="alerts-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="alertsMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="var(--color-text-primary)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    Edit Alert
+  </div>
+  <div class="pm-dd-item" onclick="alertsMenuAction('duplicate')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.5" stroke="var(--color-text-primary)" stroke-width="1.3"/><path d="M9 5V3.5A1.5 1.5 0 007.5 2H3.5A1.5 1.5 0 002 3.5v4A1.5 1.5 0 003.5 9H5" stroke="var(--color-text-primary)" stroke-width="1.3"/></svg>
+    Duplicate
+  </div>
+  <div class="pm-dd-item" onclick="alertsMenuAction('toggle')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4.5" width="12" height="5" rx="2.5" stroke="var(--color-text-primary)" stroke-width="1.3"/><circle cx="9.5" cy="7" r="2" fill="var(--color-text-primary)"/></svg>
+    <span id="alerts-dd-toggle-label">Disable Alert</span>
+  </div>
+  <div class="pm-dd-item" onclick="alertsMenuAction('delete')" style="color:#d72225;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete
+  </div>
+</div>
+
+<!-- ANN DELETE MODAL -->
+<div id="ann-delete-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Delete Annotation</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">Are you sure you want to delete this annotation? This action cannot be undone.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="annDeleteCancel()">Cancel</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="annDeleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS DELETE MODAL -->
+<div id="alerts-delete-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Delete Alert</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">Are you sure you want to delete this alert? This action cannot be undone.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-delete-modal').style.display='none'">Cancel</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="alertsDeleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS DUPLICATE MODAL -->
+<div id="alerts-duplicate-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:440px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Duplicate Alert</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin-bottom:16px;">Choose what to duplicate from the original alert.</p>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Alert Name <span style="color:#d72225;">*</span></label>
+        <input type="text" class="modal-input" id="dup-name-input" style="width:100%;box-sizing:border-box;">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-ds" checked> Data Source</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-metrics" checked> Metrics</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-conditions" checked> Conditions</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-schedule" checked> Schedule</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-notifs" checked> Notifications Setup</label>
+      </div>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-duplicate-modal').style.display='none'">Cancel</button>
+      <button class="btn-primary-sm" onclick="alertsDuplicateConfirm()">Duplicate Alert</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS PREVIEW MODAL -->
+<div id="alerts-preview-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:480px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Alert Message Preview</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin-bottom:16px;">This is a preview. Actual values may vary when the alert triggers.</p>
+      <div class="slack-preview-card">
+        <div class="slack-preview-title">🚨 Alert Triggered: <span id="alerts-preview-name">Budget Alert</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Platform:</span><span id="alerts-preview-platform">Google Ads</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Triggered:</span><span>Dec 4, 2025 · 2:00 AM</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Condition:</span><span>COS is greater than 50 over 7 days</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Value:</span><span style="color:#f87171;">54.2%</span></div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid #2e3035;font-size:12px;color:#6b6f73;">View in Argos →</div>
+      </div>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-preview-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS CONDITION MODAL -->
+<div id="alerts-condition-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:460px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Triggered Condition</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin-bottom:12px;">Condition that triggered this alert for <strong id="condition-modal-client"></strong></p>
+      <p style="font-size:12px;color:var(--color-text-caption);margin-bottom:12px;">Triggered at: <span id="condition-modal-time"></span></p>
+      <div class="condition-display" id="condition-modal-text"></div>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-condition-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS UNSAVED MODAL -->
+<div id="alerts-unsaved-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Unsaved Changes</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">You've made some updates that haven't been saved yet. If you leave now, you'll lose these changes.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-primary-sm" onclick="alertsStay()">Stay</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="alertsDiscard()">Discard</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══ PERMISSION MANAGER: Role / Client Access Modal ══ -->
 <div id="pm-role-modal" class="pm-modal-overlay" style="display:none;" onclick="pmModalOverlayClick(event)">
@@ -5328,7 +6068,7 @@ var ISSUES = [
   }
 
   function hideFeedDetailPages() {
-    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
   }
   window.hideFeedDetailPages = hideFeedDetailPages;
 
@@ -5897,6 +6637,12 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'permission-manager') {
           showPermissionManagerPage();
+        }
+        if (this.getAttribute('data-nav') === 'annotations') {
+          showAnnotationsPage();
+        }
+        if (this.getAttribute('data-nav') === 'alerts') {
+          showAlertsPage();
         }
       });
     });
@@ -7025,6 +7771,792 @@ window.filterLogs = function() {
 
   /* ── Init ── */
   (function() { var t = document.getElementById('pm-users-tbody'); if (t) pmRenderList(''); })();
+
+  /* ═══════════════════════════════════════════════
+     ANNOTATIONS & ALERTS MANAGEMENT JS
+  ═══════════════════════════════════════════════ */
+
+  /* ── ANNOTATIONS DATA ── */
+  var ANNOTATIONS_DATA = [
+    { id:1, title:'Black Friday campaign launched', client:'MojoMotoSport', website:'MojoMotoSport', date:'Dec 4, 2025', endDate:null, notes:'Major sale event with 40% off sitewide. Expected traffic surge.', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' },
+    { id:2, title:'Website redesign go-live', client:'Blossom Beauty', website:'Blossom Beauty', date:'Nov 18, 2025', endDate:null, notes:'New checkout flow launched. Monitor conversion rate closely.', modifiedBy:'Marcus Reid', modifiedTime:'5 days ago' },
+    { id:3, title:'Google Ads budget increase', client:'Peak Performance', website:'Peak Performance', date:'Nov 10, 2025', endDate:null, notes:'Budget increased from $5k to $8k/mo for Q4.', modifiedBy:'Priya Nair', modifiedTime:'1 week ago' },
+    { id:4, title:'Seasonal promotion — Winter Sale', client:'Coastal Living', website:'Coastal Living', date:'Dec 1, 2025', endDate:'Jan 5, 2026', notes:null, modifiedBy:'Devon Blake', modifiedTime:'3 days ago' },
+    { id:5, title:'Tracking pixel reinstalled', client:'Urban Threads', website:'Urban Threads', date:'Oct 28, 2025', endDate:null, notes:'GA4 pixel had gone missing; reinstalled and verified firing.', modifiedBy:'Shilo Jones', modifiedTime:'3 weeks ago' },
+    { id:6, title:'Meta Ads account paused', client:'Bright Minds', website:'Bright Minds', date:'Oct 15, 2025', endDate:'Nov 1, 2025', notes:'Paused due to creative fatigue. Resuming with new assets.', modifiedBy:'Marcus Reid', modifiedTime:'1 month ago' },
+    { id:7, title:'Landing page A/B test started', client:'Terra Gardens', website:'Terra Gardens', date:'Nov 22, 2025', endDate:null, notes:'Testing two variants of the hero section.', modifiedBy:'Priya Nair', modifiedTime:'4 days ago' },
+    { id:8, title:'Holiday email campaign launched', client:'Apex Fitness', website:'Apex Fitness', date:'Dec 2, 2025', endDate:null, notes:null, modifiedBy:'Devon Blake', modifiedTime:'2 days ago' },
+    { id:9, title:'Site migration completed', client:'Silver Creek', website:'Silver Creek', date:'Sep 30, 2025', endDate:null, notes:'Migrated from Shopify to custom WooCommerce. Check all tags.', modifiedBy:'Shilo Jones', modifiedTime:'2 months ago' },
+    { id:10, title:'CPC spike — investigating', client:'Harbor Light', website:'Harbor Light', date:'Dec 3, 2025', endDate:null, notes:'CPC jumped 40% overnight. Reviewing search terms and competitors.', modifiedBy:'Marcus Reid', modifiedTime:'1 day ago' }
+  ];
+  var _annNextId = 11;
+
+  /* ── ALERTS DATA ── */
+  var ALERTS_DATA = [
+    { id:'1', name:'Budget Alert', dataSource:'Google Ads', scope:'All Clients', status:'Active', lastRun:'Dec 4, 2025 · 2:00 AM', lastTriggered:'Dec 4, 2025', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' },
+    { id:'2', name:'COS Threshold Alert', dataSource:'Google Ads', scope:'MojoMotoSport', status:'Active', lastRun:'Dec 4, 2025 · 2:00 AM', lastTriggered:'Dec 2, 2025', modifiedBy:'Marcus Reid', modifiedTime:'1 week ago' },
+    { id:'3', name:'Conversion Drop Alert', dataSource:'Meta Ads', scope:'All Clients', status:'Active', lastRun:'Dec 4, 2025 · 3:00 AM', lastTriggered:'Nov 30, 2025', modifiedBy:'Priya Nair', modifiedTime:'3 days ago' },
+    { id:'4', name:'SEO Position Drop', dataSource:'Organic Search (SEO)', scope:'Blossom Beauty', status:'Active', lastRun:'Dec 3, 2025 · 1:00 AM', lastTriggered:'Nov 28, 2025', modifiedBy:'Devon Blake', modifiedTime:'4 days ago' },
+    { id:'5', name:'ROAS Below Target', dataSource:'Google Ads', scope:'Peak Performance', status:'Draft', lastRun:null, lastTriggered:null, modifiedBy:'Shilo Jones', modifiedTime:'1 week ago' },
+    { id:'6', name:'Impression Share Drop', dataSource:'Microsoft Ads', scope:'All Clients', status:'Active', lastRun:'Dec 4, 2025 · 4:00 AM', lastTriggered:'Dec 1, 2025', modifiedBy:'Marcus Reid', modifiedTime:'5 days ago' },
+    { id:'7', name:'CPC Spike Alert', dataSource:'Google Ads', scope:'Harbor Light', status:'Active', lastRun:'Dec 4, 2025 · 2:00 AM', lastTriggered:'Dec 3, 2025', modifiedBy:'Priya Nair', modifiedTime:'1 day ago' },
+    { id:'8', name:'CTR Below Benchmark', dataSource:'Meta Ads', scope:'All Clients', status:'Draft', lastRun:null, lastTriggered:null, modifiedBy:'Devon Blake', modifiedTime:'2 weeks ago' },
+    { id:'9', name:'Weekly Performance Summary', dataSource:'Google Ads', scope:'All Clients', status:'Active', lastRun:'Dec 1, 2025 · 6:00 AM', lastTriggered:'Nov 24, 2025', modifiedBy:'Shilo Jones', modifiedTime:'1 week ago' }
+  ];
+  var _alertsNextId = 10;
+
+  var ALERTS_DETAILS = {
+    '1': {
+      metrics:['COS','Clicks','Conversions'],
+      conditions:[
+        {metric:'COS',operator:'is greater than',threshold:'50',timeWindow:'7 days',logic:null},
+        {metric:'Clicks',operator:'is less than',threshold:'500',timeWindow:'7 days',logic:'AND'}
+      ],
+      schedule:{frequency:'Daily'},
+      notifications:{slackChannel:'#alerts-budget',slackDM:'Seyifunmi Olufemi'},
+      activity:[
+        {id:'a1',client:'MojoMotoSport',triggeredAt:'Dec 4, 2025 · 2:14 AM',condition:'COS is greater than 50 over 7 days — actual: 54.2%'},
+        {id:'a2',client:'Peak Performance',triggeredAt:'Dec 2, 2025 · 2:08 AM',condition:'Clicks is less than 500 over 7 days — actual: 412'},
+        {id:'a3',client:'Apex Fitness',triggeredAt:'Nov 30, 2025 · 2:11 AM',condition:'COS is greater than 50 over 7 days — actual: 51.8%'}
+      ]
+    },
+    '2': {
+      metrics:['COS'],
+      conditions:[{metric:'COS',operator:'is greater than',threshold:'45',timeWindow:'7 days',logic:null}],
+      schedule:{frequency:'Daily'},
+      notifications:{slackDM:'Marcus Reid'},
+      activity:[
+        {id:'b1',client:'MojoMotoSport',triggeredAt:'Dec 2, 2025 · 2:05 AM',condition:'COS is greater than 45 over 7 days — actual: 47.1%'}
+      ]
+    },
+    '3': { metrics:['Conversions','COS'], conditions:[{metric:'Conversions',operator:'decreases by',threshold:'20',timeWindow:'7 days',logic:null}], schedule:{frequency:'Daily'}, notifications:{slackChannel:'#alerts-performance'}, activity:[] },
+    '4': { metrics:['Position'], conditions:[{metric:'Position',operator:'is greater than',threshold:'10',timeWindow:'7 days',logic:null}], schedule:{frequency:'Weekly'}, notifications:{slackDM:'Devon Blake'}, activity:[] },
+    '5': { metrics:['ROAS'], conditions:[{metric:'ROAS',operator:'is less than',threshold:'3',timeWindow:'14 days',logic:null}], schedule:{frequency:'Daily'}, notifications:{}, activity:[] },
+    '6': { metrics:['Impressions'], conditions:[{metric:'Impressions',operator:'decreases by',threshold:'25',timeWindow:'7 days',logic:null}], schedule:{frequency:'Daily'}, notifications:{slackChannel:'#team-paid-search'}, activity:[] },
+    '7': { metrics:['CPC'], conditions:[{metric:'CPC',operator:'is greater than',threshold:'5',timeWindow:'3 days',logic:null}], schedule:{frequency:'Daily'}, notifications:{slackDM:'Priya Nair'}, activity:[
+      {id:'c1',client:'Harbor Light',triggeredAt:'Dec 3, 2025 · 2:22 AM',condition:'CPC is greater than $5 over 3 days — actual: $6.40'}
+    ]},
+    '8': { metrics:['CTR'], conditions:[{metric:'CTR',operator:'is less than',threshold:'1',timeWindow:'7 days',logic:null}], schedule:{frequency:'Weekly'}, notifications:{}, activity:[] },
+    '9': { metrics:['COS','Clicks','Conversions','ROAS'], conditions:[], schedule:{frequency:'Weekly'}, notifications:{slackChannel:'#alerts-general'}, activity:[] }
+  };
+
+  /* ── STATE ── */
+  var _annActiveId = null;
+  var _annEditMode = false;
+  var _alertsActiveId = null;
+  var _alertsEditMode = false;
+  var _alertsConditions = [];
+  var _alertsSelectedMetrics = [];
+  var _alertsSelectedClients = [];
+  var _alertsFormDirty = false;
+  var _alertsDeleteId = null;
+  var _alertsDuplicateId = null;
+  var _alertsFilterDs = '';
+  var _alertsFilterStatus = '';
+  var _alertsFilterSearch = '';
+  var _alertsCurrentMetricsList = [];
+
+  /* ─────────────────────────────────────────
+     ANNOTATIONS
+  ───────────────────────────────────────── */
+  function showAnnotationsPage() {
+    ['ic-list','ic-detail','integrations-page','feed-data-page'].forEach(function(id){
+      var el=document.getElementById(id); if(el) el.style.display='none';
+    });
+    hideFeedDetailPages();
+    var p=document.getElementById('annotations-page'); if(p) p.style.display='block';
+    annShowListView();
+    window.scrollTo(0,0);
+  }
+  window.showAnnotationsPage = showAnnotationsPage;
+
+  function annShowListView() {
+    document.getElementById('ann-list-view').style.display='block';
+    document.getElementById('ann-add-view').style.display='none';
+    document.getElementById('ann-detail-view').style.display='none';
+    var s=document.getElementById('ann-search'); if(s) s.value='';
+    annRenderList('');
+  }
+  window.annShowListView = annShowListView;
+
+  window.annSearch = function(){ annRenderList(document.getElementById('ann-search').value); };
+
+  function annRenderList(query) {
+    var q=(query||'').toLowerCase();
+    var rows=ANNOTATIONS_DATA.filter(function(a){
+      return !q||a.title.toLowerCase().indexOf(q)>-1||a.client.toLowerCase().indexOf(q)>-1||a.website.toLowerCase().indexOf(q)>-1;
+    });
+    var badge=document.getElementById('ann-count-badge'); if(badge) badge.textContent=ANNOTATIONS_DATA.length;
+    var tbody=document.getElementById('ann-tbody'); if(!tbody) return;
+    tbody.innerHTML=rows.map(function(a){
+      return '<tr style="border-bottom:1px solid var(--color-border);">'+
+        '<td style="padding:12px 16px;"><span style="font-size:14px;color:var(--color-blue);cursor:pointer;font-weight:500;" onclick="annShowDetail('+a.id+')">'+escHtml(a.title)+'</span></td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(a.client)+'</td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(a.website)+'</td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(a.date)+'</td>'+
+        '<td style="padding:12px 16px;">'+
+          '<div style="display:flex;align-items:center;gap:8px;">'+
+            pmAvatar(a.modifiedBy)+
+            '<div>'+
+              '<div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">'+escHtml(a.modifiedBy)+'</div>'+
+              '<div style="font-size:11px;color:var(--color-text-caption);">'+a.modifiedTime+'</div>'+
+            '</div>'+
+          '</div>'+
+        '</td>'+
+        '<td style="padding:12px 16px;text-align:center;">'+
+          '<button style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-caption);padding:2px 8px;border-radius:4px;" onclick="annOpenActionMenu('+a.id+',this,event)">⋮</button>'+
+        '</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  window.annOpenActionMenu = function(id, el, evt) {
+    evt.stopPropagation();
+    _annActiveId = id;
+    var dd=document.getElementById('ann-action-dd');
+    var rect=el.getBoundingClientRect();
+    dd.style.top=(rect.bottom+4)+'px';
+    dd.style.left=Math.max(8,rect.right-180)+'px';
+    dd.style.display='block';
+  };
+  window.annMenuAction = function(action) {
+    document.getElementById('ann-action-dd').style.display='none';
+    if(action==='edit') annShowDetail(_annActiveId,true);
+    else if(action==='delete') annConfirmDelete(_annActiveId);
+  };
+
+  window.annShowAddView = function() {
+    document.getElementById('ann-list-view').style.display='none';
+    document.getElementById('ann-add-view').style.display='block';
+    document.getElementById('ann-detail-view').style.display='none';
+    annResetAddForm();
+    window.scrollTo(0,0);
+  };
+  function annResetAddForm() {
+    var fc=document.getElementById('ann-form-client'); if(fc) fc.value='';
+    var fw=document.getElementById('ann-form-website');
+    if(fw){fw.value='';fw.disabled=true;fw.style.opacity='0.6';}
+    var fd=document.getElementById('ann-form-date'); if(fd) fd.value='';
+    var fe=document.getElementById('ann-form-end-date'); if(fe) fe.value='';
+    var er=document.getElementById('ann-end-date-row'); if(er) er.style.display='none';
+    var el2=document.getElementById('ann-add-end-link'); if(el2) el2.style.display='inline';
+    var ft=document.getElementById('ann-form-title'); if(ft) ft.value='';
+    var fn=document.getElementById('ann-form-notes'); if(fn) fn.value='';
+  }
+  window.annOnClientChange = function() {
+    var sel=document.getElementById('ann-form-client').value;
+    var ws=document.getElementById('ann-form-website');
+    ws.disabled=!sel; ws.style.opacity=sel?'1':'0.6';
+    ws.innerHTML='<option value="">Select Website</option>';
+    if(sel){ var o=document.createElement('option'); o.value=sel; o.textContent=sel; ws.appendChild(o); ws.value=sel; }
+  };
+  window.annToggleEndDate = function(show) {
+    document.getElementById('ann-end-date-row').style.display=show?'flex':'none';
+    document.getElementById('ann-add-end-link').style.display=show?'none':'inline';
+  };
+  window.annSubmitAdd = function() {
+    var client=document.getElementById('ann-form-client').value;
+    var website=document.getElementById('ann-form-website').value;
+    var date=document.getElementById('ann-form-date').value;
+    var title=document.getElementById('ann-form-title').value.trim();
+    if(!client||!website||!date||!title){showToast('Please fill in all required fields');return;}
+    var endDateRaw=document.getElementById('ann-form-end-date').value||null;
+    var notes=document.getElementById('ann-form-notes').value.trim()||null;
+    ANNOTATIONS_DATA.unshift({id:_annNextId++,title:title,client:client,website:website,date:formatAnnDate(date),endDate:endDateRaw?formatAnnDate(endDateRaw):null,notes:notes,modifiedBy:'Shilo Jones',modifiedTime:'Just now'});
+    showToast('Annotation added');
+    annShowListView();
+  };
+  function formatAnnDate(iso) {
+    var d=new Date(iso+'T00:00:00');
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+
+  function annShowDetail(id, editMode) {
+    _annActiveId=id; _annEditMode=!!editMode;
+    document.getElementById('ann-list-view').style.display='none';
+    document.getElementById('ann-add-view').style.display='none';
+    document.getElementById('ann-detail-view').style.display='block';
+    annRenderDetail(id,_annEditMode);
+    window.scrollTo(0,0);
+  }
+  window.annShowDetail = annShowDetail;
+
+  function annRenderDetail(id, editMode) {
+    var a=ANNOTATIONS_DATA.find(function(x){return x.id===id;});
+    if(!a) return;
+    document.getElementById('ann-detail-bc-title').textContent=a.title;
+    document.getElementById('ann-detail-heading').textContent=a.title;
+    document.getElementById('ann-detail-modified').textContent='Last modified: '+a.modifiedBy+' · '+a.modifiedTime;
+    // populate fields
+    var cc=document.getElementById('ann-detail-client-input');
+    if(cc){cc.value=a.client;cc.disabled=!editMode;}
+    var wc=document.getElementById('ann-detail-website-input');
+    if(wc){
+      // ensure value is in options
+      var found=false;
+      for(var i=0;i<wc.options.length;i++){if(wc.options[i].value===a.website){found=true;break;}}
+      if(!found){var o=document.createElement('option');o.value=a.website;o.textContent=a.website;wc.appendChild(o);}
+      wc.value=a.website; wc.disabled=!editMode;
+    }
+    var dc=document.getElementById('ann-detail-date-input');
+    if(dc){
+      // convert "Dec 4, 2025" -> "2025-12-04"
+      try{ var dateObj=new Date(a.date); dc.value=dateObj.toISOString().split('T')[0]; }catch(e){ dc.value=''; }
+      dc.disabled=!editMode;
+    }
+    var tc=document.getElementById('ann-detail-title-input');
+    if(tc){tc.value=a.title;tc.disabled=!editMode;}
+    var nc=document.getElementById('ann-detail-notes-input');
+    if(nc){nc.value=a.notes||'';nc.disabled=!editMode;}
+    document.getElementById('ann-detail-edit-btns').style.display=editMode?'none':'flex';
+    document.getElementById('ann-detail-save-btns').style.display=editMode?'flex':'none';
+  }
+  window.annEnableEdit = function(){_annEditMode=true;annRenderDetail(_annActiveId,true);};
+  window.annCancelEdit = function(){_annEditMode=false;annRenderDetail(_annActiveId,false);};
+  window.annSaveEdit = function(){
+    var a=ANNOTATIONS_DATA.find(function(x){return x.id===_annActiveId;});
+    if(!a) return;
+    var t=document.getElementById('ann-detail-title-input').value.trim();
+    if(!t){showToast('Title is required');return;}
+    a.title=t;
+    a.client=document.getElementById('ann-detail-client-input').value;
+    a.website=document.getElementById('ann-detail-website-input').value;
+    var dv=document.getElementById('ann-detail-date-input').value;
+    if(dv) a.date=formatAnnDate(dv);
+    a.notes=document.getElementById('ann-detail-notes-input').value.trim()||null;
+    a.modifiedBy='Shilo Jones'; a.modifiedTime='Just now';
+    showToast('Annotation updated');
+    _annEditMode=false; annRenderDetail(_annActiveId,false);
+  };
+  window.annConfirmDelete = function(id){
+    _annActiveId=id;
+    document.getElementById('ann-delete-modal').style.display='flex';
+  };
+  window.annDeleteConfirmed = function(){
+    ANNOTATIONS_DATA=ANNOTATIONS_DATA.filter(function(a){return a.id!==_annActiveId;});
+    document.getElementById('ann-delete-modal').style.display='none';
+    showToast('Annotation deleted');
+    annShowListView();
+  };
+  window.annDeleteCancel = function(){document.getElementById('ann-delete-modal').style.display='none';};
+
+  /* ─────────────────────────────────────────
+     ALERTS
+  ───────────────────────────────────────── */
+  function showAlertsPage() {
+    ['ic-list','ic-detail','integrations-page','feed-data-page'].forEach(function(id){
+      var el=document.getElementById(id); if(el) el.style.display='none';
+    });
+    hideFeedDetailPages();
+    var p=document.getElementById('alerts-page'); if(p) p.style.display='block';
+    alertsShowListView();
+    window.scrollTo(0,0);
+  }
+  window.showAlertsPage = showAlertsPage;
+
+  function alertsShowListView() {
+    document.getElementById('alerts-list-view').style.display='block';
+    document.getElementById('alerts-create-view').style.display='none';
+    document.getElementById('alerts-detail-view').style.display='none';
+    _alertsFilterDs=''; _alertsFilterStatus=''; _alertsFilterSearch='';
+    var sl=document.getElementById('alerts-ds-btn-label'); if(sl) sl.textContent='Data Source: All';
+    var ss=document.getElementById('alerts-status-btn-label'); if(ss) ss.textContent='Status: All';
+    var si=document.getElementById('alerts-search'); if(si) si.value='';
+    alertsRenderList();
+  }
+  window.alertsShowListView = alertsShowListView;
+
+  function alertsRenderList() {
+    var q=_alertsFilterSearch.toLowerCase();
+    var rows=ALERTS_DATA.filter(function(a){
+      return (!q||a.name.toLowerCase().indexOf(q)>-1||a.dataSource.toLowerCase().indexOf(q)>-1||a.scope.toLowerCase().indexOf(q)>-1)&&
+             (!_alertsFilterDs||a.dataSource===_alertsFilterDs)&&
+             (!_alertsFilterStatus||a.status===_alertsFilterStatus);
+    });
+    var badge=document.getElementById('alerts-count-badge'); if(badge) badge.textContent=ALERTS_DATA.length;
+    var tbody=document.getElementById('alerts-tbody'); if(!tbody) return;
+    tbody.innerHTML=rows.map(function(a){
+      var sb=a.status==='Active'?'<span class="badge-active">Active</span>':'<span class="badge-draft">Draft</span>';
+      return '<tr style="border-bottom:1px solid var(--color-border);">'+
+        '<td style="padding:12px 16px;"><span style="font-size:14px;color:var(--color-blue);cursor:pointer;font-weight:500;" onclick="alertsShowDetail(\''+a.id+'\')">'+escHtml(a.name)+'</span></td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(a.dataSource)+'</td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(a.scope)+'</td>'+
+        '<td style="padding:12px 16px;">'+sb+'</td>'+
+        '<td style="padding:12px 16px;font-size:13px;color:var(--color-text-caption);">'+(a.lastRun||'—')+'</td>'+
+        '<td style="padding:12px 16px;font-size:13px;color:var(--color-text-caption);">'+(a.lastTriggered||'—')+'</td>'+
+        '<td style="padding:12px 16px;">'+
+          '<div style="display:flex;align-items:center;gap:8px;">'+
+            pmAvatar(a.modifiedBy)+
+            '<div><div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">'+escHtml(a.modifiedBy)+'</div>'+
+            '<div style="font-size:11px;color:var(--color-text-caption);">'+a.modifiedTime+'</div></div>'+
+          '</div>'+
+        '</td>'+
+        '<td style="padding:12px 16px;text-align:center;">'+
+          '<button style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-caption);padding:2px 8px;border-radius:4px;" onclick="alertsOpenActionMenu(\''+a.id+'\',this,event)">⋮</button>'+
+        '</td>'+
+      '</tr>';
+    }).join('');
+  }
+  window.alertsSearch = function(){_alertsFilterSearch=document.getElementById('alerts-search').value;alertsRenderList();};
+  window.alertsSetFilterDs = function(val){
+    _alertsFilterDs=val;
+    document.getElementById('alerts-ds-btn-label').textContent=val?'Data Source: '+val:'Data Source: All';
+    document.getElementById('alerts-ds-panel').classList.remove('open');
+    alertsRenderList();
+  };
+  window.alertsSetFilterStatus = function(val){
+    _alertsFilterStatus=val;
+    document.getElementById('alerts-status-btn-label').textContent=val?'Status: '+val:'Status: All';
+    document.getElementById('alerts-status-panel').classList.remove('open');
+    alertsRenderList();
+  };
+
+  window.alertsOpenActionMenu = function(id, el, evt) {
+    evt.stopPropagation();
+    _alertsActiveId=id;
+    var a=ALERTS_DATA.find(function(x){return x.id===id;});
+    var lbl=document.getElementById('alerts-dd-toggle-label');
+    if(lbl) lbl.textContent=a&&a.status==='Active'?'Disable Alert':'Enable Alert';
+    var dd=document.getElementById('alerts-action-dd');
+    var rect=el.getBoundingClientRect();
+    dd.style.top=(rect.bottom+4)+'px';
+    dd.style.left=Math.max(8,rect.right-190)+'px';
+    dd.style.display='block';
+  };
+  window.alertsMenuAction = function(action) {
+    document.getElementById('alerts-action-dd').style.display='none';
+    if(action==='edit') alertsShowCreate(_alertsActiveId);
+    else if(action==='duplicate') alertsOpenDuplicate(_alertsActiveId);
+    else if(action==='toggle') alertsToggleStatus(_alertsActiveId);
+    else if(action==='delete') alertsConfirmDelete(_alertsActiveId);
+  };
+  window.alertsToggleStatus = function(id) {
+    var a=ALERTS_DATA.find(function(x){return x.id===id;});
+    if(!a) return;
+    a.status=a.status==='Active'?'Draft':'Active';
+    alertsRenderList();
+    showToast('Alert '+(a.status==='Active'?'enabled':'disabled'));
+  };
+  window.alertsDetailToggle = function() {
+    alertsToggleStatus(_alertsActiveId);
+    alertsRenderDetail(_alertsActiveId);
+  };
+
+  /* Create form */
+  window.alertsShowCreate = function(editId) {
+    _alertsEditMode=!!editId; _alertsActiveId=editId||null;
+    _alertsFormDirty=false; _alertsConditions=[];
+    _alertsSelectedMetrics=[]; _alertsSelectedClients=[];
+    document.getElementById('alerts-list-view').style.display='none';
+    document.getElementById('alerts-create-view').style.display='block';
+    document.getElementById('alerts-detail-view').style.display='none';
+    var h=document.getElementById('alerts-create-heading');
+    var bc=document.getElementById('alerts-create-bc-label');
+    if(editId){
+      var ae=ALERTS_DATA.find(function(x){return x.id===editId;});
+      if(h) h.textContent='Edit Alert';
+      if(bc) bc.textContent='Edit Alert';
+      alertsPreFillForm(editId);
+    } else {
+      if(h) h.textContent='Create Alert';
+      if(bc) bc.textContent='Create Alert';
+      alertsResetForm();
+    }
+    window.scrollTo(0,0);
+  };
+
+  function alertsResetForm() {
+    var n=document.getElementById('alerts-form-name'); if(n) n.value='';
+    var ds=document.getElementById('alerts-form-ds'); if(ds) ds.value='';
+    var fr=document.getElementById('alerts-form-freq'); if(fr) fr.value='Daily';
+    var sc=document.getElementById('alerts-form-slack-ch'); if(sc) sc.value='';
+    var sd=document.getElementById('alerts-form-slack-dm'); if(sd) sd.value='';
+    document.querySelectorAll('.scope-radio-option').forEach(function(el,i){el.classList.toggle('selected',i===0);});
+    var cr=document.getElementById('alerts-client-select-row'); if(cr) cr.style.display='none';
+    var chips=document.getElementById('alerts-metric-chips'); if(chips) chips.innerHTML='';
+    var mp=document.getElementById('alerts-metrics-panel'); if(mp) mp.innerHTML='';
+    _alertsCurrentMetricsList=[];
+    var cc=document.getElementById('alerts-conditions-container');
+    if(cc) cc.innerHTML='<p style="font-size:13px;color:var(--color-text-caption);margin:0;">Select at least one metric to define alert conditions.</p>';
+    var sb=document.getElementById('alerts-summary-box');
+    if(sb){sb.className='alert-summary-box muted';sb.textContent='Set up the alert conditions in order to view the alert summary.';}
+    alertsUpdateCreateBtn();
+  }
+
+  function alertsPreFillForm(id) {
+    var a=ALERTS_DATA.find(function(x){return x.id===id;});
+    var d=ALERTS_DETAILS[id]||{};
+    if(!a) return;
+    var n=document.getElementById('alerts-form-name'); if(n) n.value=a.name;
+    var ds=document.getElementById('alerts-form-ds'); if(ds) ds.value=a.dataSource;
+    var fr=document.getElementById('alerts-form-freq'); if(fr) fr.value=(d.schedule||{}).frequency||'Daily';
+    var sc=document.getElementById('alerts-form-slack-ch'); if(sc) sc.value=(d.notifications||{}).slackChannel||'';
+    var sd=document.getElementById('alerts-form-slack-dm'); if(sd) sd.value=(d.notifications||{}).slackDM||'';
+    _alertsSelectedMetrics=(d.metrics||[]).slice();
+    _alertsConditions=JSON.parse(JSON.stringify(d.conditions||[]));
+    var metrics=alertsGetMetricsForDs(a.dataSource);
+    _alertsCurrentMetricsList=metrics;
+    alertsRenderMetricsPanel(metrics);
+    alertsRenderMetricChips();
+    alertsRenderConditions();
+    alertsUpdateSummary();
+    alertsUpdateCreateBtn();
+  }
+
+  function alertsGetMetricsForDs(ds) {
+    return ds==='Organic Search (SEO)'?['Clicks','Impressions','CTR','Position']:['COS','Clicks','Conversions','Impressions','Conversion Value','ROAS','CPC','CTR','Cost'];
+  }
+
+  window.alertsFormDirty = function(){_alertsFormDirty=true;};
+
+  window.alertsOnDataSourceChange = function() {
+    _alertsFormDirty=true;
+    var ds=document.getElementById('alerts-form-ds').value;
+    var metrics=alertsGetMetricsForDs(ds);
+    _alertsCurrentMetricsList=metrics;
+    _alertsSelectedMetrics=[]; _alertsConditions=[];
+    alertsRenderMetricsPanel(metrics);
+    alertsRenderMetricChips();
+    alertsRenderConditions();
+    alertsUpdateSummary();
+    alertsUpdateCreateBtn();
+  };
+
+  function alertsRenderMetricsPanel(metrics) {
+    var panel=document.getElementById('alerts-metrics-panel'); if(!panel) return;
+    panel.innerHTML=metrics.map(function(m){
+      var chk=_alertsSelectedMetrics.indexOf(m)>-1;
+      return '<div class="metrics-dd-item" onclick="alertsToggleMetric(\''+m+'\')">'+
+        '<input type="checkbox" '+(chk?'checked':'')+' style="pointer-events:none;"> '+escHtml(m)+'</div>';
+    }).join('');
+  }
+
+  window.alertsToggleMetricsPanel = function() {
+    var panel=document.getElementById('alerts-metrics-panel');
+    if(panel) panel.classList.toggle('open');
+  };
+
+  window.alertsToggleMetric = function(metric) {
+    _alertsFormDirty=true;
+    var idx=_alertsSelectedMetrics.indexOf(metric);
+    if(idx>-1){
+      _alertsSelectedMetrics.splice(idx,1);
+      _alertsConditions=_alertsConditions.filter(function(c){return c.metric!==metric;});
+    } else {
+      _alertsSelectedMetrics.push(metric);
+      _alertsConditions.push({metric:metric,operator:'is greater than',threshold:'',timeWindow:'7 days',logic:_alertsConditions.length>0?'AND':null});
+    }
+    alertsRenderMetricsPanel(_alertsCurrentMetricsList);
+    alertsRenderMetricChips();
+    alertsRenderConditions();
+    alertsUpdateSummary();
+    alertsUpdateCreateBtn();
+  };
+
+  window.alertsRemoveMetric = function(metric) { alertsToggleMetric(metric); };
+
+  function alertsRenderMetricChips() {
+    var c=document.getElementById('alerts-metric-chips'); if(!c) return;
+    c.innerHTML=_alertsSelectedMetrics.map(function(m){
+      return '<span class="metric-chip">'+escHtml(m)+'<span class="metric-chip-x" onclick="alertsRemoveMetric(\''+m+'\')">×</span></span>';
+    }).join('');
+  }
+
+  function alertsRenderConditions() {
+    var container=document.getElementById('alerts-conditions-container'); if(!container) return;
+    if(_alertsConditions.length===0){
+      container.innerHTML='<p style="font-size:13px;color:var(--color-text-caption);margin:0;">Select at least one metric to define alert conditions.</p>';
+      return;
+    }
+    var metrics=_alertsSelectedMetrics;
+    var operators=['is greater than','is less than','increases by','decreases by','equals','does not equal'];
+    var windows=['1 day','3 days','7 days','14 days','30 days'];
+    container.innerHTML=_alertsConditions.map(function(cond,i){
+      var html='';
+      if(i>0){
+        html+='<div class="logic-connector">'+
+          '<span class="logic-pill'+(cond.logic==='AND'?' active':'')+'" onclick="alertsSetLogic('+i+',\'AND\')">AND</span>'+
+          '<span class="logic-pill'+(cond.logic==='OR'?' active':'')+'" onclick="alertsSetLogic('+i+',\'OR\')">OR</span>'+
+          '<span style="margin-left:auto;font-size:12px;color:#d72225;cursor:pointer;" onclick="alertsRemoveCondition('+i+')">× Remove</span>'+
+        '</div>';
+      }
+      html+='<div class="condition-rule">'+
+        '<select onchange="alertsUpdateCondition('+i+',\'metric\',this.value)">'+
+          metrics.map(function(m){return '<option'+(m===cond.metric?' selected':'')+'>'+m+'</option>';}).join('')+
+        '</select>'+
+        '<select onchange="alertsUpdateCondition('+i+',\'operator\',this.value)">'+
+          operators.map(function(o){return '<option'+(o===cond.operator?' selected':'')+'>'+o+'</option>';}).join('')+
+        '</select>'+
+        '<input type="text" value="'+escHtml(cond.threshold)+'" placeholder="value" oninput="alertsUpdateConditionInput('+i+',this.value)">'+
+        '<span style="font-size:13px;color:var(--color-text-caption);">over</span>'+
+        '<select onchange="alertsUpdateCondition('+i+',\'timeWindow\',this.value)">'+
+          windows.map(function(w){return '<option'+(w===cond.timeWindow?' selected':'')+'>'+w+'</option>';}).join('')+
+        '</select>'+
+      '</div>';
+      return html;
+    }).join('');
+  }
+
+  window.alertsUpdateCondition = function(i, key, val) {
+    if(_alertsConditions[i]) _alertsConditions[i][key]=val;
+    alertsUpdateSummary(); alertsUpdateCreateBtn();
+  };
+  window.alertsUpdateConditionInput = function(i, val) {
+    if(_alertsConditions[i]) _alertsConditions[i].threshold=val;
+    alertsUpdateSummary(); alertsUpdateCreateBtn();
+  };
+  window.alertsSetLogic = function(i, val) {
+    if(_alertsConditions[i]) _alertsConditions[i].logic=val;
+    alertsRenderConditions(); alertsUpdateSummary();
+  };
+  window.alertsRemoveCondition = function(i) {
+    _alertsConditions.splice(i,1);
+    if(_alertsConditions.length>0) _alertsConditions[0].logic=null;
+    alertsRenderConditions(); alertsUpdateSummary(); alertsUpdateCreateBtn();
+  };
+
+  function alertsUpdateSummary() {
+    var box=document.getElementById('alerts-summary-box'); if(!box) return;
+    var filled=_alertsConditions.filter(function(c){return c.metric&&c.threshold;});
+    if(!filled.length){
+      box.className='alert-summary-box muted';
+      box.textContent='Set up the alert conditions in order to view the alert summary.';
+      return;
+    }
+    box.className='alert-summary-box';
+    box.textContent='Trigger this alert when '+filled.map(function(c,i){
+      return (i>0?(c.logic||'AND')+' ':'')+c.metric+' '+c.operator+' '+c.threshold+' over '+c.timeWindow;
+    }).join(' ');
+  }
+
+  function alertsUpdateCreateBtn() {
+    var btn=document.getElementById('alerts-create-btn'); if(!btn) return;
+    var name=(document.getElementById('alerts-form-name')||{value:''}).value||'';
+    var ds=(document.getElementById('alerts-form-ds')||{value:''}).value||'';
+    var hasM=_alertsSelectedMetrics.length>0;
+    var hasC=_alertsConditions.some(function(c){return c.metric&&c.threshold;});
+    var ok=name.trim()&&ds&&hasM&&hasC;
+    btn.disabled=!ok;
+    if(ok) btn.classList.remove('pm-btn-disabled'); else btn.classList.add('pm-btn-disabled');
+  }
+
+  window.alertsSelectScope = function(el) {
+    document.querySelectorAll('.scope-radio-option').forEach(function(o){o.classList.remove('selected');});
+    el.classList.add('selected');
+    var scope=el.getAttribute('data-scope');
+    var cr=document.getElementById('alerts-client-select-row');
+    if(cr) cr.style.display=scope==='Specific Clients'?'block':'none';
+    _alertsFormDirty=true;
+  };
+
+  window.alertsAddClient = function(client) {
+    if(!client||_alertsSelectedClients.indexOf(client)>-1) return;
+    _alertsSelectedClients.push(client);
+    var chips=document.getElementById('alerts-client-chips'); if(!chips) return;
+    chips.innerHTML=_alertsSelectedClients.map(function(c){
+      return '<span class="pm-user-chip">'+escHtml(c)+'<span class="pm-user-chip-x" onclick="alertsRemoveClient(\''+c+'\')">×</span></span>';
+    }).join('');
+    _alertsFormDirty=true;
+  };
+  window.alertsRemoveClient = function(client) {
+    _alertsSelectedClients=_alertsSelectedClients.filter(function(c){return c!==client;});
+    var chips=document.getElementById('alerts-client-chips'); if(!chips) return;
+    chips.innerHTML=_alertsSelectedClients.map(function(c){
+      return '<span class="pm-user-chip">'+escHtml(c)+'<span class="pm-user-chip-x" onclick="alertsRemoveClient(\''+c+'\')">×</span></span>';
+    }).join('');
+  };
+
+  window.alertsSubmitCreate = function() {
+    var name=document.getElementById('alerts-form-name').value.trim();
+    var ds=document.getElementById('alerts-form-ds').value;
+    if(!name||!ds||!_alertsSelectedMetrics.length||!_alertsConditions.some(function(c){return c.metric&&c.threshold;})){
+      showToast('Please fill in all required fields');return;
+    }
+    var scopeEl=document.querySelector('.scope-radio-option.selected');
+    var scope=scopeEl?scopeEl.getAttribute('data-scope'):'All Clients';
+    if(scope==='Specific Clients'&&_alertsSelectedClients.length) scope=_alertsSelectedClients.join(', ');
+    var freq=(document.getElementById('alerts-form-freq')||{value:'Daily'}).value||'Daily';
+    var slackCh=(document.getElementById('alerts-form-slack-ch')||{value:''}).value||'';
+    var slackDm=(document.getElementById('alerts-form-slack-dm')||{value:''}).value||'';
+    if(_alertsEditMode&&_alertsActiveId){
+      var ae=ALERTS_DATA.find(function(x){return x.id===_alertsActiveId;});
+      if(ae){ae.name=name;ae.dataSource=ds;ae.scope=scope;ae.modifiedBy='Shilo Jones';ae.modifiedTime='Just now';}
+      ALERTS_DETAILS[_alertsActiveId]={metrics:[..._alertsSelectedMetrics],conditions:JSON.parse(JSON.stringify(_alertsConditions)),schedule:{frequency:freq},notifications:{slackChannel:slackCh,slackDM:slackDm},activity:(ALERTS_DETAILS[_alertsActiveId]||{}).activity||[]};
+      _alertsFormDirty=false;
+      showToast('Alert updated');
+      alertsShowDetail(_alertsActiveId);
+    } else {
+      var newId=String(_alertsNextId++);
+      ALERTS_DATA.unshift({id:newId,name:name,dataSource:ds,scope:scope,status:'Active',lastRun:null,lastTriggered:null,modifiedBy:'Shilo Jones',modifiedTime:'Just now'});
+      ALERTS_DETAILS[newId]={metrics:[..._alertsSelectedMetrics],conditions:JSON.parse(JSON.stringify(_alertsConditions)),schedule:{frequency:freq},notifications:{slackChannel:slackCh,slackDM:slackDm},activity:[]};
+      _alertsFormDirty=false;
+      showToast('Alert created');
+      alertsShowDetail(newId);
+    }
+  };
+
+  window.alertsSaveDraft = function() {
+    var name=(document.getElementById('alerts-form-name')||{value:''}).value.trim()||'Untitled Alert';
+    var newId=String(_alertsNextId++);
+    ALERTS_DATA.unshift({id:newId,name:name,dataSource:(document.getElementById('alerts-form-ds')||{value:''}).value||'',scope:'All Clients',status:'Draft',lastRun:null,lastTriggered:null,modifiedBy:'Shilo Jones',modifiedTime:'Just now'});
+    _alertsFormDirty=false;
+    showToast('Alert saved as draft');
+    alertsShowListView();
+  };
+
+  window.alertsBackToList = function(){
+    if(_alertsFormDirty){document.getElementById('alerts-unsaved-modal').style.display='flex';return;}
+    alertsShowListView();
+  };
+  window.alertsStay = function(){document.getElementById('alerts-unsaved-modal').style.display='none';};
+  window.alertsDiscard = function(){_alertsFormDirty=false;document.getElementById('alerts-unsaved-modal').style.display='none';alertsShowListView();};
+
+  /* Detail */
+  function alertsShowDetail(id) {
+    _alertsActiveId=id;
+    document.getElementById('alerts-list-view').style.display='none';
+    document.getElementById('alerts-create-view').style.display='none';
+    document.getElementById('alerts-detail-view').style.display='block';
+    alertsRenderDetail(id);
+    window.scrollTo(0,0);
+  }
+  window.alertsShowDetail = alertsShowDetail;
+
+  function alertsRenderDetail(id) {
+    var a=ALERTS_DATA.find(function(x){return x.id===id;});
+    var d=ALERTS_DETAILS[id]||{};
+    if(!a) return;
+    document.getElementById('alerts-detail-heading').textContent=a.name;
+    document.getElementById('alerts-detail-bc-title').textContent=a.name;
+    document.getElementById('alerts-detail-status').innerHTML=a.status==='Active'?'<span class="badge-active">Active</span>':'<span class="badge-draft">Draft</span>';
+    document.getElementById('alerts-detail-modified').textContent='Last modified: '+a.modifiedBy+' · '+a.modifiedTime;
+    var tb=document.getElementById('alerts-detail-toggle-btn'); if(tb) tb.textContent=a.status==='Active'?'Disable':'Enable';
+    alertsRenderDetailSections(a,d);
+    alertsRenderActivity(d.activity||[]);
+  }
+
+  function alertsRenderDetailSections(a, d) {
+    var el=document.getElementById('alerts-detail-sections'); if(!el) return;
+    var metrics=(d.metrics||[]).map(function(m){return '<span class="metric-chip">'+escHtml(m)+'</span>';}).join('');
+    var conds=(d.conditions||[]).map(function(c,i){
+      return '<div class="condition-display">'+(i>0?'<strong style="font-size:11px;color:var(--color-text-caption);">'+(c.logic||'AND')+'</strong> ':'')+escHtml(c.metric+' '+c.operator+' '+c.threshold+' over '+c.timeWindow)+'</div>';
+    }).join('');
+    var notifs=[];
+    if((d.notifications||{}).slackChannel) notifs.push('Slack Channel: '+d.notifications.slackChannel);
+    if((d.notifications||{}).slackDM) notifs.push('Slack DM: '+d.notifications.slackDM);
+    var nStr=notifs.length?notifs.join(' · '):'None';
+    el.innerHTML=
+      '<div style="margin-bottom:20px;"><span class="form-section-label" style="margin-top:0;">Data Source</span><p style="font-size:14px;color:var(--color-text-primary);margin:0;">'+escHtml(a.dataSource)+'</p></div>'+
+      '<hr class="form-hr">'+
+      '<div style="margin-bottom:20px;"><span class="form-section-label">Scope</span><p style="font-size:14px;color:var(--color-text-primary);margin:0;">'+escHtml(a.scope)+'</p></div>'+
+      '<hr class="form-hr">'+
+      '<div style="margin-bottom:20px;"><span class="form-section-label">Metrics</span><div>'+metrics+'</div></div>'+
+      '<hr class="form-hr">'+
+      '<div style="margin-bottom:20px;"><span class="form-section-label">Conditions</span>'+(conds||'<p style="font-size:13px;color:var(--color-text-caption);margin:0;">No conditions set.</p>')+'</div>'+
+      '<hr class="form-hr">'+
+      '<div style="margin-bottom:20px;"><span class="form-section-label">Schedule</span><p style="font-size:14px;color:var(--color-text-primary);margin:0;">'+escHtml(((d.schedule||{}).frequency)||'—')+'</p></div>'+
+      '<hr class="form-hr">'+
+      '<div><span class="form-section-label">Notifications</span><p style="font-size:14px;color:var(--color-text-primary);margin:0;">'+escHtml(nStr)+'</p></div>';
+  }
+
+  function alertsRenderActivity(activity) {
+    var tbody=document.getElementById('alerts-activity-tbody'); if(!tbody) return;
+    if(!activity.length){
+      tbody.innerHTML='<tr><td colspan="4" style="padding:24px 16px;text-align:center;font-size:13px;color:var(--color-text-caption);">No activity recorded yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML=activity.map(function(item){
+      return '<tr style="border-bottom:1px solid var(--color-border);">'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(item.client)+'</td>'+
+        '<td style="padding:12px 16px;font-size:13px;color:var(--color-text-caption);">'+escHtml(item.triggeredAt)+'</td>'+
+        '<td style="padding:12px 16px;font-size:13px;color:var(--color-text-primary);">'+escHtml(item.condition)+'</td>'+
+        '<td style="padding:12px 16px;text-align:center;"><span style="font-size:13px;color:var(--color-blue);cursor:pointer;" onclick="alertsShowConditionModal(\''+item.id+'\')">View</span></td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  /* Duplicate */
+  window.alertsOpenDuplicate = function(id) {
+    _alertsDuplicateId=id;
+    var a=ALERTS_DATA.find(function(x){return x.id===id;});
+    var inp=document.getElementById('dup-name-input'); if(inp&&a) inp.value=a.name+' (Copy)';
+    document.getElementById('alerts-duplicate-modal').style.display='flex';
+  };
+  window.alertsDuplicateConfirm = function() {
+    var src=ALERTS_DATA.find(function(x){return x.id===_alertsDuplicateId;});
+    if(!src) return;
+    var srcD=ALERTS_DETAILS[_alertsDuplicateId]||{};
+    var newName=(document.getElementById('dup-name-input').value.trim())||src.name+' (Copy)';
+    var newId=String(_alertsNextId++);
+    var copy=Object.assign({},src,{id:newId,name:newName,status:'Draft',lastRun:null,lastTriggered:null,modifiedBy:'Shilo Jones',modifiedTime:'Just now'});
+    var newD={activity:[]};
+    if(document.getElementById('dup-cb-ds').checked) copy.dataSource=src.dataSource;
+    if(document.getElementById('dup-cb-metrics').checked) newD.metrics=(srcD.metrics||[]).slice();
+    if(document.getElementById('dup-cb-conditions').checked) newD.conditions=JSON.parse(JSON.stringify(srcD.conditions||[]));
+    if(document.getElementById('dup-cb-schedule').checked) newD.schedule=Object.assign({},srcD.schedule||{});
+    if(document.getElementById('dup-cb-notifs').checked) newD.notifications=Object.assign({},srcD.notifications||{});
+    ALERTS_DATA.unshift(copy);
+    ALERTS_DETAILS[newId]=newD;
+    document.getElementById('alerts-duplicate-modal').style.display='none';
+    showToast('Alert duplicated');
+    alertsRenderList();
+    alertsShowListView();
+  };
+
+  /* Delete */
+  window.alertsConfirmDelete = function(id) {
+    _alertsDeleteId=id;
+    document.getElementById('alerts-delete-modal').style.display='flex';
+  };
+  window.alertsDeleteConfirmed = function() {
+    ALERTS_DATA=ALERTS_DATA.filter(function(a){return a.id!==_alertsDeleteId;});
+    document.getElementById('alerts-delete-modal').style.display='none';
+    showToast('Alert deleted');
+    alertsShowListView();
+  };
+
+  /* Preview & Condition modals */
+  window.alertsShowPreview = function() {
+    var nameEl=document.getElementById('alerts-form-name');
+    var dsEl=document.getElementById('alerts-form-ds');
+    var name,ds;
+    if(nameEl&&document.getElementById('alerts-create-view').style.display==='block'){
+      name=nameEl.value||'Budget Alert'; ds=dsEl?dsEl.value||'Google Ads':'Google Ads';
+    } else {
+      var aa=ALERTS_DATA.find(function(a){return a.id===_alertsActiveId;})||{};
+      name=aa.name||'Budget Alert'; ds=aa.dataSource||'Google Ads';
+    }
+    var pn=document.getElementById('alerts-preview-name'); if(pn) pn.textContent=name;
+    var pp=document.getElementById('alerts-preview-platform'); if(pp) pp.textContent=ds;
+    document.getElementById('alerts-preview-modal').style.display='flex';
+  };
+
+  window.alertsShowConditionModal = function(activityId) {
+    var d=ALERTS_DETAILS[_alertsActiveId]||{};
+    var item=(d.activity||[]).find(function(a){return a.id===activityId;});
+    if(!item) return;
+    var cc=document.getElementById('condition-modal-client'); if(cc) cc.textContent=item.client;
+    var ct=document.getElementById('condition-modal-time'); if(ct) ct.textContent=item.triggeredAt;
+    var cx=document.getElementById('condition-modal-text'); if(cx) cx.textContent=item.condition;
+    document.getElementById('alerts-condition-modal').style.display='flex';
+  };
+
+  /* Outside-click cleanup */
+  document.addEventListener('click',function(e){
+    var dd=document.getElementById('ann-action-dd');
+    if(dd&&!e.target.closest('#ann-action-dd')&&!e.target.closest('button[onclick*="annOpenActionMenu"]')) dd.style.display='none';
+    var dd2=document.getElementById('alerts-action-dd');
+    if(dd2&&!e.target.closest('#alerts-action-dd')&&!e.target.closest('button[onclick*="alertsOpenActionMenu"]')) dd2.style.display='none';
+    if(!e.target.closest('#alerts-ds-wrap')){var dp=document.getElementById('alerts-ds-panel');if(dp) dp.classList.remove('open');}
+    if(!e.target.closest('#alerts-status-wrap')){var sp=document.getElementById('alerts-status-panel');if(sp) sp.classList.remove('open');}
+    if(!e.target.closest('#alerts-metrics-wrap')){var mp=document.getElementById('alerts-metrics-panel');if(mp) mp.classList.remove('open');}
+  });
+
+  /* Init */
+  (function(){
+    var at=document.getElementById('ann-tbody'); if(at) annRenderList('');
+    var alt=document.getElementById('alerts-tbody'); if(alt) alertsRenderList();
+  })();
 
 })();
 </script>
