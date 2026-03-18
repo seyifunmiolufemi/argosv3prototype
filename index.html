@@ -3040,7 +3040,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="tab-panel active" id="db-tab-overview">
     <div style="margin-top:20px;">
       <p class="page-h1" style="font-size:16px;margin-bottom:2px;">Overview</p>
-      <p class="page-subtitle">A summary of your database activity and health</p>
+      <p class="page-subtitle" style="text-align:left;">A summary of your database activity and health</p>
     </div>
 
     <!-- Action cards -->
@@ -3097,7 +3097,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <tr>
                 <th>Activity</th>
                 <th>Status</th>
-                <th>Modified By</th>
+                <th style="text-align:left;">Modified By</th>
               </tr>
             </thead>
             <tbody>
@@ -3163,7 +3163,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </thead>
           <tbody id="imports-tbody">
             <tr class="feed-row"><td><span class="feed-name">Shopify Products</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#96bf48;"></span>Shopify</span></td><td>Main Feed</td><td>Every four hours</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
-            <tr class="feed-row"><td><span class="feed-name">Inventory Levels</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#3b82f6;"></span>EDI</span></td><td>Join</td><td>Every 15 mins</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+            <tr class="feed-row"><td><span class="feed-name">Inventory Levels</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#6b7280;"></span>CSV</span></td><td>Join</td><td>Every 15 mins</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
             <tr class="feed-row"><td><span class="feed-name">Pricing Override</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#6b7280;"></span>SFTP</span></td><td>Join</td><td>Daily at 9:00 AM</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
           </tbody>
         </table>
@@ -3211,21 +3211,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="source-card-title">Shopify</div>
         <div class="source-card-sub">Connect to a Shopify store via API</div>
       </div>
-      <div class="source-card" id="src-edi" onclick="selectImportSource('EDI')">
+      <div class="source-card" id="src-csv" onclick="selectImportSource('CSV')">
         <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="source-card-icon" style="background:#3b82f6;">ED</div>
-        <div class="source-card-title">EDI</div>
-        <div class="source-card-sub">Import from a file hosted on the web</div>
-      </div>
-      <div class="source-card" id="src-cdntxt" onclick="selectImportSource('CDNTXT')">
-        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="source-card-icon" style="background:#f59e0b;">CD</div>
-        <div class="source-card-title">CDNTXT</div>
-        <div class="source-card-sub">Import from a file hosted on the web</div>
+        <div class="source-card-icon" style="background:#6b7280;">CSV</div>
+        <div class="source-card-title">CSV</div>
+        <div class="source-card-sub">Import from a CSV file hosted on the web</div>
       </div>
       <div class="source-card" id="src-sftp" onclick="selectImportSource('SFTP')">
         <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="source-card-icon" style="background:#6b7280;">SF</div>
+        <div class="source-card-icon" style="background:#374151;">SF</div>
         <div class="source-card-title">SFTP</div>
         <div class="source-card-sub">Import from a file on an SFTP server</div>
       </div>
@@ -3446,8 +3440,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td style="width:36px;"></td>
               </tr>
               <tr>
-                <td>Published Status</td>
-                <td>Published Products</td>
+                <td><select class="modal-select" style="padding:8px 11px;font-size:14px;"><option selected>Published Status</option></select></td>
+                <td><select class="modal-select" style="padding:8px 11px;font-size:14px;"><option selected>Published Products</option></select></td>
                 <td><button class="btn-danger-icon" onclick="removeFilterRow(this)" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></td>
               </tr>
             </tbody>
@@ -3459,15 +3453,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </button>
       </div>
 
-      <!-- File Actions -->
-      <div class="section-block">
-        <div class="section-block-title">File Actions</div>
-        <div class="section-block-sub">Operations to run on the file before import.</div>
-        <button class="btn-text-link" onclick="showToast('Add header coming soon')">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add header
-        </button>
-      </div>
     </div>
     <div class="wizard-btn-row">
       <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(4)">Back</button>
@@ -4451,7 +4436,7 @@ var ISSUES = [
     function selectImportSource(src) {
       importSource = src;
       document.querySelectorAll('.source-card').forEach(function(c){ c.classList.remove('selected'); });
-      var map = {Shopify:'src-shopify', EDI:'src-edi', CDNTXT:'src-cdntxt', SFTP:'src-sftp'};
+      var map = {Shopify:'src-shopify', CSV:'src-csv', SFTP:'src-sftp'};
       var el = document.getElementById(map[src]);
       if (el) el.classList.add('selected');
       updateContinueBtn();
@@ -4496,7 +4481,7 @@ var ISSUES = [
     /* ═══════════════════════════════════════════
        CONFIGURE IMPORT WIZARD
     ═══════════════════════════════════════════ */
-    var sourceColors = {Shopify:'#96bf48', EDI:'#3b82f6', CDNTXT:'#f59e0b', SFTP:'#6b7280'};
+    var sourceColors = {Shopify:'#96bf48', CSV:'#6b7280', SFTP:'#374151'};
 
     function showConfigureImportPage(src, type) {
       importSource = src || importSource;
