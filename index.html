@@ -1634,6 +1634,121 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
 .fm-table th{background:var(--color-bg-grey50);padding:10px 12px;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--color-text-caption);border-bottom:1px solid var(--color-border);text-align:left;}
 .fm-table td{padding:9px 12px;border-bottom:1px solid var(--color-border);vertical-align:middle;}
 
+/* ═══════════════════════════════════════════════
+   PERMISSION MANAGER
+═══════════════════════════════════════════════ */
+.av-blue   { background:#346ed9; color:#fff; }
+.av-green  { background:#289253; color:#fff; }
+.av-amber  { background:#d97706; color:#fff; }
+.av-red    { background:#dc2626; color:#fff; }
+.av-purple { background:#7c3aed; color:#fff; }
+.av-cyan   { background:#0891b2; color:#fff; }
+.av-pink   { background:#db2777; color:#fff; }
+.pm-role-pill {
+  display:inline-block; background:var(--color-bg-grey50);
+  border-radius:6px; padding:3px 8px; font-size:12px;
+  color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; font-weight:500;
+}
+#pm-action-dd {
+  position:fixed; background:white;
+  border:1px solid var(--color-border); border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  z-index:1000; padding:4px 0; min-width:160px;
+}
+.pm-dd-item {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 14px; font-size:14px; color:var(--color-text-primary); cursor:pointer;
+}
+.pm-dd-item:hover { background:var(--color-bg-grey50); }
+.pm-modal-overlay {
+  position:fixed; inset:0; background:rgba(1,3,7,0.35);
+  z-index:1000; display:flex; align-items:center; justify-content:center;
+}
+.pm-modal-box {
+  background:var(--color-white); border-radius:14px;
+  box-shadow:0 20px 60px rgba(1,3,7,0.18);
+  width:560px; max-width:92vw; max-height:88vh;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.pm-modal-header {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  padding:22px 24px 0; gap:12px; flex-shrink:0;
+}
+.pm-modal-body { flex:1; overflow-y:auto; padding:0 24px 24px; }
+.pm-modal-footer {
+  padding:14px 24px; border-top:1px solid var(--color-border);
+  display:flex; gap:8px; justify-content:flex-end; flex-shrink:0;
+}
+.pm-role-card {
+  display:flex; align-items:center; justify-content:space-between;
+  border:1px solid var(--color-border); border-radius:8px;
+  padding:13px 16px; margin-bottom:10px; cursor:pointer;
+  background:var(--color-bg-grey50); transition:border-color 0.15s, background 0.15s;
+}
+.pm-role-card.selected { border-color:var(--color-blue); background:#fff; }
+.pm-role-card.readonly { cursor:default; }
+.pm-role-card-left { display:flex; align-items:center; gap:10px; }
+.pm-role-radio {
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid var(--color-border); flex-shrink:0; background:#fff; position:relative;
+}
+.pm-role-card.selected .pm-role-radio::after {
+  content:''; position:absolute; inset:2px; border-radius:50%; background:var(--color-blue);
+}
+.pm-role-name { font-size:14px; font-weight:500; color:var(--color-text-primary); }
+.pm-view-perms { font-size:13px; color:var(--color-blue); cursor:pointer; flex-shrink:0; white-space:nowrap; }
+.pm-view-perms:hover { text-decoration:underline; }
+.pm-perm-flyout {
+  position:fixed; background:white; border:1px solid var(--color-border); border-radius:10px;
+  box-shadow:0 8px 24px rgba(1,3,7,0.12); z-index:1100; padding:16px; min-width:340px; max-width:90vw;
+}
+.pm-perm-table { width:100%; border-collapse:collapse; margin-top:8px; }
+.pm-perm-table th {
+  font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;
+  color:var(--color-text-caption); padding:6px 8px; border-bottom:1px solid var(--color-border); text-align:center;
+}
+.pm-perm-table th:first-child { text-align:left; }
+.pm-perm-table td {
+  font-size:12px; padding:7px 8px; border-bottom:1px solid var(--color-border);
+  text-align:center; color:var(--color-text-caption);
+}
+.pm-perm-table td:first-child { text-align:left; font-size:13px; color:var(--color-text-primary); font-weight:500; }
+.pm-perm-check { color:#289253; font-weight:700; font-size:13px; }
+.pm-perm-cross { color:#d1d5db; font-size:13px; }
+.pm-user-chip {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--color-bg-grey50); border-radius:20px;
+  padding:3px 10px 3px 6px; font-size:13px; font-family:'DM Sans',sans-serif;
+  color:var(--color-text-primary); border:1px solid var(--color-border); margin:3px;
+}
+.pm-user-chip-x { cursor:pointer; color:var(--color-text-caption); font-size:15px; line-height:1; padding:0 1px; }
+.pm-user-chip-x:hover { color:var(--color-text-primary); }
+.pm-user-search-dd {
+  position:absolute; top:calc(100% + 4px); left:0; right:0;
+  background:white; border:1px solid var(--color-border); border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.10); z-index:600; max-height:220px; overflow-y:auto; display:none;
+}
+.pm-user-search-dd.open { display:block; }
+.pm-user-dd-row { display:flex; align-items:center; gap:10px; padding:9px 14px; cursor:pointer; }
+.pm-user-dd-row:hover { background:var(--color-bg-grey50); }
+.pm-user-dd-name { font-size:13px; font-weight:500; color:var(--color-text-primary); line-height:1.3; }
+.pm-user-dd-email { font-size:12px; color:var(--color-text-caption); }
+.pm-unsaved-banner {
+  background:#fff9e6; border:1px solid #f59e0b; border-radius:8px;
+  padding:12px 16px; margin:12px 0; font-size:13px; color:#92400e; line-height:1.5; font-family:'DM Sans',sans-serif;
+}
+.pm-client-list { max-height:280px; overflow-y:auto; border:1px solid var(--color-border); border-radius:8px; margin-top:8px; }
+.pm-client-row {
+  display:flex; align-items:center; gap:10px; padding:9px 14px;
+  border-bottom:1px solid var(--color-border); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif;
+}
+.pm-client-row:last-child { border-bottom:none; }
+.pm-client-row:hover { background:var(--color-bg-grey50); }
+.pm-btn-disabled {
+  background:#eff1f5 !important; color:var(--color-text-inactive,#bbc0c8) !important;
+  border-color:#eff1f5 !important; cursor:not-allowed !important; opacity:1 !important; box-shadow:none !important;
+}
+
 </style>
 </head>
 <body>
@@ -4304,11 +4419,163 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 </div><!-- /add-export-page -->
 
+<!-- ══ PERMISSION MANAGER ══ -->
+<div id="permission-manager-page" style="display:none;">
+
+  <!-- ── List view ── -->
+  <div id="pm-list-view">
+    <div class="page-title-row">
+      <div>
+        <h1 class="page-h1" style="font-size:18px;">Permission Manager</h1>
+        <p class="page-subtitle" style="margin-top:3px;">Manage what each role can access across Statbid.</p>
+      </div>
+      <div class="page-title-right">
+        <button class="btn-primary-sm" onclick="pmShowAssignView()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Assign Role
+        </button>
+      </div>
+    </div>
+    <div class="breadcrumb" style="margin-bottom:14px;">
+      <span class="bc-item bc-muted">User Management</span>
+      <span class="bc-item bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item">Permission Manager</span>
+    </div>
+    <div class="search-box" style="margin-bottom:16px;max-width:100%;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="pm-search" placeholder="Search users" oninput="pmSearch()">
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:left;">USER <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:3px;vertical-align:middle;"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:left;">ROLE <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:3px;vertical-align:middle;"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:left;">LAST MODIFIED <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:3px;vertical-align:middle;"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:center;">ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="pm-users-tbody">
+        </tbody>
+      </table>
+    </div>
+  </div><!-- /pm-list-view -->
+
+  <!-- ── Assign Role view ── -->
+  <div id="pm-assign-view" style="display:none;">
+    <div class="page-title-row">
+      <h1 class="page-h1" style="font-size:18px;">Permission Manager</h1>
+    </div>
+    <div class="breadcrumb" style="margin-bottom:14px;">
+      <span class="bc-item bc-muted">User Management</span>
+      <span class="bc-item bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item">Permission Manager</span>
+    </div>
+    <div class="table-card">
+      <h2 style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin:0 0 4px;">Assign Role</h2>
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin:0 0 20px;">Choose a user and assign a role in Statbid</p>
+      <div style="margin-bottom:20px;">
+        <div class="modal-label" style="margin-bottom:6px;">Select User</div>
+        <div style="position:relative;">
+          <div class="search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="pm-assign-search" placeholder="Search users" autocomplete="off" oninput="pmAssignSearch()">
+          </div>
+          <div class="pm-user-search-dd" id="pm-assign-dd"></div>
+        </div>
+        <div id="pm-selected-chips" style="margin-top:8px;min-height:8px;"></div>
+      </div>
+      <div style="margin-bottom:24px;">
+        <div class="modal-label" style="margin-bottom:10px;">Select Role</div>
+        <div id="pm-assign-roles"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="pm-assign-submit" class="btn-primary-sm pm-btn-disabled" onclick="pmSubmitAssign()">Assign Role</button>
+        <button class="btn-outline" style="height:36px;padding:0 16px;" onclick="pmBackToList()">Cancel</button>
+      </div>
+    </div>
+  </div><!-- /pm-assign-view -->
+
+</div><!-- /permission-manager-page -->
+
     </div><!-- /page-content -->
   </main>
 
 </div><!-- /app-shell -->
 </div><!-- /screen-dashboard -->
+
+<!-- ══ PERMISSION MANAGER: Role / Client Access Modal ══ -->
+<div id="pm-role-modal" class="pm-modal-overlay" style="display:none;" onclick="pmModalOverlayClick(event)">
+  <div class="pm-modal-box" onclick="event.stopPropagation()">
+    <div class="pm-modal-header">
+      <div>
+        <h3 class="modal-title" id="pm-modal-username" style="margin-bottom:4px;"></h3>
+        <p class="modal-desc" id="pm-modal-subtitle"></p>
+      </div>
+      <button onclick="pmCloseModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--color-text-caption);padding:0;line-height:1;flex-shrink:0;">×</button>
+    </div>
+    <div id="pm-modal-tabs" style="display:flex;border-bottom:1px solid var(--color-border);padding:0 24px;margin-top:16px;flex-shrink:0;">
+      <button class="detail-tab active" data-pmtab="roles" onclick="pmSwitchModalTab('roles')">Roles</button>
+      <button class="detail-tab" data-pmtab="clients" onclick="pmSwitchModalTab('clients')">Client Access</button>
+    </div>
+    <div class="pm-modal-body">
+      <div id="pm-modal-tab-roles" style="padding-top:20px;">
+        <div id="pm-modal-roles-cards"></div>
+      </div>
+      <div id="pm-modal-tab-clients" style="display:none;padding-top:20px;">
+        <h4 style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin:0 0 4px;" id="pm-ca-title"></h4>
+        <p style="font-size:13px;color:var(--color-text-subtitle);margin:0 0 16px;">Choose which clients this user should have access to</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--color-border);margin-bottom:14px;">
+          <span style="font-size:14px;font-weight:500;color:var(--color-text-primary);">User has access to all clients by default</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="pm-ca-all-toggle" onchange="pmToggleAllAccess(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="pm-ca-client-section" style="display:none;">
+          <div class="modal-label" style="margin-bottom:6px;">Clients</div>
+          <div class="pm-client-list" id="pm-ca-client-list"></div>
+        </div>
+        <div class="pm-unsaved-banner" id="pm-unsaved-banner" style="display:none;">
+          You've made some updates that haven't been saved yet. If you leave now, you'll lose these changes.
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn-primary-sm" onclick="pmStayOnModal()" style="height:32px;font-size:13px;">Stay</button>
+            <button onclick="pmDiscardAndClose()" style="height:32px;font-size:13px;padding:0 14px;background:#fff0f0;color:#d72225;border:1px solid #d72225;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;">Discard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pm-modal-footer" id="pm-modal-footer" style="display:none;">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="pmCloseModal()">Cancel</button>
+      <button id="pm-modal-save" class="btn-primary-sm pm-btn-disabled" onclick="pmSaveModal()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Permission Manager ⋮ Action Dropdown -->
+<div id="pm-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="pmMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Edit Roles
+  </div>
+  <div class="pm-dd-item" onclick="pmMenuAction('view')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    View Roles
+  </div>
+  <div class="pm-dd-item" onclick="pmMenuAction('clients')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Client Access
+  </div>
+</div>
+
+<!-- Permission flyout panel -->
+<div id="pm-perm-flyout" class="pm-perm-flyout" style="display:none;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <strong id="pm-flyout-title" style="font-size:14px;color:var(--color-text-primary);"></strong>
+    <button onclick="document.getElementById('pm-perm-flyout').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-caption);line-height:1;padding:0;">×</button>
+  </div>
+  <table class="pm-perm-table" id="pm-flyout-table"></table>
+</div>
 
 <!-- ══ ADD TRANSFORMER MODAL ══ -->
 <div id="add-transformer-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
@@ -5061,7 +5328,7 @@ var ISSUES = [
   }
 
   function hideFeedDetailPages() {
-    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
   }
   window.hideFeedDetailPages = hideFeedDetailPages;
 
@@ -5627,6 +5894,9 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'feed-data') {
           showFeedDataPage();
+        }
+        if (this.getAttribute('data-nav') === 'permission-manager') {
+          showPermissionManagerPage();
         }
       });
     });
@@ -6343,6 +6613,418 @@ window.filterLogs = function() {
     var btn = e.target.closest('[data-action="field-mapping"]');
     if (btn) { window.showFieldMappingPage(); }
   });
+
+  /* ══════════════════════════════════════════════════
+     PERMISSION MANAGER
+  ══════════════════════════════════════════════════ */
+
+  var PM_USERS = [
+    { id:1,  name:'Mike Jelley',              email:'mike@statbid.com',           role:'Admin',   lastActive:'3/18/2026', sessions:1 },
+    { id:2,  name:'Suraj Sintala',            email:'ssintala@windsorplywood.com', role:'Client',  lastActive:'3/17/2026', sessions:1 },
+    { id:3,  name:'Ruben Guzman',             email:'ruben@statbid.com',          role:'Admin',   lastActive:'3/17/2026', sessions:3 },
+    { id:4,  name:'Amy Sams',                 email:'amy@statbid.com',            role:'Analyst', lastActive:'3/17/2026', sessions:1 },
+    { id:5,  name:'Theresa G',                email:'theresa@statbid.com',        role:'Admin',   lastActive:'3/17/2026', sessions:2 },
+    { id:6,  name:'Aalishan Jami',            email:'aalishan@statbid.com',       role:'Analyst', lastActive:'3/16/2026', sessions:3 },
+    { id:7,  name:'Shilo Jones',              email:'shilo@statbid.com',          role:'Admin',   lastActive:'3/16/2026', sessions:1 },
+    { id:8,  name:'Seyifunmi Olufemi',        email:'seyifunmi@statbid.com',      role:'Client',  lastActive:'3/16/2026', sessions:1 },
+    { id:9,  name:'Arman Ali',                email:'arman@statbid.com',          role:'Analyst', lastActive:'3/14/2026', sessions:1 },
+    { id:10, name:'Andrew Flicker',           email:'andrew@statbid.com',         role:'Analyst', lastActive:'3/12/2026', sessions:1 },
+    { id:11, name:'Mariel Dianne Caguimbal',  email:'mariel@statbid.com',         role:'Admin',   lastActive:null, sessions:0 },
+    { id:12, name:'Roy Steves',               email:'roy@poolaroo.com',           role:'Client',  lastActive:null, sessions:0 },
+    { id:13, name:'Efthymios Kasvikis',       email:'efthymios@statbid.com',      role:'Admin',   lastActive:null, sessions:0 },
+    { id:14, name:'Marlyn',                   email:'marlyn@statbid.com',         role:'Admin',   lastActive:null, sessions:0 },
+    { id:15, name:'Jeff McRitchie',           email:'jeff@statbid.com',           role:'Admin',   lastActive:null, sessions:0 },
+    { id:16, name:'Kayley King',              email:'kayley@statbid.com',         role:'Analyst', lastActive:null, sessions:0 },
+    { id:17, name:'Kent Escala',              email:'kent@statbid.com',           role:'Admin',   lastActive:null, sessions:0 },
+    { id:18, name:'Corey Hartford',           email:'corey@statbid.com',          role:'Admin',   lastActive:null, sessions:0 },
+    { id:19, name:'Tom Barr',                 email:'tom@statbid.com',            role:'Analyst', lastActive:null, sessions:0 },
+    { id:20, name:'Dieter Davis',             email:'dieter@poolaroo.com',        role:'Client',  lastActive:null, sessions:0 },
+    { id:21, name:'Stephen Mahlum',           email:'stephen@statbid.com',        role:'Admin',   lastActive:null, sessions:0 },
+    { id:22, name:'Daphne Mae Tagama',        email:'daphne@statbid.com',         role:'Admin',   lastActive:null, sessions:0 },
+    { id:23, name:'Shiny Apps',               email:'shiny@statbid.com',          role:'Client',  lastActive:null, sessions:0 }
+  ];
+
+  PM_USERS.forEach(function(u) {
+    if (u.role !== 'Client') { u.clientAccess = 'all'; return; }
+    if (u.email.includes('windsorplywood')) u.clientAccess = ['Windsor Plywood'];
+    else if (u.email.includes('poolaroo'))  u.clientAccess = ['Poolaroo'];
+    else u.clientAccess = [];
+  });
+
+  var PM_MODULES = ['Permission Manager','Client Management','Reports','Feed Quality Check','Search Term Grader','Test Designer','Task Manager','Alerts Management','Annotations','Page Level View'];
+
+  var PM_PERM = {
+    Admin:   {'Permission Manager':[1,1,1,1],'Client Management':[1,1,1,1],'Reports':[1,1,1,1],'Feed Quality Check':[1,1,1,1],'Search Term Grader':[1,1,1,1],'Test Designer':[1,1,1,1],'Task Manager':[1,1,1,1],'Alerts Management':[1,1,1,1],'Annotations':[1,1,1,1],'Page Level View':[1,1,1,1]},
+    Analyst: {'Permission Manager':[1,0,0,0],'Client Management':[1,0,0,0],'Reports':[1,1,1,0],'Feed Quality Check':[1,1,1,0],'Search Term Grader':[1,1,1,0],'Test Designer':[1,1,1,0],'Task Manager':[1,1,1,0],'Alerts Management':[1,1,1,0],'Annotations':[1,1,1,0],'Page Level View':[1,1,1,0]},
+    Client:  {'Permission Manager':[0,0,0,0],'Client Management':[0,0,0,0],'Reports':[1,0,0,0],'Feed Quality Check':[1,0,0,0],'Search Term Grader':[1,0,0,0],'Test Designer':[1,0,0,0],'Task Manager':[1,0,0,0],'Alerts Management':[1,0,0,0],'Annotations':[1,0,0,0],'Page Level View':[1,0,0,0]}
+  };
+
+  var _pmActiveUserId = null;
+  var _pmModalMode = 'view';
+  var _pmSelectedUsers = [];
+  var _pmAssignRole = null;
+  var _pmHasUnsaved = false;
+
+  /* ── Helpers ── */
+  function pmGetAvatarColor(name) {
+    var palette = ['av-blue','av-green','av-amber','av-red','av-purple','av-cyan','av-pink'];
+    var h = 0;
+    for (var i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0x7fffffff;
+    return palette[h % palette.length];
+  }
+  function pmGetInitials(name) {
+    var parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+  }
+  function pmAvatar(name, size) {
+    size = size || 26;
+    var cls = pmGetAvatarColor(name);
+    var fs = Math.floor(size * 0.38);
+    return '<span class="avatar-circle ' + cls + '" style="width:' + size + 'px;height:' + size + 'px;font-size:' + fs + 'px;flex-shrink:0;">' + pmGetInitials(name) + '</span>';
+  }
+  function pmRelDate(dateStr) {
+    if (!dateStr) return 'Never active';
+    var parts = dateStr.split('/');
+    var d = new Date(parseInt(parts[2]), parseInt(parts[0])-1, parseInt(parts[1]));
+    var today = new Date(2026, 2, 18);
+    var diff = Math.round((today - d) / 86400000);
+    if (diff <= 0) return 'Today';
+    if (diff === 1) return '1 day ago';
+    if (diff < 30) return diff + ' days ago';
+    return Math.round(diff/30) + ' months ago';
+  }
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── Page navigation ── */
+  function showPermissionManagerPage() {
+    ['ic-list','ic-detail','integrations-page','feed-data-page'].forEach(function(id) {
+      var el = document.getElementById(id); if (el) el.style.display = 'none';
+    });
+    hideFeedDetailPages();
+    var pm = document.getElementById('permission-manager-page');
+    if (pm) pm.style.display = 'block';
+    pmShowListView();
+    window.scrollTo(0, 0);
+  }
+  window.showPermissionManagerPage = showPermissionManagerPage;
+
+  /* ── List view ── */
+  function pmShowListView() {
+    document.getElementById('pm-list-view').style.display = 'block';
+    document.getElementById('pm-assign-view').style.display = 'none';
+    var si = document.getElementById('pm-search'); if (si) si.value = '';
+    pmRenderList('');
+  }
+  window.pmSearch = function() { pmRenderList(document.getElementById('pm-search').value); };
+
+  function pmRenderList(query) {
+    var q = (query || '').toLowerCase();
+    var tbody = document.getElementById('pm-users-tbody');
+    if (!tbody) return;
+    var filtered = PM_USERS.filter(function(u) {
+      return !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+    });
+    tbody.innerHTML = filtered.map(function(u) {
+      var lastActive = pmRelDate(u.lastActive);
+      return '<tr style="border-bottom:1px solid var(--color-border);">' +
+        '<td style="padding:12px 16px;">' +
+          '<div style="display:flex;align-items:center;gap:10px;">' +
+            pmAvatar(u.name) +
+            '<div>' +
+              '<div style="font-size:14px;font-weight:500;color:var(--color-text-primary);">' + escHtml(u.name) + '</div>' +
+              '<div style="font-size:12px;color:var(--color-text-caption);">' + lastActive + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td style="padding:12px 16px;"><span class="pm-role-pill">' + u.role + '</span></td>' +
+        '<td style="padding:12px 16px;">' +
+          '<div style="display:flex;align-items:center;gap:8px;">' +
+            pmAvatar('Shilo Jones') +
+            '<div>' +
+              '<div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Shilo Jones</div>' +
+              '<div style="font-size:11px;color:var(--color-text-caption);">2 days ago</div>' +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td style="padding:12px 16px;text-align:center;">' +
+          '<button style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-caption);padding:2px 8px;border-radius:4px;line-height:1;" onclick="pmOpenActionMenu(' + u.id + ',this,event)">⋮</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  /* ── ⋮ Action menu ── */
+  window.pmOpenActionMenu = function(uid, el, evt) {
+    evt.stopPropagation();
+    _pmActiveUserId = uid;
+    var dd = document.getElementById('pm-action-dd');
+    var rect = el.getBoundingClientRect();
+    dd.style.top = (rect.bottom + 4) + 'px';
+    dd.style.left = Math.max(8, rect.right - 168) + 'px';
+    dd.style.display = 'block';
+  };
+  window.pmMenuAction = function(action) {
+    document.getElementById('pm-action-dd').style.display = 'none';
+    var uid = _pmActiveUserId;
+    if (action === 'edit') pmOpenModal(uid, 'edit');
+    else if (action === 'view') pmOpenModal(uid, 'view');
+    else pmOpenModal(uid, 'clients');
+  };
+
+  /* ── Modal open/close ── */
+  function pmOpenModal(uid, mode) {
+    _pmActiveUserId = uid;
+    _pmModalMode = mode;
+    _pmHasUnsaved = false;
+    document.getElementById('pm-unsaved-banner').style.display = 'none';
+    var user = PM_USERS.find(function(u) { return u.id === uid; });
+    if (!user) return;
+    document.getElementById('pm-modal-username').textContent = user.name;
+    document.getElementById('pm-modal-subtitle').textContent =
+      mode === 'edit' ? 'Edit the roles for this user' : 'View the roles and permissions assigned to this user';
+    var footer = document.getElementById('pm-modal-footer');
+    footer.style.display = (mode === 'view') ? 'none' : 'flex';
+    var saveBtn = document.getElementById('pm-modal-save');
+    saveBtn.disabled = true;
+    saveBtn.classList.add('pm-btn-disabled');
+    pmSwitchModalTab(mode === 'clients' ? 'clients' : 'roles');
+    pmRenderModalRoles(user, mode);
+    if (mode === 'clients') pmRenderClientAccess(user);
+    document.getElementById('pm-role-modal').style.display = 'flex';
+  }
+  window.pmSwitchModalTab = function(tab) {
+    document.querySelectorAll('#pm-modal-tabs .detail-tab').forEach(function(t) { t.classList.remove('active'); });
+    var activeTab = document.querySelector('#pm-modal-tabs [data-pmtab="' + tab + '"]');
+    if (activeTab) activeTab.classList.add('active');
+    document.getElementById('pm-modal-tab-roles').style.display = tab === 'roles' ? 'block' : 'none';
+    document.getElementById('pm-modal-tab-clients').style.display = tab === 'clients' ? 'block' : 'none';
+    var footer = document.getElementById('pm-modal-footer');
+    if (_pmModalMode !== 'view') footer.style.display = 'flex';
+    if (tab === 'clients' && _pmActiveUserId) {
+      var user = PM_USERS.find(function(u) { return u.id === _pmActiveUserId; });
+      if (user) pmRenderClientAccess(user);
+    }
+  };
+  window.pmCloseModal = function() {
+    if (_pmHasUnsaved) { document.getElementById('pm-unsaved-banner').style.display = 'block'; return; }
+    document.getElementById('pm-role-modal').style.display = 'none';
+  };
+  window.pmModalOverlayClick = function(e) {
+    if (e.target === document.getElementById('pm-role-modal')) window.pmCloseModal();
+  };
+  window.pmStayOnModal = function() { document.getElementById('pm-unsaved-banner').style.display = 'none'; };
+  window.pmDiscardAndClose = function() {
+    _pmHasUnsaved = false;
+    document.getElementById('pm-unsaved-banner').style.display = 'none';
+    document.getElementById('pm-role-modal').style.display = 'none';
+  };
+
+  /* ── Roles tab in modal ── */
+  function pmRenderModalRoles(user, mode) {
+    var editable = (mode === 'edit');
+    document.getElementById('pm-modal-roles-cards').innerHTML = ['Admin','Analyst','Client'].map(function(role) {
+      var sel = (user.role === role);
+      return '<div class="pm-role-card' + (sel ? ' selected' : '') + (editable ? '' : ' readonly') + '" data-role="' + role + '"' +
+        (editable ? ' onclick="pmModalSelectRole(\'' + role + '\')"' : '') + '>' +
+        '<div class="pm-role-card-left"><div class="pm-role-radio"></div><span class="pm-role-name">' + role + '</span></div>' +
+        '<span class="pm-view-perms" onclick="event.stopPropagation();pmShowPermTable(\'' + role + '\',this)">View permissions ⓘ</span>' +
+      '</div>';
+    }).join('');
+  }
+  window.pmModalSelectRole = function(role) {
+    if (_pmModalMode !== 'edit') return;
+    document.querySelectorAll('#pm-modal-roles-cards .pm-role-card').forEach(function(c) { c.classList.remove('selected'); });
+    var card = document.querySelector('#pm-modal-roles-cards [data-role="' + role + '"]');
+    if (card) card.classList.add('selected');
+    var user = PM_USERS.find(function(u) { return u.id === _pmActiveUserId; });
+    var changed = user && user.role !== role;
+    var saveBtn = document.getElementById('pm-modal-save');
+    saveBtn.disabled = !changed;
+    if (changed) saveBtn.classList.remove('pm-btn-disabled'); else saveBtn.classList.add('pm-btn-disabled');
+  };
+  window.pmSaveModal = function() {
+    var user = PM_USERS.find(function(u) { return u.id === _pmActiveUserId; });
+    if (!user) return;
+    if (_pmModalMode === 'edit') {
+      var selected = document.querySelector('#pm-modal-roles-cards .pm-role-card.selected');
+      if (selected) user.role = selected.getAttribute('data-role');
+      showToast('Role updated for ' + user.name);
+      _pmHasUnsaved = false;
+      document.getElementById('pm-role-modal').style.display = 'none';
+      pmRenderList(document.getElementById('pm-search').value);
+    } else if (_pmModalMode === 'clients') {
+      pmSaveClientAccess();
+    }
+  };
+
+  /* ── Permission flyout ── */
+  window.pmShowPermTable = function(role, el) {
+    var flyout = document.getElementById('pm-perm-flyout');
+    document.getElementById('pm-flyout-title').textContent = role + ' Permissions';
+    var html = '<tr><th style="text-align:left;">Module</th><th>View</th><th>Edit</th><th>Create</th><th>Delete</th></tr>';
+    html += PM_MODULES.map(function(mod) {
+      var perms = PM_PERM[role] ? (PM_PERM[role][mod] || [0,0,0,0]) : [0,0,0,0];
+      return '<tr><td>' + mod + '</td>' +
+        perms.map(function(p) {
+          return '<td>' + (p ? '<span class="pm-perm-check">✓</span>' : '<span class="pm-perm-cross">✗</span>') + '</td>';
+        }).join('') + '</tr>';
+    }).join('');
+    document.getElementById('pm-flyout-table').innerHTML = html;
+    var rect = el.getBoundingClientRect();
+    flyout.style.top = (rect.bottom + 8) + 'px';
+    flyout.style.left = Math.min(rect.left, window.innerWidth - 360) + 'px';
+    flyout.style.display = 'block';
+  };
+
+  /* ── Client Access tab ── */
+  function pmRenderClientAccess(user) {
+    var allAccess = (user.clientAccess === 'all');
+    var toggle = document.getElementById('pm-ca-all-toggle');
+    toggle.checked = allAccess;
+    document.getElementById('pm-ca-title').textContent = user.name;
+    document.getElementById('pm-ca-client-section').style.display = allAccess ? 'none' : 'block';
+    var access = allAccess ? [] : (user.clientAccess || []);
+    document.getElementById('pm-ca-client-list').innerHTML = CLIENTS.map(function(c) {
+      var checked = allAccess || access.indexOf(c.name) > -1;
+      return '<label class="pm-client-row">' +
+        '<input type="checkbox"' + (checked ? ' checked' : '') + ' onchange="pmClientCheckChange(this)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0;">' +
+        '<span>' + escHtml(c.name) + '</span>' +
+      '</label>';
+    }).join('');
+  }
+  window.pmToggleAllAccess = function(isAll) {
+    _pmHasUnsaved = true;
+    var saveBtn = document.getElementById('pm-modal-save');
+    saveBtn.disabled = false; saveBtn.classList.remove('pm-btn-disabled');
+    document.getElementById('pm-ca-client-section').style.display = isAll ? 'none' : 'block';
+    if (!isAll) {
+      document.getElementById('pm-ca-client-list').innerHTML = CLIENTS.map(function(c) {
+        return '<label class="pm-client-row"><input type="checkbox" checked onchange="pmClientCheckChange(this)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0;"><span>' + escHtml(c.name) + '</span></label>';
+      }).join('');
+    }
+  };
+  window.pmClientCheckChange = function(cb) {
+    _pmHasUnsaved = true;
+    var saveBtn = document.getElementById('pm-modal-save');
+    saveBtn.disabled = false; saveBtn.classList.remove('pm-btn-disabled');
+  };
+  function pmSaveClientAccess() {
+    var user = PM_USERS.find(function(u) { return u.id === _pmActiveUserId; });
+    if (!user) return;
+    var allToggle = document.getElementById('pm-ca-all-toggle');
+    if (allToggle.checked) {
+      user.clientAccess = 'all';
+    } else {
+      var checkboxes = document.querySelectorAll('#pm-ca-client-list input[type="checkbox"]');
+      var selected = [];
+      checkboxes.forEach(function(cb, i) { if (cb.checked && CLIENTS[i]) selected.push(CLIENTS[i].name); });
+      user.clientAccess = selected;
+    }
+    _pmHasUnsaved = false;
+    showToast(user.name + "'s Client Access updated");
+    document.getElementById('pm-role-modal').style.display = 'none';
+  }
+
+  /* ── Assign Role view ── */
+  window.pmShowAssignView = function() {
+    document.getElementById('pm-list-view').style.display = 'none';
+    document.getElementById('pm-assign-view').style.display = 'block';
+    _pmSelectedUsers = []; _pmAssignRole = null;
+    document.getElementById('pm-assign-search').value = '';
+    document.getElementById('pm-assign-dd').classList.remove('open');
+    pmRenderAssignChips();
+    pmRenderAssignRoleCards();
+    pmUpdateAssignBtn();
+    window.scrollTo(0, 0);
+  };
+  window.pmBackToList = function() { pmShowListView(); };
+
+  window.pmAssignSearch = function() {
+    var q = document.getElementById('pm-assign-search').value.toLowerCase();
+    var dd = document.getElementById('pm-assign-dd');
+    if (!q) { dd.classList.remove('open'); return; }
+    var matches = PM_USERS.filter(function(u) {
+      return (u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)) &&
+             _pmSelectedUsers.indexOf(u.id) === -1;
+    });
+    if (!matches.length) { dd.classList.remove('open'); return; }
+    dd.innerHTML = matches.map(function(u) {
+      return '<div class="pm-user-dd-row" onclick="pmAssignSelectUser(' + u.id + ')">' +
+        pmAvatar(u.name, 24) +
+        '<div><div class="pm-user-dd-name">' + escHtml(u.name) + '</div><div class="pm-user-dd-email">' + escHtml(u.email) + '</div></div>' +
+      '</div>';
+    }).join('');
+    dd.classList.add('open');
+  };
+  window.pmAssignSelectUser = function(uid) {
+    if (_pmSelectedUsers.indexOf(uid) === -1) _pmSelectedUsers.push(uid);
+    document.getElementById('pm-assign-dd').classList.remove('open');
+    document.getElementById('pm-assign-search').value = '';
+    pmRenderAssignChips(); pmUpdateAssignBtn();
+  };
+  window.pmRemoveUserChip = function(uid) {
+    _pmSelectedUsers = _pmSelectedUsers.filter(function(id) { return id !== uid; });
+    pmRenderAssignChips(); pmUpdateAssignBtn();
+  };
+  function pmRenderAssignChips() {
+    document.getElementById('pm-selected-chips').innerHTML = _pmSelectedUsers.map(function(uid) {
+      var u = PM_USERS.find(function(x) { return x.id === uid; });
+      if (!u) return '';
+      return '<span class="pm-user-chip">' + pmAvatar(u.name, 20) + escHtml(u.name) +
+        '<span class="pm-user-chip-x" onclick="pmRemoveUserChip(' + uid + ')">×</span></span>';
+    }).join('');
+  }
+  window.pmSelectAssignRole = function(role) {
+    _pmAssignRole = role; pmRenderAssignRoleCards(); pmUpdateAssignBtn();
+  };
+  function pmRenderAssignRoleCards() {
+    var container = document.getElementById('pm-assign-roles');
+    if (!container) return;
+    container.innerHTML = ['Admin','Analyst','Client'].map(function(r) {
+      var sel = (r === _pmAssignRole);
+      return '<div class="pm-role-card' + (sel ? ' selected' : '') + '" data-role="' + r + '" onclick="pmSelectAssignRole(\'' + r + '\')">' +
+        '<div class="pm-role-card-left"><div class="pm-role-radio"></div><span class="pm-role-name">' + r + '</span></div>' +
+        '<span class="pm-view-perms" onclick="event.stopPropagation();pmShowPermTable(\'' + r + '\',this)">View permissions ⓘ</span>' +
+      '</div>';
+    }).join('');
+  }
+  function pmUpdateAssignBtn() {
+    var btn = document.getElementById('pm-assign-submit');
+    if (!btn) return;
+    var ok = (_pmSelectedUsers.length > 0 && _pmAssignRole !== null);
+    btn.disabled = !ok;
+    if (ok) btn.classList.remove('pm-btn-disabled'); else btn.classList.add('pm-btn-disabled');
+  }
+  window.pmSubmitAssign = function() {
+    if (!_pmSelectedUsers.length || !_pmAssignRole) return;
+    _pmSelectedUsers.forEach(function(uid) {
+      var u = PM_USERS.find(function(x) { return x.id === uid; }); if (u) u.role = _pmAssignRole;
+    });
+    var names = _pmSelectedUsers.map(function(uid) {
+      var u = PM_USERS.find(function(x) { return x.id === uid; }); return u ? u.name : '';
+    }).filter(Boolean);
+    var msg = names.length === 1 ? 'Role assigned to ' + names[0] :
+              names.length <= 3 ? names.length + ' roles assigned to ' + names.join(', ') :
+              names.length + ' roles assigned to ' + names.slice(0,3).join(', ') + '...';
+    showToast(msg);
+    pmShowListView();
+  };
+
+  /* ── Outside-click cleanup ── */
+  document.addEventListener('click', function(e) {
+    var dd = document.getElementById('pm-action-dd');
+    if (dd && !e.target.closest('#pm-action-dd') && !e.target.closest('button[onclick*="pmOpenActionMenu"]')) dd.style.display = 'none';
+    var flyout = document.getElementById('pm-perm-flyout');
+    if (flyout && !e.target.closest('#pm-perm-flyout') && !e.target.closest('.pm-view-perms')) flyout.style.display = 'none';
+    var assignDd = document.getElementById('pm-assign-dd');
+    if (assignDd && !e.target.closest('#pm-assign-dd') && !e.target.closest('#pm-assign-search')) assignDd.classList.remove('open');
+  });
+
+  /* ── Init ── */
+  (function() { var t = document.getElementById('pm-users-tbody'); if (t) pmRenderList(''); })();
 
 })();
 </script>
