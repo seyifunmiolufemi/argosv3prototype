@@ -1862,6 +1862,59 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
 }
 .alerts-filter-item:hover { background:var(--color-bg-grey50); }
 
+/* ═══════════════════════════════════════════════
+   BUSINESS RULE MANAGER / OVERVIEW / HIGHLIGHTS
+═══════════════════════════════════════════════ */
+.impact-high   { display:inline-block; background:#fff0f0; color:#d72225; border-radius:6px; padding:2px 8px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; }
+.impact-medium { display:inline-block; background:var(--color-container-warn); color:var(--color-text-warning); border-radius:6px; padding:2px 8px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; }
+.impact-low    { display:inline-block; background:var(--color-bg-grey50); color:var(--color-text-subtitle); border-radius:6px; padding:2px 8px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; }
+#brm-action-dd { position:fixed; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:1000; padding:4px 0; min-width:160px; display:none; }
+.ov-kpi-card { background:white; border:1px solid var(--color-border); border-radius:8px; padding:16px 20px; flex:1; min-width:0; }
+.ov-kpi-label { font-size:13px; color:var(--color-text-caption); margin-bottom:6px; font-family:'DM Sans',sans-serif; }
+.ov-kpi-value { font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; letter-spacing:-0.5px; margin-bottom:4px; }
+.ov-kpi-change-pos { font-size:13px; color:var(--color-text-success); font-weight:500; }
+.ov-kpi-change-neg { font-size:13px; color:var(--color-text-error); font-weight:500; }
+.ov-kpi-vs { font-size:11px; color:var(--color-text-caption); margin-top:2px; }
+.ov-section-heading { font-size:16px; font-weight:600; color:var(--color-text-primary); margin-bottom:4px; font-family:'Instrument Sans',sans-serif; }
+.ov-section-sub { font-size:13px; color:var(--color-text-subtitle); margin-bottom:16px; }
+.ov-section-insight { font-size:13px; color:var(--color-text-caption); font-style:italic; margin-top:12px; line-height:1.5; }
+.ov-filter-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border:1px solid var(--color-border); border-radius:8px; background:white; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.ov-filter-btn:hover { background:var(--color-bg-grey50); }
+.ov-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.ov-bar-label { font-size:13px; color:var(--color-text-primary); min-width:140px; }
+.ov-bar-track { flex:1; height:6px; border-radius:3px; background:#e2e5ed; overflow:hidden; }
+.ov-bar-fill { height:100%; border-radius:3px; }
+.ov-bar-change-pos { font-size:12px; color:var(--color-text-success); min-width:55px; text-align:right; }
+.ov-bar-change-neg { font-size:12px; color:var(--color-text-error); min-width:55px; text-align:right; }
+.ov-customize-drawer { position:fixed; top:0; right:-380px; width:360px; height:100vh; background:white; border-left:1px solid var(--color-border); box-shadow:-4px 0 20px rgba(0,0,0,0.08); z-index:900; transition:right 0.22s ease; display:flex; flex-direction:column; overflow:hidden; }
+.ov-customize-drawer.open { right:0; }
+.ov-drawer-header { padding:20px 20px 16px; border-bottom:1px solid var(--color-border); flex-shrink:0; }
+.ov-drawer-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.ov-drawer-footer { padding:16px 20px; border-top:1px solid var(--color-border); display:flex; gap:10px; align-items:center; flex-shrink:0; }
+.ov-drawer-section { margin-bottom:12px; border:1px solid var(--color-border); border-radius:8px; overflow:hidden; }
+.ov-drawer-section-hdr { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:var(--color-bg-grey50); cursor:pointer; font-size:14px; font-weight:500; color:var(--color-text-primary); }
+.ov-drawer-section-body { padding:12px 14px; display:none; }
+.ov-drawer-section-body.open { display:block; }
+.cos-green { background:rgba(52,199,89,0.18); color:#166534; border-radius:4px; padding:2px 6px; font-size:13px; font-weight:500; }
+.cos-amber { background:rgba(255,196,0,0.18); color:#854d0e; border-radius:4px; padding:2px 6px; font-size:13px; font-weight:500; }
+.cos-red   { background:rgba(239,68,68,0.15); color:#991b1b; border-radius:4px; padding:2px 6px; font-size:13px; font-weight:500; }
+.ov-search-tile { background:var(--color-container-info); border:1px solid #c7d9f8; border-radius:8px; padding:14px 16px; flex:1; min-width:0; }
+.ov-search-tile-label { font-size:12px; color:var(--color-text-subtitle); margin-bottom:4px; }
+.ov-search-tile-value { font-size:20px; font-weight:700; color:var(--color-text-primary); }
+.ov-search-tile-sub { font-size:11px; color:var(--color-text-caption); margin-top:2px; }
+.wf-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.wf-label { font-size:13px; color:var(--color-text-primary); min-width:130px; }
+.wf-bar-track { flex:1; height:14px; border-radius:4px; background:#e2e5ed; position:relative; overflow:hidden; }
+.wf-bar-fill { height:100%; border-radius:4px; position:absolute; left:0; top:0; }
+.wf-value { font-size:12px; color:var(--color-text-caption); min-width:60px; text-align:right; }
+#hl-filter-drawer { position:fixed; top:0; right:-540px; width:520px; height:100vh; background:white; border-left:1px solid var(--color-border); box-shadow:-4px 0 20px rgba(0,0,0,0.08); z-index:900; transition:right 0.22s ease; display:flex; flex-direction:column; overflow:hidden; }
+#hl-filter-drawer.open { right:0; }
+.hl-context-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:#f3f4f6; border-radius:8px; padding:6px 12px; margin-bottom:16px; }
+.hl-context-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:none; border-radius:6px; background:transparent; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.hl-context-btn:hover { background:rgba(0,0,0,0.05); }
+.hl-context-sep { width:1px; height:20px; background:var(--color-border); margin:0 2px; flex-shrink:0; }
+.hl-green-cell { border-radius:4px; padding:2px 6px; font-size:13px; }
+
 </style>
 </head>
 <body>
@@ -2667,7 +2720,11 @@ document.addEventListener('DOMContentLoaded', function() {
             <svg class="sb-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </div>
           <div class="sb-kids" id="kids-reports">
-            <div class="sb-kid" data-nav="sem-overview"><div class="sb-kid-bar"></div><span>SEM Overview</span></div>
+            <div class="sb-kid" data-nav="sem-overview"><div class="sb-kid-bar"></div><span>Overview</span></div>
+            <div class="sb-kid" data-nav="highlights-table"><div class="sb-kid-bar"></div>
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+              <span>Highlights Table</span>
+            </div>
           </div>
         </div>
 
@@ -5092,11 +5149,846 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div><!-- /alerts-page -->
 
+<!-- ═══════════════════════════════════════════
+     BUSINESS RULE MANAGER PAGE
+═══════════════════════════════════════════ -->
+<div id="brm-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- LIST VIEW -->
+  <div id="brm-list-view">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1">Business Rule Manager</h1>
+        <span class="count-badge" id="brm-count-badge">10</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="brmShowCreate()" style="display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Create Rule
+        </button>
+      </div>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Create and manage automated business rules for detecting issues.</p>
+    <nav class="breadcrumb" style="margin-bottom:20px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Business Rule Manager</span>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="position:relative;flex:1;max-width:280px;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--color-text-caption)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="var(--color-text-caption)" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="brm-search" class="search-box" style="padding-left:32px;width:100%;box-sizing:border-box;" placeholder="Search by rule name…" oninput="brmSearch()">
+      </div>
+      <div id="brm-ds-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('brm-ds-panel').classList.toggle('open');document.getElementById('brm-status-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:170px;justify-content:space-between;">
+          <span id="brm-ds-label">Data Source: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="brm-ds-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="brmSetDs('')">All</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Google Merchant Center')">Google Merchant Center</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Search Console')">Search Console</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Google Ads')">Google Ads</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Bing Ads')">Bing Ads</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Feed Analyzer')">Feed Analyzer</div>
+        </div>
+      </div>
+      <div id="brm-status-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('brm-status-panel').classList.toggle('open');document.getElementById('brm-ds-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:130px;justify-content:space-between;">
+          <span id="brm-status-label">Status: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="brm-status-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="brmSetStatus('')">All</div>
+          <div class="alerts-filter-item" onclick="brmSetStatus('Active')">Active</div>
+          <div class="alerts-filter-item" onclick="brmSetStatus('Draft')">Draft</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Issue ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Impact ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Data Source ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Entity Type ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Status ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Modified ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="brm-tbody"></tbody>
+      </table>
+    </div>
+  </div><!-- /brm-list-view -->
+
+  <!-- CREATE VIEW -->
+  <div id="brm-create-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <h1 class="page-h1" id="brm-create-heading">Create Rule</h1>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Define what the rule is, where it applies, and its context.</p>
+    <nav class="breadcrumb" style="margin-bottom:24px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="brmShowListView()">Business Rule Manager</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="brm-create-bc-label" style="color:var(--color-text-primary);">Create Rule</span>
+    </nav>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <span class="form-section-label" style="margin-top:0;">Rule Details</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Name <span style="color:#d72225;">*</span> <span title="Enter a descriptive name for this rule" style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--color-bg-grey25);color:var(--color-text-caption);font-size:10px;cursor:default;margin-left:4px;">?</span></label>
+          <input type="text" class="modal-input" id="brm-form-name" placeholder="e.g. Missing Product Titles" style="width:100%;box-sizing:border-box;" oninput="brmUpdateCreateBtn()">
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Description <span style="color:#d72225;">*</span></label>
+          <textarea class="modal-textarea" id="brm-form-desc" placeholder="e.g. Detects issues with empty or null fields that could affect user experience" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;min-height:88px;" oninput="brmUpdateCreateBtn()"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Severity <span style="color:#d72225;">*</span></label>
+            <select class="modal-select" id="brm-form-severity" style="width:100%;" onchange="brmUpdateCreateBtn()">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Status</label>
+            <select class="modal-select" id="brm-form-status" style="width:100%;">
+              <option value="Active" selected>Active</option>
+              <option value="Draft">Draft</option>
+            </select>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <span class="form-section-label">Scope</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Data Source <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="brm-form-ds" style="width:100%;" onchange="brmUpdateCreateBtn()">
+            <option value="">Select the data source</option>
+            <option>Google Merchant Center</option>
+            <option>Search Console</option>
+            <option>Google Ads</option>
+            <option>Microsoft Ads / Bing Ads</option>
+            <option>Feed Analyzer</option>
+          </select>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label class="field-label">Entity <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="brm-form-entity" style="width:100%;" onchange="brmUpdateCreateBtn()">
+            <option value="">Select the entity</option>
+            <option>Product</option>
+            <option>Page</option>
+            <option>URL</option>
+            <option>Campaign</option>
+            <option>Ad Group</option>
+            <option>All Ad Groups</option>
+            <option>Selected Ad Groups</option>
+          </select>
+        </div>
+        <hr class="form-hr" style="margin-top:0;">
+        <div style="display:flex;gap:10px;align-items:center;padding-top:4px;">
+          <button class="btn-primary-sm pm-btn-disabled" id="brm-create-btn" disabled onclick="brmSubmitCreate()">Create Rule</button>
+          <button class="btn-outline" onclick="brmShowListView()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /brm-create-view -->
+
+  <!-- DETAIL VIEW -->
+  <div id="brm-detail-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;align-items:flex-start;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1" id="brm-detail-heading">Rule</h1>
+        <span id="brm-detail-impact-badge"></span>
+      </div>
+      <div id="brm-detail-view-btns" style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-outline" style="display:flex;align-items:center;gap:6px;" onclick="brmEnableEdit()">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          Edit
+        </button>
+        <button style="background:#fff0f0;color:#d72225;border:1px solid #d72225;border-radius:8px;padding:7px 14px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="brmConfirmDelete(_brmActiveId)">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Delete
+        </button>
+      </div>
+      <div id="brm-detail-edit-btns" style="display:none;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="brmSaveEdit()">Save Changes</button>
+        <button class="btn-outline" onclick="brmCancelEdit()">Cancel</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" style="margin-bottom:8px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="brmShowListView()">Business Rule Manager</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="brm-detail-bc" style="color:var(--color-text-primary);">Detail</span>
+    </nav>
+    <p id="brm-detail-modified" style="font-size:12px;color:var(--color-text-caption);margin-bottom:24px;"></p>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <span class="form-section-label" style="margin-top:0;">Rule Details</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Name</label>
+          <input type="text" class="modal-input" id="brm-det-name" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Description</label>
+          <textarea class="modal-textarea" id="brm-det-desc" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;min-height:88px;" disabled></textarea>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Severity</label>
+          <div id="brm-det-severity-display" style="margin-top:4px;"></div>
+          <select class="modal-select" id="brm-det-severity" style="width:160px;display:none;" disabled>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+        <hr class="form-hr">
+        <span class="form-section-label">Scope</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Data Source</label>
+          <input type="text" class="modal-input" id="brm-det-ds" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+        <div>
+          <label class="field-label">Entity</label>
+          <input type="text" class="modal-input" id="brm-det-entity" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+      </div>
+    </div>
+  </div><!-- /brm-detail-view -->
+
+</div><!-- /brm-page -->
+
+<!-- ═══════════════════════════════════════════
+     OVERVIEW PAGE (SEM / SEO)
+═══════════════════════════════════════════ -->
+<div id="overview-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- Header -->
+  <div class="page-title-row" style="margin-bottom:4px;">
+    <div>
+      <h1 class="page-h1" id="ov-heading">SEM Overview</h1>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button class="btn-outline" onclick="ovOpenDrawer()" style="display:flex;align-items:center;gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+        Customize
+      </button>
+      <button class="btn-primary-sm" style="display:flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1v9M3.5 6.5L7 10l3.5-3.5M1 11.5h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Export
+      </button>
+    </div>
+  </div>
+  <p class="page-subtitle" id="ov-subtitle" style="margin-bottom:20px;">Paid search performance and optimisation insights.</p>
+  <nav class="breadcrumb" style="margin-bottom:20px;">
+    <span class="bc-item bc-muted">Reports</span>
+    <span class="bc-muted" style="margin:0 4px;">›</span>
+    <span class="bc-item" style="color:var(--color-text-primary);">Overview</span>
+  </nav>
+
+  <!-- Filter bar -->
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+    <div id="ov-client-wrap" style="position:relative;">
+      <button class="ov-filter-btn" onclick="document.getElementById('ov-client-panel').classList.toggle('open')">
+        <span id="ov-client-label">Outdoor Research</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="ov-client-panel" class="alerts-filter-panel" style="min-width:200px;">
+        <div class="alerts-filter-item" onclick="ovSetClient('Outdoor Research')">Outdoor Research</div>
+        <div class="alerts-filter-item" onclick="ovSetClient('MojoMotoSport')">MojoMotoSport</div>
+        <div class="alerts-filter-item" onclick="ovSetClient('Blossom Beauty')">Blossom Beauty</div>
+        <div class="alerts-filter-item" onclick="ovSetClient('Peak Performance')">Peak Performance</div>
+        <div class="alerts-filter-item" onclick="ovSetClient('Coastal Living')">Coastal Living</div>
+      </div>
+    </div>
+    <div id="ov-website-wrap" style="position:relative;">
+      <button class="ov-filter-btn" onclick="document.getElementById('ov-website-panel').classList.toggle('open')">
+        <span id="ov-website-label">outdoorresearch.com</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="ov-website-panel" class="alerts-filter-panel">
+        <div class="alerts-filter-item" onclick="ovSetWebsite('outdoorresearch.com')">outdoorresearch.com</div>
+      </div>
+    </div>
+    <div id="ov-channel-wrap" style="position:relative;">
+      <button class="ov-filter-btn" onclick="document.getElementById('ov-channel-panel').classList.toggle('open')" style="border-color:var(--color-blue);color:var(--color-blue);">
+        <span id="ov-channel-label">SEM</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="var(--color-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="ov-channel-panel" class="alerts-filter-panel">
+        <div class="alerts-filter-item" onclick="ovSetChannel('SEM')">SEM</div>
+        <div class="alerts-filter-item" onclick="ovSetChannel('SEO')">SEO</div>
+      </div>
+    </div>
+    <div id="ov-comp-wrap" style="position:relative;">
+      <button class="ov-filter-btn" onclick="document.getElementById('ov-comp-panel').classList.toggle('open')">
+        <span id="ov-comp-label">Previous Period</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="ov-comp-panel" class="alerts-filter-panel">
+        <div class="alerts-filter-item" onclick="ovSetComp('Previous Period')">Previous Period</div>
+        <div class="alerts-filter-item" onclick="ovSetComp('Previous Year')">Previous Year</div>
+        <div class="alerts-filter-item" onclick="ovSetComp('No Comparison')">No Comparison</div>
+      </div>
+    </div>
+    <div id="ov-date-wrap" style="position:relative;">
+      <button class="ov-filter-btn" onclick="document.getElementById('ov-date-panel').classList.toggle('open')">
+        <span id="ov-date-label">Last 30 Days</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="ov-date-panel" class="alerts-filter-panel">
+        <div class="alerts-filter-item" onclick="ovSetDate('Last 7 Days')">Last 7 Days</div>
+        <div class="alerts-filter-item" onclick="ovSetDate('Last 30 Days')">Last 30 Days</div>
+        <div class="alerts-filter-item" onclick="ovSetDate('Last 90 Days')">Last 90 Days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEM CONTENT -->
+  <div id="ov-sem-content">
+
+    <!-- 1. KPI cards -->
+    <div id="ov-sec-kpi" style="display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;">
+      <div class="ov-kpi-card">
+        <div class="ov-kpi-label">Conversion Value</div>
+        <div class="ov-kpi-value">$487,320</div>
+        <div><span class="ov-kpi-change-pos">↑ +12.3%</span></div>
+        <div class="ov-kpi-vs">vs Previous Period</div>
+      </div>
+      <div class="ov-kpi-card">
+        <div class="ov-kpi-label">Cost</div>
+        <div class="ov-kpi-value">$98,450</div>
+        <div><span class="ov-kpi-change-neg">↓ -12.2%</span></div>
+        <div class="ov-kpi-vs">vs Previous Period</div>
+      </div>
+      <div class="ov-kpi-card">
+        <div class="ov-kpi-label">COS</div>
+        <div class="ov-kpi-value">20.2%</div>
+        <div><span class="ov-kpi-change-neg">↑ +12.2%</span></div>
+        <div class="ov-kpi-vs">vs Previous Period</div>
+      </div>
+      <div class="ov-kpi-card">
+        <div class="ov-kpi-label">Conversions</div>
+        <div class="ov-kpi-value">3,847</div>
+        <div><span class="ov-kpi-change-neg">↓ -12.2%</span></div>
+        <div class="ov-kpi-vs">vs Previous Period</div>
+      </div>
+    </div>
+
+    <!-- 2. Channel Performance -->
+    <div id="ov-sec-channel" style="margin-bottom:28px;">
+      <div class="table-card" style="padding:20px 24px;">
+        <div class="ov-section-heading">Channel Performance Overview</div>
+        <div class="ov-section-sub">How this channel is trending compared to the overall site and other key channels.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">Revenue</div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Paid Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:78%;background:var(--color-blue);"></div></div><div class="ov-bar-change-pos">+12.3%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Organic Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:55%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-1.7%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Direct</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:40%;background:#9ca3af;"></div></div><div class="ov-bar-change-pos">+12.3%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Total Site</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:90%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-3.6%</div></div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">Sessions</div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Paid Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:65%;background:var(--color-blue);"></div></div><div class="ov-bar-change-pos">+4.6%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Organic Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:72%;background:#9ca3af;"></div></div><div class="ov-bar-change-pos">+2.1%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Direct</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:38%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-5.2%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label" style="font-size:13px;">Total Site</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:85%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-1.8%</div></div>
+          </div>
+        </div>
+        <p class="ov-section-insight">Paid Search revenue grew 12.3% while sessions increased 4.6%. Revenue per session improved, indicating better traffic quality or conversion efficiency.</p>
+      </div>
+    </div>
+
+    <!-- 3. Performance Over Time -->
+    <div id="ov-sec-time" style="margin-bottom:28px;">
+      <div class="table-card" style="padding:20px 24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:4px;">
+          <div class="ov-section-heading" style="margin-bottom:0;">Performance Over Time</div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-primary);cursor:pointer;">
+              <input type="checkbox" id="ov-markers-cb" checked style="accent-color:var(--color-blue);"> Show special cause markers
+            </label>
+            <div style="position:relative;">
+              <select class="modal-select" id="ov-metric-sel" style="font-size:13px;padding:5px 28px 5px 10px;">
+                <option>Conversion Value</option>
+                <option>Cost</option>
+                <option>COS</option>
+                <option>Conversions</option>
+                <option>ROAS</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="ov-section-sub">How your key metrics are trending day over day.</div>
+        <!-- SVG Line Chart -->
+        <div style="width:100%;overflow-x:auto;">
+          <svg viewBox="0 0 860 200" style="width:100%;min-width:500px;display:block;" xmlns="http://www.w3.org/2000/svg">
+            <!-- Y axis labels -->
+            <text x="0" y="18" font-size="10" fill="#9ca3af">$600K</text>
+            <text x="0" y="58" font-size="10" fill="#9ca3af">$500K</text>
+            <text x="0" y="98" font-size="10" fill="#9ca3af">$400K</text>
+            <text x="0" y="138" font-size="10" fill="#9ca3af">$300K</text>
+            <text x="0" y="178" font-size="10" fill="#9ca3af">$200K</text>
+            <!-- Grid lines -->
+            <line x1="40" y1="14" x2="855" y2="14" stroke="#e2e5ed" stroke-width="1"/>
+            <line x1="40" y1="54" x2="855" y2="54" stroke="#e2e5ed" stroke-width="1"/>
+            <line x1="40" y1="94" x2="855" y2="94" stroke="#e2e5ed" stroke-width="1"/>
+            <line x1="40" y1="134" x2="855" y2="134" stroke="#e2e5ed" stroke-width="1"/>
+            <line x1="40" y1="174" x2="855" y2="174" stroke="#e2e5ed" stroke-width="1"/>
+            <!-- Chart line -->
+            <polyline points="40,140 95,120 150,130 205,100 260,115 315,90 370,105 425,80 480,95 535,70 590,88 645,60 700,75 755,55 810,65 855,50" fill="none" stroke="#346ed9" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <!-- Area fill -->
+            <polygon points="40,140 95,120 150,130 205,100 260,115 315,90 370,105 425,80 480,95 535,70 590,88 645,60 700,75 755,55 810,65 855,50 855,174 40,174" fill="rgba(52,110,217,0.07)"/>
+            <!-- X axis labels -->
+            <text x="40" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Aug 25</text>
+            <text x="150" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Sep 15</text>
+            <text x="260" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Oct 5</text>
+            <text x="370" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Oct 26</text>
+            <text x="480" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Nov 15</text>
+            <text x="590" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Dec 5</text>
+            <text x="700" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Dec 20</text>
+            <text x="855" y="195" font-size="9" fill="#9ca3af" text-anchor="middle">Dec 31</text>
+          </svg>
+        </div>
+        <div style="margin-top:8px;">
+          <span style="display:inline-flex;align-items:center;gap:5px;background:var(--color-container-info);border:1px solid #c7d9f8;border-radius:20px;padding:3px 10px;font-size:12px;color:var(--color-blue);cursor:pointer;">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="#346ed9" stroke-width="1.2"/><path d="M6 4v2.5M6 7.5v.5" stroke="#346ed9" stroke-width="1.2" stroke-linecap="round"/></svg>
+            1 Connected Issue
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Drivers of Change -->
+    <div id="ov-sec-drivers" style="margin-bottom:28px;">
+      <div class="table-card" style="padding:20px 24px;">
+        <div class="ov-section-heading">Drivers of Change</div>
+        <div class="ov-section-sub">Breakdown of factors behind the change from the previous period.</div>
+        <div style="max-width:560px;">
+          <div class="wf-row"><div class="wf-label">Impressions</div><div class="wf-bar-track"><div class="wf-bar-fill" style="width:72%;background:#22c55e;"></div></div><div class="wf-value" style="color:#166534;">+$58,200</div></div>
+          <div class="wf-row"><div class="wf-label">CTR</div><div class="wf-bar-track"><div class="wf-bar-fill" style="width:55%;background:#22c55e;"></div></div><div class="wf-value" style="color:#166534;">+$41,100</div></div>
+          <div class="wf-row"><div class="wf-label">Conv. Rate</div><div class="wf-bar-track"><div class="wf-bar-fill" style="width:80%;background:#22c55e;"></div></div><div class="wf-value" style="color:#166534;">+$68,400</div></div>
+          <div class="wf-row"><div class="wf-label">Trending Term</div><div class="wf-bar-track"><div class="wf-bar-fill" style="width:30%;background:#eab308;"></div></div><div class="wf-value" style="color:#854d0e;">+$12,800</div></div>
+          <div class="wf-row"><div class="wf-label">Other Factors</div><div class="wf-bar-track"><div class="wf-bar-fill" style="width:18%;background:#9ca3af;"></div></div><div class="wf-value">+$6,820</div></div>
+        </div>
+        <p class="ov-section-insight">Conversion Rate has the largest directional association with this period-over-period change, relative to other factors.</p>
+      </div>
+    </div>
+
+    <!-- 5. Category Performance -->
+    <div id="ov-sec-category" style="margin-bottom:28px;">
+      <div class="table-card">
+        <div style="padding:20px 24px 12px;">
+          <div class="ov-section-heading">Category Performance</div>
+          <div class="ov-section-sub" style="margin-bottom:0;">Performance by product category across revenue, cost, and efficiency.</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Category</th>
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Conv. Val.</th>
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Cost</th>
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Conv</th>
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Conv Rate</th>
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">AOV</th>
+              <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">COS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;color:var(--color-text-primary);">Outerwear</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$109</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$109</td><td style="padding:11px 16px;font-size:13px;text-align:right;">109</td><td style="padding:11px 16px;font-size:13px;text-align:right;">10.9%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$109</td><td style="padding:11px 16px;text-align:right;"><span class="cos-red">30.1%</span></td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;color:var(--color-text-primary);">Footwear</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$707</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$707</td><td style="padding:11px 16px;font-size:13px;text-align:right;">707</td><td style="padding:11px 16px;font-size:13px;text-align:right;">7.1%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$707</td><td style="padding:11px 16px;text-align:right;"><span class="cos-green">26.67%</span></td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;color:var(--color-text-primary);">Accessories</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$797</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$797</td><td style="padding:11px 16px;font-size:13px;text-align:right;">797</td><td style="padding:11px 16px;font-size:13px;text-align:right;">8.0%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$797</td><td style="padding:11px 16px;text-align:right;"><span class="cos-amber">28.67%</span></td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;color:var(--color-text-primary);">Base Layers</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$898</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$898</td><td style="padding:11px 16px;font-size:13px;text-align:right;">898</td><td style="padding:11px 16px;font-size:13px;text-align:right;">9.0%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$898</td><td style="padding:11px 16px;text-align:right;"><span class="cos-amber">32.8%</span></td></tr>
+            <tr><td style="padding:11px 16px;font-size:14px;color:var(--color-text-primary);">Gloves &amp; Mitts</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$797</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$797</td><td style="padding:11px 16px;font-size:13px;text-align:right;">797</td><td style="padding:11px 16px;font-size:13px;text-align:right;">8.0%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$797</td><td style="padding:11px 16px;text-align:right;"><span class="cos-green">18.67%</span></td></tr>
+          </tbody>
+        </table>
+        <p style="padding:10px 16px;font-size:12px;color:var(--color-text-caption);margin:0;border-top:1px solid var(--color-border);">Footwear generated the most revenue. Accessories had the best efficiency at 28.67% COS.</p>
+      </div>
+    </div>
+
+    <!-- 6. Search Term Intelligence -->
+    <div id="ov-sec-search" style="margin-bottom:28px;">
+      <div class="table-card" style="padding:20px 24px;">
+        <div class="ov-section-heading">Search Term Intelligence</div>
+        <div class="ov-section-sub">How your key keywords are performing in search results.</div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+          <div class="ov-search-tile"><div class="ov-search-tile-label">Unique Search Terms</div><div class="ov-search-tile-value">4,892</div><div class="ov-search-tile-sub">↓ -13.9% vs prev</div></div>
+          <div class="ov-search-tile"><div class="ov-search-tile-label">Converting Terms</div><div class="ov-search-tile-value">847</div><div class="ov-search-tile-sub">3% of total</div></div>
+          <div class="ov-search-tile"><div class="ov-search-tile-label">Wasted Spend</div><div class="ov-search-tile-value">$4,210</div><div class="ov-search-tile-sub">Non-converting spend</div></div>
+          <div class="ov-search-tile"><div class="ov-search-tile-label">New This Period</div><div class="ov-search-tile-value">234</div><div class="ov-search-tile-sub">First-time terms</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--color-text-primary);">Top Converting Terms</div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead><tr style="border-bottom:1px solid var(--color-border);"><th style="padding:6px 8px;text-align:left;font-size:11px;color:var(--color-text-accent);font-weight:600;text-transform:uppercase;">Term</th><th style="padding:6px 8px;text-align:right;font-size:11px;color:var(--color-text-accent);font-weight:600;text-transform:uppercase;">Conv.</th><th style="padding:6px 8px;text-align:right;font-size:11px;color:var(--color-text-accent);font-weight:600;text-transform:uppercase;">Value</th></tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">outdoor research jacket</td><td style="padding:7px 8px;text-align:right;">142</td><td style="padding:7px 8px;text-align:right;">$18,460</td></tr>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">hiking boots waterproof</td><td style="padding:7px 8px;text-align:right;">98</td><td style="padding:7px 8px;text-align:right;">$12,740</td></tr>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">men's softshell jacket</td><td style="padding:7px 8px;text-align:right;">87</td><td style="padding:7px 8px;text-align:right;">$9,570</td></tr>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">trail running shoes</td><td style="padding:7px 8px;text-align:right;">76</td><td style="padding:7px 8px;text-align:right;">$8,360</td></tr>
+                <tr><td style="padding:7px 8px;">women's rain jacket</td><td style="padding:7px 8px;text-align:right;">65</td><td style="padding:7px 8px;text-align:right;">$7,150</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--color-text-primary);">Top Wasted Spend Terms</div>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <thead><tr style="border-bottom:1px solid var(--color-border);"><th style="padding:6px 8px;text-align:left;font-size:11px;color:var(--color-text-accent);font-weight:600;text-transform:uppercase;">Term</th><th style="padding:6px 8px;text-align:right;font-size:11px;color:var(--color-text-accent);font-weight:600;text-transform:uppercase;">Cost</th><th style="padding:6px 8px;text-align:right;font-size:11px;color:var(--color-text-accent);font-weight:600;text-transform:uppercase;">Conv.</th></tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">cheap hiking gear</td><td style="padding:7px 8px;text-align:right;">$842</td><td style="padding:7px 8px;text-align:right;">0</td></tr>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">free camping equipment</td><td style="padding:7px 8px;text-align:right;">$614</td><td style="padding:7px 8px;text-align:right;">0</td></tr>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">diy tent repairs</td><td style="padding:7px 8px;text-align:right;">$487</td><td style="padding:7px 8px;text-align:right;">0</td></tr>
+                <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:7px 8px;">outdoor gear rental</td><td style="padding:7px 8px;text-align:right;">$356</td><td style="padding:7px 8px;text-align:right;">0</td></tr>
+                <tr><td style="padding:7px 8px;">second hand backpacks</td><td style="padding:7px 8px;text-align:right;">$312</td><td style="padding:7px 8px;text-align:right;">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /ov-sem-content -->
+
+  <!-- SEO CONTENT -->
+  <div id="ov-seo-content" style="display:none;">
+
+    <!-- SEO KPI cards -->
+    <div id="ov-seo-sec-kpi" style="display:flex;gap:12px;margin-bottom:28px;flex-wrap:wrap;">
+      <div class="ov-kpi-card"><div class="ov-kpi-label">Organic Revenue</div><div class="ov-kpi-value">$312,840</div><div><span class="ov-kpi-change-pos">↑ +8.4%</span></div><div class="ov-kpi-vs">vs Previous Period</div></div>
+      <div class="ov-kpi-card"><div class="ov-kpi-label">Organic Sessions</div><div class="ov-kpi-value">84,210</div><div><span class="ov-kpi-change-pos">↑ +3.2%</span></div><div class="ov-kpi-vs">vs Previous Period</div></div>
+      <div class="ov-kpi-card"><div class="ov-kpi-label">Organic Conversions</div><div class="ov-kpi-value">2,614</div><div><span class="ov-kpi-change-neg">↓ -2.1%</span></div><div class="ov-kpi-vs">vs Previous Period</div></div>
+      <div class="ov-kpi-card"><div class="ov-kpi-label">Revenue per Session</div><div class="ov-kpi-value">$3.72</div><div><span class="ov-kpi-change-pos">↑ +5.0%</span></div><div class="ov-kpi-vs">vs Previous Period</div></div>
+    </div>
+
+    <!-- SEO Channel Performance (reuse structure) -->
+    <div style="margin-bottom:28px;">
+      <div class="table-card" style="padding:20px 24px;">
+        <div class="ov-section-heading">Channel Performance Overview</div>
+        <div class="ov-section-sub">How organic search is trending vs. other channels.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">Revenue</div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Organic Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:68%;background:var(--color-blue);"></div></div><div class="ov-bar-change-pos">+8.4%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Paid Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:55%;background:#9ca3af;"></div></div><div class="ov-bar-change-pos">+12.3%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Direct</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:38%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-5.2%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Total Site</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:88%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-1.8%</div></div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">Sessions</div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Organic Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:75%;background:var(--color-blue);"></div></div><div class="ov-bar-change-pos">+3.2%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Paid Search</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:60%;background:#9ca3af;"></div></div><div class="ov-bar-change-pos">+4.6%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Direct</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:35%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-5.2%</div></div>
+            <div class="ov-bar-row"><div class="ov-bar-label">Total Site</div><div class="ov-bar-track"><div class="ov-bar-fill" style="width:82%;background:#9ca3af;"></div></div><div class="ov-bar-change-neg">-0.8%</div></div>
+          </div>
+        </div>
+        <p class="ov-section-insight">Organic search sessions grew 3.2% while revenue grew faster at 8.4%, reflecting higher revenue-per-session quality improvements.</p>
+      </div>
+    </div>
+
+    <!-- SEO Keyword Performance -->
+    <div style="margin-bottom:28px;">
+      <div class="table-card">
+        <div style="padding:20px 24px 12px;">
+          <div class="ov-section-heading">Keyword Performance</div>
+          <div class="ov-section-sub" style="margin-bottom:0;">How your key keywords are ranking in organic search results.</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Keyword</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Position</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Clicks</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Impressions</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">CTR</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">outdoor research jacket</td><td style="padding:11px 16px;font-size:13px;text-align:right;"><span class="cos-green">2.1</span></td><td style="padding:11px 16px;font-size:13px;text-align:right;">4,820</td><td style="padding:11px 16px;font-size:13px;text-align:right;">32,400</td><td style="padding:11px 16px;font-size:13px;text-align:right;">14.9%</td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">hiking boots men</td><td style="padding:11px 16px;font-size:13px;text-align:right;"><span class="cos-amber">4.7</span></td><td style="padding:11px 16px;font-size:13px;text-align:right;">3,210</td><td style="padding:11px 16px;font-size:13px;text-align:right;">28,700</td><td style="padding:11px 16px;font-size:13px;text-align:right;">11.2%</td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">softshell jacket</td><td style="padding:11px 16px;font-size:13px;text-align:right;"><span class="cos-green">3.2</span></td><td style="padding:11px 16px;font-size:13px;text-align:right;">2,870</td><td style="padding:11px 16px;font-size:13px;text-align:right;">21,400</td><td style="padding:11px 16px;font-size:13px;text-align:right;">13.4%</td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">trail running shoes women</td><td style="padding:11px 16px;font-size:13px;text-align:right;"><span class="cos-red">11.4</span></td><td style="padding:11px 16px;font-size:13px;text-align:right;">980</td><td style="padding:11px 16px;font-size:13px;text-align:right;">18,200</td><td style="padding:11px 16px;font-size:13px;text-align:right;">5.4%</td></tr>
+            <tr><td style="padding:11px 16px;font-size:14px;">winter gloves outdoor</td><td style="padding:11px 16px;font-size:13px;text-align:right;"><span class="cos-amber">6.8</span></td><td style="padding:11px 16px;font-size:13px;text-align:right;">1,540</td><td style="padding:11px 16px;font-size:13px;text-align:right;">14,600</td><td style="padding:11px 16px;font-size:13px;text-align:right;">10.5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SEO Page Type Performance -->
+    <div style="margin-bottom:28px;">
+      <div class="table-card">
+        <div style="padding:20px 24px 12px;">
+          <div class="ov-section-heading">Page Type Performance</div>
+          <div class="ov-section-sub" style="margin-bottom:0;">Organic performance broken down by page type.</div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Page Type</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Sessions</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Org. Revenue</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">% of Sessions</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:right;">Rev / Session</th>
+          </tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">Category Pages</td><td style="padding:11px 16px;font-size:13px;text-align:right;">28,420</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$124,500</td><td style="padding:11px 16px;font-size:13px;text-align:right;">33.8%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$4.38</td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">Product Pages</td><td style="padding:11px 16px;font-size:13px;text-align:right;">24,810</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$108,200</td><td style="padding:11px 16px;font-size:13px;text-align:right;">29.5%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$4.36</td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">Blog / Editorial</td><td style="padding:11px 16px;font-size:13px;text-align:right;">18,640</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$42,100</td><td style="padding:11px 16px;font-size:13px;text-align:right;">22.1%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$2.26</td></tr>
+            <tr style="border-bottom:1px solid var(--color-border);"><td style="padding:11px 16px;font-size:14px;">Homepage</td><td style="padding:11px 16px;font-size:13px;text-align:right;">7,420</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$24,800</td><td style="padding:11px 16px;font-size:13px;text-align:right;">8.8%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$3.34</td></tr>
+            <tr><td style="padding:11px 16px;font-size:14px;">Other</td><td style="padding:11px 16px;font-size:13px;text-align:right;">4,920</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$13,240</td><td style="padding:11px 16px;font-size:13px;text-align:right;">5.8%</td><td style="padding:11px 16px;font-size:13px;text-align:right;">$2.69</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /ov-seo-content -->
+
+  <!-- Customize Drawer -->
+  <div class="ov-customize-drawer" id="ov-customize-drawer">
+    <div class="ov-drawer-header">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+        <div>
+          <div style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin-bottom:3px;">Customize Dashboard</div>
+          <div style="font-size:13px;color:var(--color-text-subtitle);">Choose what appears on this overview.</div>
+        </div>
+        <button onclick="ovCloseDrawer()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--color-text-caption);padding:0;line-height:1;">×</button>
+      </div>
+    </div>
+    <div class="ov-drawer-body">
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleSection(this)">
+          <span>Top-level Metrics</span>
+          <span style="font-size:11px;color:var(--color-text-caption);">▼</span>
+        </div>
+        <div class="ov-drawer-section-body open">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px;cursor:pointer;"><input type="checkbox" data-section="kpi" checked style="accent-color:var(--color-blue);"> Show section</label>
+          <div style="font-size:12px;color:var(--color-text-caption);">Conversion Value, Cost, COS, Conversions</div>
+        </div>
+      </div>
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleSection(this)"><span>Channel Performance</span><span style="font-size:11px;color:var(--color-text-caption);">▼</span></div>
+        <div class="ov-drawer-section-body open"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" data-section="channel" checked style="accent-color:var(--color-blue);"> Show section</label></div>
+      </div>
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleSection(this)"><span>Performance Over Time</span><span style="font-size:11px;color:var(--color-text-caption);">▼</span></div>
+        <div class="ov-drawer-section-body open"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" data-section="time" checked style="accent-color:var(--color-blue);"> Show section</label></div>
+      </div>
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleSection(this)"><span>Drivers of Change</span><span style="font-size:11px;color:var(--color-text-caption);">▼</span></div>
+        <div class="ov-drawer-section-body open"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" data-section="drivers" checked style="accent-color:var(--color-blue);"> Show section</label></div>
+      </div>
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleSection(this)"><span>Category Performance</span><span style="font-size:11px;color:var(--color-text-caption);">▼</span></div>
+        <div class="ov-drawer-section-body open"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" data-section="category" checked style="accent-color:var(--color-blue);"> Show section</label></div>
+      </div>
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleSection(this)"><span>Search Term Intelligence</span><span style="font-size:11px;color:var(--color-text-caption);">▼</span></div>
+        <div class="ov-drawer-section-body open"><label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" data-section="search" checked style="accent-color:var(--color-blue);"> Show section</label></div>
+      </div>
+    </div>
+    <div class="ov-drawer-footer">
+      <button class="btn-primary-sm" onclick="ovApplyCustomize()">Apply Changes</button>
+      <span style="font-size:13px;color:var(--color-blue);cursor:pointer;text-decoration:underline;" onclick="ovResetCustomize()">Reset to default</span>
+    </div>
+  </div>
+  <div id="ov-drawer-overlay" style="display:none;position:fixed;inset:0;z-index:800;" onclick="ovCloseDrawer()"></div>
+
+</div><!-- /overview-page -->
+
+<!-- HIGHLIGHTS PAGE -->
+<div id="highlights-page" style="display:none; padding:32px 32px 64px;">
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px;">
+    <div>
+      <h1 style="font-size:24px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px;">Product Segment Performance</h1>
+      <p class="page-subtitle" style="margin:0 0 4px;">Monitor key metrics to optimise performance</p>
+      <div style="font-size:12px; color:var(--color-text-caption);">
+        <span style="cursor:pointer; color:var(--color-blue);">Reports</span>
+        <span style="margin:0 4px; color:var(--color-text-caption);">›</span>
+        <span>Highlights Table</span>
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; align-items:center; margin-top:4px;">
+      <button class="ov-filter-btn">Client <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      <button class="ov-filter-btn">Website <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;">
+    <!-- Context bar -->
+    <div class="hl-context-bar">
+      <button class="hl-context-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Last 30 Days
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="hl-context-sep"></div>
+      <button class="hl-context-btn">
+        Channel: SEM
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="hl-context-sep"></div>
+      <button class="hl-context-btn" id="hl-level-btn" onclick="hlCycleLevel()">
+        Level: <span id="hl-level-label">L1</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="hl-context-sep"></div>
+      <button class="hl-context-btn">
+        Sort: Impact
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="hl-context-sep"></div>
+      <button class="hl-context-btn" onclick="hlOpenDrawer()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        Filters
+      </button>
+      <div class="hl-context-sep"></div>
+      <input id="hl-search" type="text" placeholder="Search products…" oninput="hlRender()" style="border:none; background:transparent; font-size:13px; font-family:'DM Sans',sans-serif; outline:none; min-width:140px; color:var(--color-text-primary);">
+      <div class="hl-context-sep"></div>
+      <button class="hl-context-btn">
+        Download
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card" style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; min-width:900px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <th style="padding:10px 16px; text-align:left; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap;">PRODUCT TYPE</th>
+            <th style="padding:10px 16px; text-align:right; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer;" onclick="hlSortBy('convVal')">CONV. VAL. ↕</th>
+            <th style="padding:10px 16px; text-align:right; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer;" onclick="hlSortBy('cost')">COST ↕</th>
+            <th style="padding:10px 16px; text-align:right; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer;" onclick="hlSortBy('conv')">CONV ↕</th>
+            <th style="padding:10px 16px; text-align:right; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer;" onclick="hlSortBy('convRate')">CONV RATE ↕</th>
+            <th style="padding:10px 16px; text-align:right; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer;" onclick="hlSortBy('aov')">AOV ↕</th>
+            <th style="padding:10px 16px; text-align:right; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer;" onclick="hlSortBy('cos')">COS ↕</th>
+            <th style="padding:10px 16px; text-align:center; font-size:12px; font-weight:600; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap;">COS TREND</th>
+          </tr>
+        </thead>
+        <tbody id="hl-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; padding:0 4px;">
+      <span style="font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;">Showing 13 of 13 results · 10 per page</span>
+      <div style="display:flex; gap:4px; align-items:center;">
+        <button style="padding:5px 10px; border:1px solid var(--color-border); border-radius:6px; background:white; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-subtitle); cursor:pointer;">← Prev</button>
+        <button style="padding:5px 10px; border:1px solid var(--color-blue); border-radius:6px; background:var(--color-blue); font-size:13px; font-family:'DM Sans',sans-serif; color:white; cursor:pointer;">1</button>
+        <button style="padding:5px 10px; border:1px solid var(--color-border); border-radius:6px; background:white; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer;">2</button>
+        <button style="padding:5px 10px; border:1px solid var(--color-border); border-radius:6px; background:white; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-subtitle); cursor:pointer;">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Drawer -->
+  <div id="hl-filter-drawer">
+    <div style="height:4px; background:var(--color-blue); flex-shrink:0;"></div>
+    <div class="ov-drawer-header" style="padding:20px 20px 16px; border-bottom:1px solid var(--color-border); flex-shrink:0;">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font-size:16px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif;">Filters</div>
+          <div style="font-size:13px; color:var(--color-text-subtitle); margin-top:2px;">Customise your highlights view</div>
+        </div>
+        <button onclick="hlCloseDrawer()" style="border:none; background:none; cursor:pointer; padding:4px; color:var(--color-text-subtitle);">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="ov-drawer-body" style="flex:1; overflow-y:auto; padding:16px 20px;">
+      <!-- Highlight Columns -->
+      <div class="ov-drawer-section" style="margin-bottom:12px;">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)">
+          <span>Highlight Columns</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="ov-drawer-section-body open" style="padding:12px 14px; display:block;">
+          <p style="font-size:12px; color:var(--color-text-caption); margin:0 0 10px;">Select columns to apply green-gradient highlighting</p>
+          <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <input type="checkbox" id="hl-chk-convval" checked style="accent-color:var(--color-blue);"> Conv. Val.
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <input type="checkbox" id="hl-chk-cost" style="accent-color:var(--color-blue);"> Cost (inverted)
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <input type="checkbox" id="hl-chk-convrate" style="accent-color:var(--color-blue);"> Conv Rate
+          </label>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <input type="checkbox" id="hl-chk-aov" checked style="accent-color:var(--color-blue);"> AOV
+          </label>
+        </div>
+      </div>
+      <!-- COS Target -->
+      <div class="ov-drawer-section" style="margin-bottom:12px;">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)">
+          <span>COS Target</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="ov-drawer-section-body open" style="padding:12px 14px; display:block;">
+          <p style="font-size:12px; color:var(--color-text-caption); margin:0 0 10px;">COS ≤ (target−2)% = green · ≤ (target+1)% = amber · else red</p>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <label style="font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary);">Target %</label>
+            <input type="number" id="hl-cos-target-input" value="29" min="1" max="100" style="width:70px; padding:6px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif;">
+          </div>
+        </div>
+      </div>
+      <!-- Show Sparklines -->
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)">
+          <span>Display Options</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="ov-drawer-section-body open" style="padding:12px 14px; display:block;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;">
+            <input type="checkbox" id="hl-chk-sparklines" checked style="accent-color:var(--color-blue);"> Show COS sparklines
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="ov-drawer-footer" style="padding:16px 20px; border-top:1px solid var(--color-border); display:flex; gap:10px; align-items:center; flex-shrink:0;">
+      <button onclick="hlApplyFilters()" class="btn-primary-sm">Apply Filters</button>
+      <button onclick="hlClearFilters()" class="btn-outline">Clear All</button>
+    </div>
+  </div>
+  <div id="hl-drawer-overlay" style="display:none; position:fixed; inset:0; z-index:800;" onclick="hlCloseDrawer()"></div>
+</div><!-- /highlights-page -->
+
     </div><!-- /page-content -->
   </main>
 
 </div><!-- /app-shell -->
 </div><!-- /screen-dashboard -->
+
+<!-- BRM ACTION DROPDOWN -->
+<div id="brm-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="brmMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="var(--color-text-primary)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    Edit
+  </div>
+  <div class="pm-dd-item" onclick="brmMenuAction('delete')" style="color:#d72225;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete
+  </div>
+</div>
+
+<!-- BRM DELETE MODAL -->
+<div id="brm-delete-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Delete Rule</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">Delete this rule? This cannot be undone.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('brm-delete-modal').style.display='none'">Cancel</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="brmDeleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</div>
 
 <!-- ANN ACTION DROPDOWN -->
 <div id="ann-action-dd" style="display:none;">
@@ -6069,7 +6961,7 @@ var ISSUES = [
   }
 
   function hideFeedDetailPages() {
-    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    ['db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
   }
   window.hideFeedDetailPages = hideFeedDetailPages;
 
@@ -6644,6 +7536,15 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'alerts') {
           showAlertsPage();
+        }
+        if (this.getAttribute('data-nav') === 'biz-rules') {
+          showBrmPage();
+        }
+        if (this.getAttribute('data-nav') === 'sem-overview') {
+          showOverviewPage();
+        }
+        if (this.getAttribute('data-nav') === 'highlights-table') {
+          showHighlightsPage();
         }
       });
     });
@@ -8558,6 +9459,430 @@ window.filterLogs = function() {
     var at=document.getElementById('ann-tbody'); if(at) annRenderList('');
     var alt=document.getElementById('alerts-tbody'); if(alt) alertsRenderList();
   })();
+
+  /* ─────────────────────────────────────────
+     BUSINESS RULE MANAGER
+  ───────────────────────────────────────── */
+  var BRM_DATA = [
+    { id:'1', issue:'Missing Product Descriptions', impact:'High', dataSource:'Google Merchant Center', entityType:'Product', status:'Active', description:'Identifies products without descriptions', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' },
+    { id:'2', issue:'Missing Page Breadcrumbs', impact:'High', dataSource:'Search Console', entityType:'Page', status:'Active', description:'Identifies pages missing breadcrumb markup', modifiedBy:'Amy Sams', modifiedTime:'2 days ago' },
+    { id:'3', issue:'Excessive Daily Spends', impact:'Medium', dataSource:'Google Ads', entityType:'URL', status:'Draft', description:'Detects campaigns spending above daily budget thresholds', modifiedBy:'Theresa G', modifiedTime:'2 days ago' },
+    { id:'4', issue:'Invalid Image Aspect Ratio', impact:'Low', dataSource:'Google Merchant Center', entityType:'Product', status:'Active', description:'Detects product images with non-standard aspect ratios', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' },
+    { id:'5', issue:'Low Impression Share', impact:'High', dataSource:'Google Ads', entityType:'Campaign', status:'Active', description:'Identifies campaigns with impression share below threshold', modifiedBy:'Amy Sams', modifiedTime:'2 days ago' },
+    { id:'6', issue:'Missing Brand Names', impact:'Medium', dataSource:'Feed Analyzer', entityType:'Campaign', status:'Draft', description:'Identifies products missing brand name in attributes', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' },
+    { id:'7', issue:'Oversized Product Images', impact:'High', dataSource:'Google Merchant Center', entityType:'URL', status:'Draft', description:'Flags product images exceeding size limits', modifiedBy:'Theresa G', modifiedTime:'2 days ago' },
+    { id:'8', issue:'Low ROAS Campaigns', impact:'Medium', dataSource:'Bing Ads', entityType:'URL', status:'Active', description:'Identifies campaigns with ROAS below target', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' },
+    { id:'9', issue:'Short Product Titles', impact:'Medium', dataSource:'Google Merchant Center', entityType:'All Ad groups', status:'Active', description:'Identifies products with titles shorter than recommended length', modifiedBy:'Amy Sams', modifiedTime:'2 days ago' },
+    { id:'10', issue:'Non-Canonical URLs Indexed', impact:'Low', dataSource:'Search Console', entityType:'Selected Ad groups', status:'Draft', description:'Identifies non-canonical URLs appearing in search index', modifiedBy:'Shilo Jones', modifiedTime:'2 days ago' }
+  ];
+  var _brmNextId = 11;
+  var _brmActiveId = null;
+  var _brmEditMode = false;
+  var _brmFilterDs = '', _brmFilterStatus = '', _brmFilterSearch = '';
+
+  function showBrmPage() {
+    ['ic-list','ic-detail','integrations-page','feed-data-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    hideFeedDetailPages();
+    var p=document.getElementById('brm-page'); if(p) p.style.display='block';
+    brmShowListView();
+    window.scrollTo(0,0);
+  }
+  window.showBrmPage = showBrmPage;
+
+  function brmShowListView() {
+    document.getElementById('brm-list-view').style.display='block';
+    document.getElementById('brm-create-view').style.display='none';
+    document.getElementById('brm-detail-view').style.display='none';
+    _brmFilterDs=''; _brmFilterStatus=''; _brmFilterSearch='';
+    var sl=document.getElementById('brm-ds-label'); if(sl) sl.textContent='Data Source: All';
+    var ss=document.getElementById('brm-status-label'); if(ss) ss.textContent='Status: All';
+    var si=document.getElementById('brm-search'); if(si) si.value='';
+    brmRenderList();
+  }
+  window.brmShowListView = brmShowListView;
+
+  function brmImpactBadge(impact) {
+    if(impact==='High') return '<span class="impact-high">High</span>';
+    if(impact==='Medium') return '<span class="impact-medium">Medium</span>';
+    return '<span class="impact-low">Low</span>';
+  }
+
+  function brmRenderList() {
+    var q=_brmFilterSearch.toLowerCase();
+    var rows=BRM_DATA.filter(function(r){
+      return (!q||r.issue.toLowerCase().indexOf(q)>-1)&&
+             (!_brmFilterDs||r.dataSource===_brmFilterDs)&&
+             (!_brmFilterStatus||r.status===_brmFilterStatus);
+    });
+    var badge=document.getElementById('brm-count-badge'); if(badge) badge.textContent=BRM_DATA.length;
+    var tbody=document.getElementById('brm-tbody'); if(!tbody) return;
+    tbody.innerHTML=rows.map(function(r){
+      var sb=r.status==='Active'?'<span class="badge-active">Active</span>':'<span class="badge-draft">Draft</span>';
+      return '<tr style="border-bottom:1px solid var(--color-border);cursor:pointer;" onclick="brmShowDetail(\''+r.id+'\')">'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-blue);font-weight:500;">'+escHtml(r.issue)+'</td>'+
+        '<td style="padding:12px 16px;">'+brmImpactBadge(r.impact)+'</td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(r.dataSource)+'</td>'+
+        '<td style="padding:12px 16px;font-size:14px;color:var(--color-text-primary);">'+escHtml(r.entityType)+'</td>'+
+        '<td style="padding:12px 16px;">'+sb+'</td>'+
+        '<td style="padding:12px 16px;">'+
+          '<div style="display:flex;align-items:center;gap:8px;">'+
+            pmAvatar(r.modifiedBy)+
+            '<div><div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">'+escHtml(r.modifiedBy)+'</div>'+
+            '<div style="font-size:11px;color:var(--color-text-caption);">'+r.modifiedTime+'</div></div>'+
+          '</div>'+
+        '</td>'+
+        '<td style="padding:12px 16px;text-align:center;" onclick="event.stopPropagation()">'+
+          '<button style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-caption);padding:2px 8px;border-radius:4px;" onclick="brmOpenActionMenu(\''+r.id+'\',this,event)">⋮</button>'+
+        '</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  window.brmSearch = function(){ _brmFilterSearch=document.getElementById('brm-search').value; brmRenderList(); };
+  window.brmSetDs = function(val){ _brmFilterDs=val; document.getElementById('brm-ds-label').textContent=val?'Data Source: '+val:'Data Source: All'; document.getElementById('brm-ds-panel').classList.remove('open'); brmRenderList(); };
+  window.brmSetStatus = function(val){ _brmFilterStatus=val; document.getElementById('brm-status-label').textContent=val?'Status: '+val:'Status: All'; document.getElementById('brm-status-panel').classList.remove('open'); brmRenderList(); };
+
+  window.brmOpenActionMenu = function(id, el, evt) {
+    evt.stopPropagation();
+    _brmActiveId=id;
+    var dd=document.getElementById('brm-action-dd');
+    var rect=el.getBoundingClientRect();
+    dd.style.top=(rect.bottom+4)+'px';
+    dd.style.left=Math.max(8,rect.right-180)+'px';
+    dd.style.display='block';
+  };
+  window.brmMenuAction = function(action) {
+    document.getElementById('brm-action-dd').style.display='none';
+    if(action==='edit') brmShowDetail(_brmActiveId,true);
+    else if(action==='delete') brmConfirmDelete(_brmActiveId);
+  };
+
+  window.brmShowCreate = function() {
+    _brmEditMode=false;
+    document.getElementById('brm-list-view').style.display='none';
+    document.getElementById('brm-create-view').style.display='block';
+    document.getElementById('brm-detail-view').style.display='none';
+    document.getElementById('brm-create-heading').textContent='Create Rule';
+    document.getElementById('brm-create-bc-label').textContent='Create Rule';
+    document.getElementById('brm-form-name').value='';
+    document.getElementById('brm-form-desc').value='';
+    document.getElementById('brm-form-severity').value='Medium';
+    document.getElementById('brm-form-status').value='Active';
+    document.getElementById('brm-form-ds').value='';
+    document.getElementById('brm-form-entity').value='';
+    brmUpdateCreateBtn();
+    window.scrollTo(0,0);
+  };
+
+  window.brmUpdateCreateBtn = function() {
+    var btn=document.getElementById('brm-create-btn'); if(!btn) return;
+    var ok=document.getElementById('brm-form-name').value.trim()&&
+           document.getElementById('brm-form-desc').value.trim()&&
+           document.getElementById('brm-form-ds').value&&
+           document.getElementById('brm-form-entity').value;
+    btn.disabled=!ok;
+    if(ok) btn.classList.remove('pm-btn-disabled'); else btn.classList.add('pm-btn-disabled');
+  };
+
+  window.brmSubmitCreate = function() {
+    var name=document.getElementById('brm-form-name').value.trim();
+    var desc=document.getElementById('brm-form-desc').value.trim();
+    var sev=document.getElementById('brm-form-severity').value;
+    var stat=document.getElementById('brm-form-status').value;
+    var ds=document.getElementById('brm-form-ds').value;
+    var ent=document.getElementById('brm-form-entity').value;
+    if(!name||!desc||!ds||!ent){showToast('Please fill in all required fields');return;}
+    var newId=String(_brmNextId++);
+    BRM_DATA.unshift({id:newId,issue:name,impact:sev,dataSource:ds,entityType:ent,status:stat,description:desc,modifiedBy:'Shilo Jones',modifiedTime:'Just now'});
+    showToast('Rule created');
+    brmShowDetail(newId);
+  };
+
+  function brmShowDetail(id, editMode) {
+    _brmActiveId=id; _brmEditMode=!!editMode;
+    document.getElementById('brm-list-view').style.display='none';
+    document.getElementById('brm-create-view').style.display='none';
+    document.getElementById('brm-detail-view').style.display='block';
+    brmRenderDetail(id, _brmEditMode);
+    window.scrollTo(0,0);
+  }
+  window.brmShowDetail = brmShowDetail;
+
+  function brmRenderDetail(id, editMode) {
+    var r=BRM_DATA.find(function(x){return x.id===id;});
+    if(!r) return;
+    document.getElementById('brm-detail-heading').textContent=r.issue;
+    document.getElementById('brm-detail-bc').textContent=r.issue;
+    document.getElementById('brm-detail-impact-badge').innerHTML=brmImpactBadge(r.impact);
+    document.getElementById('brm-detail-modified').textContent='Last modified: '+r.modifiedBy+' · '+r.modifiedTime;
+    document.getElementById('brm-det-name').value=r.issue; document.getElementById('brm-det-name').disabled=!editMode;
+    document.getElementById('brm-det-desc').value=r.description; document.getElementById('brm-det-desc').disabled=!editMode;
+    document.getElementById('brm-det-ds').value=r.dataSource; document.getElementById('brm-det-ds').disabled=!editMode;
+    document.getElementById('brm-det-entity').value=r.entityType; document.getElementById('brm-det-entity').disabled=!editMode;
+    var sevDisp=document.getElementById('brm-det-severity-display');
+    var sevSel=document.getElementById('brm-det-severity');
+    if(editMode){ sevDisp.style.display='none'; sevSel.style.display=''; sevSel.value=r.impact; sevSel.disabled=false; }
+    else { sevDisp.style.display='block'; sevDisp.innerHTML=brmImpactBadge(r.impact); sevSel.style.display='none'; }
+    document.getElementById('brm-detail-view-btns').style.display=editMode?'none':'flex';
+    document.getElementById('brm-detail-edit-btns').style.display=editMode?'flex':'none';
+  }
+
+  window.brmEnableEdit = function(){ _brmEditMode=true; brmRenderDetail(_brmActiveId,true); };
+  window.brmCancelEdit = function(){ _brmEditMode=false; brmRenderDetail(_brmActiveId,false); };
+  window.brmSaveEdit = function(){
+    var r=BRM_DATA.find(function(x){return x.id===_brmActiveId;});
+    if(!r) return;
+    var n=document.getElementById('brm-det-name').value.trim();
+    if(!n){showToast('Rule name is required');return;}
+    r.issue=n; r.description=document.getElementById('brm-det-desc').value.trim()||r.description;
+    r.dataSource=document.getElementById('brm-det-ds').value||r.dataSource;
+    r.entityType=document.getElementById('brm-det-entity').value||r.entityType;
+    r.impact=document.getElementById('brm-det-severity').value||r.impact;
+    r.modifiedBy='Shilo Jones'; r.modifiedTime='Just now';
+    showToast('Rule updated');
+    _brmEditMode=false; brmRenderDetail(_brmActiveId,false);
+  };
+
+  window.brmConfirmDelete = function(id){ _brmActiveId=id; document.getElementById('brm-delete-modal').style.display='flex'; };
+  window.brmDeleteConfirmed = function(){
+    BRM_DATA=BRM_DATA.filter(function(r){return r.id!==_brmActiveId;});
+    document.getElementById('brm-delete-modal').style.display='none';
+    showToast('Rule deleted');
+    brmShowListView();
+  };
+
+  document.addEventListener('click',function(e){
+    var dd=document.getElementById('brm-action-dd');
+    if(dd&&!e.target.closest('#brm-action-dd')&&!e.target.closest('button[onclick*="brmOpenActionMenu"]')) dd.style.display='none';
+    if(!e.target.closest('#brm-ds-wrap')){var p=document.getElementById('brm-ds-panel');if(p)p.classList.remove('open');}
+    if(!e.target.closest('#brm-status-wrap')){var p2=document.getElementById('brm-status-panel');if(p2)p2.classList.remove('open');}
+  });
+
+  (function(){ var t=document.getElementById('brm-tbody'); if(t) brmRenderList(); })();
+
+  /* ─────────────────────────────────────────
+     OVERVIEW PAGE
+  ───────────────────────────────────────── */
+  var _ovChannel = 'SEM';
+
+  function showOverviewPage() {
+    ['ic-list','ic-detail','integrations-page','feed-data-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    hideFeedDetailPages();
+    var p=document.getElementById('overview-page'); if(p) p.style.display='block';
+    window.scrollTo(0,0);
+  }
+  window.showOverviewPage = showOverviewPage;
+
+  window.ovSetChannel = function(ch) {
+    _ovChannel=ch;
+    document.getElementById('ov-channel-label').textContent=ch;
+    document.getElementById('ov-channel-panel').classList.remove('open');
+    var isSEO=ch==='SEO';
+    document.getElementById('ov-sem-content').style.display=isSEO?'none':'block';
+    document.getElementById('ov-seo-content').style.display=isSEO?'block':'none';
+    document.getElementById('ov-heading').textContent=isSEO?'SEO Overview':'SEM Overview';
+    document.getElementById('ov-subtitle').textContent=isSEO?'Organic search performance and visibility insights.':'Paid search performance and optimisation insights.';
+  };
+  window.ovSetClient = function(v){ document.getElementById('ov-client-label').textContent=v; document.getElementById('ov-client-panel').classList.remove('open'); showToast('Client updated'); };
+  window.ovSetWebsite = function(v){ document.getElementById('ov-website-label').textContent=v; document.getElementById('ov-website-panel').classList.remove('open'); };
+  window.ovSetComp = function(v){ document.getElementById('ov-comp-label').textContent=v; document.getElementById('ov-comp-panel').classList.remove('open'); };
+  window.ovSetDate = function(v){ document.getElementById('ov-date-label').textContent=v; document.getElementById('ov-date-panel').classList.remove('open'); };
+
+  window.ovOpenDrawer = function() {
+    document.getElementById('ov-customize-drawer').classList.add('open');
+    document.getElementById('ov-drawer-overlay').style.display='block';
+  };
+  window.ovCloseDrawer = function() {
+    document.getElementById('ov-customize-drawer').classList.remove('open');
+    document.getElementById('ov-drawer-overlay').style.display='none';
+  };
+  window.ovToggleSection = function(hdr) {
+    var body=hdr.nextElementSibling;
+    body.classList.toggle('open');
+    hdr.querySelector('span:last-child').textContent=body.classList.contains('open')?'▼':'▶';
+  };
+  window.ovApplyCustomize = function() {
+    document.querySelectorAll('#ov-customize-drawer input[data-section]').forEach(function(cb){
+      var secId='ov-sec-'+cb.getAttribute('data-section');
+      var el=document.getElementById(secId); if(el) el.style.display=cb.checked?'':'none';
+    });
+    ovCloseDrawer();
+    showToast('Dashboard updated');
+  };
+  window.ovResetCustomize = function() {
+    document.querySelectorAll('#ov-customize-drawer input[data-section]').forEach(function(cb){ cb.checked=true; });
+    ['ov-sec-kpi','ov-sec-channel','ov-sec-time','ov-sec-drivers','ov-sec-category','ov-sec-search'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display=''; });
+    showToast('Reset to default');
+  };
+
+  // close all ov filter panels on outside click
+  document.addEventListener('click', function(e) {
+    ['ov-client-wrap','ov-website-wrap','ov-channel-wrap','ov-comp-wrap','ov-date-wrap'].forEach(function(wrapId){
+      if(!e.target.closest('#'+wrapId)){
+        var panel=document.getElementById(wrapId.replace('-wrap','-panel'));
+        if(panel) panel.classList.remove('open');
+      }
+    });
+  });
+
+/* ─── HIGHLIGHTS TABLE ─── */
+var HL_DATA = [
+  { name:'Outerwear',      convVal:284320, cost:42180, conv:1840, convRate:3.8, aov:154.5, cos:14.8, trend:[15.2,14.9,15.1,14.8,14.6,14.8] },
+  { name:'Footwear',       convVal:198450, cost:36920, conv:1420, convRate:2.9, aov:139.8, cos:18.6, trend:[19.4,19.1,18.8,18.6,18.9,18.6] },
+  { name:'Accessories',    convVal:156780, cost:31240, conv:2180, convRate:4.2, aov:71.9,  cos:19.9, trend:[20.4,20.1,19.8,19.9,20.2,19.9] },
+  { name:'Base Layers',    convVal:134560, cost:30180, conv:1680, convRate:3.5, aov:80.1,  cos:22.4, trend:[22.0,22.3,22.6,22.4,22.1,22.4] },
+  { name:'Cargo Pants',    convVal:98240,  cost:26450, conv:980,  convRate:2.6, aov:100.2, cos:26.9, trend:[27.8,27.2,26.8,26.5,26.9,26.9] },
+  { name:'Sleeping Bags',  convVal:87650,  cost:24860, conv:640,  convRate:2.1, aov:137.0, cos:28.4, trend:[27.9,28.1,28.4,28.6,28.3,28.4] },
+  { name:'Trekking Poles', convVal:76430,  cost:22140, conv:820,  convRate:2.4, aov:93.2,  cos:29.0, trend:[28.2,28.6,28.9,29.1,29.0,29.0] },
+  { name:'Headwear',       convVal:64820,  cost:20380, conv:1240, convRate:3.1, aov:52.3,  cos:31.4, trend:[30.2,30.8,31.2,31.5,31.4,31.4] },
+  { name:'Hydration',      convVal:58940,  cost:19240, conv:1060, convRate:2.8, aov:55.6,  cos:32.6, trend:[31.4,31.8,32.2,32.6,32.8,32.6] },
+  { name:'Gloves',         convVal:52180,  cost:17960, conv:880,  convRate:2.5, aov:59.3,  cos:34.4, trend:[32.8,33.2,33.8,34.1,34.4,34.4] },
+  { name:'Sunglasses',     convVal:48650,  cost:16840, conv:740,  convRate:2.2, aov:65.7,  cos:34.6, trend:[33.6,33.9,34.2,34.5,34.6,34.6] },
+  { name:'Socks',          convVal:38420,  cost:14280, conv:1480, convRate:3.6, aov:26.0,  cos:37.2, trend:[35.8,36.2,36.8,37.0,37.2,37.2] },
+  { name:'Camp Furniture', convVal:29840,  cost:12640, conv:320,  convRate:1.4, aov:93.3,  cos:42.4, trend:[40.2,40.8,41.4,42.0,42.4,42.4] }
+];
+var _hlCOSTarget = 29;
+var _hlHighlightConvVal = true;
+var _hlHighlightCost = false;
+var _hlHighlightConvRate = false;
+var _hlHighlightAov = true;
+var _hlShowSparklines = true;
+
+function getCOSStyle(cos, target) {
+  if (cos <= target - 2) return 'cos-green';
+  if (cos <= target + 1) return 'cos-amber';
+  return 'cos-red';
+}
+
+function interpolateGreen(t) {
+  var r = Math.round(230 - t * 60);
+  var g = Math.round(249 - t * 30);
+  var b = Math.round(238 - t * 80);
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
+function showHighlightsPage() {
+  var ic = document.getElementById('ic-list');
+  var icD = document.getElementById('ic-detail');
+  var intP = document.getElementById('integrations-page');
+  var fdP = document.getElementById('feed-data-page');
+  if (ic) ic.style.display = 'none';
+  if (icD) icD.style.display = 'none';
+  if (intP) intP.style.display = 'none';
+  if (fdP) fdP.style.display = 'none';
+  hideFeedDetailPages();
+  document.getElementById('highlights-page').style.display = 'block';
+  hlRender();
+}
+
+function hlRender() {
+  var search = (document.getElementById('hl-search') || {}).value || '';
+  search = search.toLowerCase();
+  var rows = HL_DATA.filter(function(r) { return r.name.toLowerCase().indexOf(search) !== -1; });
+
+  var maxConvVal = Math.max.apply(null, rows.map(function(r){return r.convVal;}));
+  var minConvVal = Math.min.apply(null, rows.map(function(r){return r.convVal;}));
+  var maxCost = Math.max.apply(null, rows.map(function(r){return r.cost;}));
+  var minCost = Math.min.apply(null, rows.map(function(r){return r.cost;}));
+  var maxConvRate = Math.max.apply(null, rows.map(function(r){return r.convRate;}));
+  var minConvRate = Math.min.apply(null, rows.map(function(r){return r.convRate;}));
+  var maxAov = Math.max.apply(null, rows.map(function(r){return r.aov;}));
+  var minAov = Math.min.apply(null, rows.map(function(r){return r.aov;}));
+
+  function norm(val, min, max) { return max === min ? 0.5 : (val - min) / (max - min); }
+  function fmtMoney(v) { return '$' + v.toLocaleString(); }
+  function fmtPct(v) { return v.toFixed(1) + '%'; }
+
+  function sparklineSvg(trend) {
+    var w = 80, h = 24, pad = 3;
+    var mn = Math.min.apply(null, trend), mx = Math.max.apply(null, trend);
+    var range = mx - mn || 1;
+    var pts = trend.map(function(v, i) {
+      var x = pad + (i / (trend.length - 1)) * (w - pad * 2);
+      var y = h - pad - ((v - mn) / range) * (h - pad * 2);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    var lastVal = trend[trend.length - 1];
+    var firstVal = trend[0];
+    var color = lastVal <= firstVal ? '#22c55e' : '#ef4444';
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
+      '<polyline points="' + pts + '" fill="none" stroke="' + color + '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>' +
+      '</svg>';
+  }
+
+  var html = '';
+  rows.forEach(function(row, i) {
+    var cvBg = _hlHighlightConvVal ? 'background:' + interpolateGreen(norm(row.convVal, minConvVal, maxConvVal)) + ';' : '';
+    var costBg = _hlHighlightCost ? 'background:' + interpolateGreen(1 - norm(row.cost, minCost, maxCost)) + ';' : '';
+    var crBg = _hlHighlightConvRate ? 'background:' + interpolateGreen(norm(row.convRate, minConvRate, maxConvRate)) + ';' : '';
+    var aovBg = _hlHighlightAov ? 'background:' + interpolateGreen(norm(row.aov, minAov, maxAov)) + ';' : '';
+    var cosClass = getCOSStyle(row.cos, _hlCOSTarget);
+
+    html += '<tr style="border-bottom:1px solid var(--color-border); ' + (i % 2 === 1 ? 'background:#fafafa;' : '') + '">';
+    html += '<td style="padding:11px 16px; font-size:13px; font-weight:500; color:var(--color-text-primary); font-family:\'DM Sans\',sans-serif;">' + escHtml(row.name) + '</td>';
+    html += '<td style="padding:11px 16px; text-align:right; font-size:13px; font-family:\'DM Sans\',sans-serif; ' + cvBg + '">' + fmtMoney(row.convVal) + '</td>';
+    html += '<td style="padding:11px 16px; text-align:right; font-size:13px; font-family:\'DM Sans\',sans-serif; ' + costBg + '">' + fmtMoney(row.cost) + '</td>';
+    html += '<td style="padding:11px 16px; text-align:right; font-size:13px; font-family:\'DM Sans\',sans-serif;">' + row.conv.toLocaleString() + '</td>';
+    html += '<td style="padding:11px 16px; text-align:right; font-size:13px; font-family:\'DM Sans\',sans-serif; ' + crBg + '">' + fmtPct(row.convRate) + '</td>';
+    html += '<td style="padding:11px 16px; text-align:right; font-size:13px; font-family:\'DM Sans\',sans-serif; ' + aovBg + '">' + fmtMoney(row.aov) + '</td>';
+    html += '<td style="padding:11px 16px; text-align:right;"><span class="' + cosClass + '">' + fmtPct(row.cos) + '</span></td>';
+    html += '<td style="padding:11px 16px; text-align:center;">' + (_hlShowSparklines ? sparklineSvg(row.trend) : '<span style="font-size:12px;color:var(--color-text-caption);">—</span>') + '</td>';
+    html += '</tr>';
+  });
+  document.getElementById('hl-tbody').innerHTML = html;
+}
+
+window.hlCycleLevel = function() {
+  var levels = ['L1','L2','L3'];
+  var lbl = document.getElementById('hl-level-label');
+  var cur = lbl.textContent;
+  var next = levels[(levels.indexOf(cur) + 1) % levels.length];
+  lbl.textContent = next;
+};
+
+window.hlOpenDrawer = function() {
+  document.getElementById('hl-filter-drawer').classList.add('open');
+  document.getElementById('hl-drawer-overlay').style.display = 'block';
+};
+
+window.hlCloseDrawer = function() {
+  document.getElementById('hl-filter-drawer').classList.remove('open');
+  document.getElementById('hl-drawer-overlay').style.display = 'none';
+};
+
+window.hlApplyFilters = function() {
+  _hlCOSTarget = parseInt(document.getElementById('hl-cos-target-input').value) || 29;
+  _hlHighlightConvVal = document.getElementById('hl-chk-convval').checked;
+  _hlHighlightCost = document.getElementById('hl-chk-cost').checked;
+  _hlHighlightConvRate = document.getElementById('hl-chk-convrate').checked;
+  _hlHighlightAov = document.getElementById('hl-chk-aov').checked;
+  _hlShowSparklines = document.getElementById('hl-chk-sparklines').checked;
+  hlCloseDrawer();
+  hlRender();
+  showToast('Filters applied');
+};
+
+window.hlClearFilters = function() {
+  _hlCOSTarget = 29;
+  _hlHighlightConvVal = true;
+  _hlHighlightCost = false;
+  _hlHighlightConvRate = false;
+  _hlHighlightAov = true;
+  _hlShowSparklines = true;
+  document.getElementById('hl-cos-target-input').value = 29;
+  document.getElementById('hl-chk-convval').checked = true;
+  document.getElementById('hl-chk-cost').checked = false;
+  document.getElementById('hl-chk-convrate').checked = false;
+  document.getElementById('hl-chk-aov').checked = true;
+  document.getElementById('hl-chk-sparklines').checked = true;
+  hlRender();
+  showToast('Filters cleared');
+};
+
+window.hlSortBy = function(col) {
+  HL_DATA.sort(function(a, b) { return b[col] - a[col]; });
+  hlRender();
+};
 
 })();
 </script>
