@@ -113,7 +113,10 @@ function hlRender() {
     var cosSt = hlCOSCellStyle(row.cos);
     html += '<tr style="border-bottom:1px solid var(--color-border);">';
     html += '<td style="padding:0 16px;font-size:13px;font-weight:500;color:var(--color-text-primary);height:42px;white-space:nowrap;">' + escHtml(row.name) + '</td>';
-    html += '<td style="padding:0;width:150px;">' + hlConvValBar(row.convVal, minCV, maxCV) + '</td>';
+    var cvT = maxCV === minCV ? 0.5 : (row.convVal - minCV) / (maxCV - minCV);
+    var cvBg = 'rgb(' + Math.round(230+(26-230)*cvT) + ',' + Math.round(249+(92-249)*cvT) + ',' + Math.round(238+(53-238)*cvT) + ')';
+    var cvTxt = cvT >= 0.5 ? '#ffffff' : '#111827';
+    html += '<td style="padding:0 16px;font-size:13px;font-weight:600;text-align:right;height:42px;background:' + cvBg + ';color:' + cvTxt + ';">$' + Math.round(row.convVal).toLocaleString() + '</td>';
     html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">$' + Math.round(row.cost).toLocaleString() + '</td>';
     html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">' + row.conv.toLocaleString() + '</td>';
     html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">' + row.convRate.toFixed(1) + '%</td>';
