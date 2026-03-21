@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+function initOnboarding() {
 
   var googleConnected = false;
   var msftConnected = false;
@@ -139,4 +139,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pw === 'new') checkPassword(e.target.value, 'new');
   });
 
-});
+}
+initOnboarding();
