@@ -1,5 +1,21 @@
 # Argos v3 Prototype — Claude Code Context
 
+## MODULE BOUNDARIES — read only what the task needs
+* Sidebar / navigation / dark mode → `html/sidebar.html` + `js/core.js`
+* Issue Center → `html/issue-center.html` + `js/core.js`
+* Feed Data Tool → `html/feed-data-tool.html` + `js/feed-data-tool.js`
+* Permission Manager → `html/permission-manager.html` + `js/permission-manager.js`
+* Annotations → `html/annotations.html` + `js/annotations.js`
+* Alerts Management → `html/alerts.html` + `js/alerts.js`
+* Business Rule Manager → `html/business-rules.html` + `js/business-rules.js`
+* Overview (SEM/SEO) → `html/overview.html` + `js/overview.js`
+* Highlights Table → `html/highlights-table.html` + `js/highlights-table.js`
+* Styles only → `css/styles.css`
+* Shared modals → `html/modals-shared.html`
+* Do NOT read `index.html` for feature work
+* Do NOT read files outside the current task's module
+* Use `/clear` between unrelated tasks
+
 ## What This Project Is
 A high-fidelity interactive prototype for **Argos v3**, a StatBid internal tool that helps
 account managers monitor and manage client issues, campaigns, and performance. This is
