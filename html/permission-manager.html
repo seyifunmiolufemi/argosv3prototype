@@ -1,0 +1,79 @@
+<!-- ══ PERMISSION MANAGER ══ -->
+<div id="permission-manager-page" style="display:none;">
+
+  <!-- ── List view ── -->
+  <div id="pm-list-view">
+    <div class="page-title-row">
+      <div>
+        <h1 class="page-h1" style="font-size:18px;">Permission Manager</h1>
+        <p class="page-subtitle" style="margin-top:3px;">Manage what each role can access across Statbid.</p>
+      </div>
+      <div class="page-title-right">
+        <button class="btn-primary-sm" onclick="pmShowAssignView()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Assign Role
+        </button>
+      </div>
+    </div>
+    <div class="breadcrumb" style="margin-bottom:14px;">
+      <span class="bc-item bc-muted">User Management</span>
+      <span class="bc-item bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item">Permission Manager</span>
+    </div>
+    <div class="search-box" style="margin-bottom:16px;max-width:100%;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="pm-search" placeholder="Search users" oninput="pmSearch()">
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--color-border);">
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:left;">USER <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:3px;vertical-align:middle;"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:left;">ROLE <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:3px;vertical-align:middle;"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:left;">LAST MODIFIED <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:3px;vertical-align:middle;"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg></th>
+            <th style="padding:10px 16px;font-size:11px;font-weight:600;color:var(--color-text-accent);letter-spacing:0.5px;text-transform:uppercase;text-align:center;">ACTION</th>
+          </tr>
+        </thead>
+        <tbody id="pm-users-tbody">
+        </tbody>
+      </table>
+    </div>
+  </div><!-- /pm-list-view -->
+
+  <!-- ── Assign Role view ── -->
+  <div id="pm-assign-view" style="display:none;">
+    <div class="page-title-row">
+      <h1 class="page-h1" style="font-size:18px;">Permission Manager</h1>
+    </div>
+    <div class="breadcrumb" style="margin-bottom:14px;">
+      <span class="bc-item bc-muted">User Management</span>
+      <span class="bc-item bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item">Permission Manager</span>
+    </div>
+    <div class="table-card">
+      <h2 style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin:0 0 4px;">Assign Role</h2>
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin:0 0 20px;">Choose a user and assign a role in Statbid</p>
+      <div style="margin-bottom:20px;">
+        <div class="modal-label" style="margin-bottom:6px;">Select User</div>
+        <div style="position:relative;">
+          <div class="search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="pm-assign-search" placeholder="Search users" autocomplete="off" oninput="pmAssignSearch()">
+          </div>
+          <div class="pm-user-search-dd" id="pm-assign-dd"></div>
+        </div>
+        <div id="pm-selected-chips" style="margin-top:8px;min-height:8px;"></div>
+      </div>
+      <div style="margin-bottom:24px;">
+        <div class="modal-label" style="margin-bottom:10px;">Select Role</div>
+        <div id="pm-assign-roles"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="pm-assign-submit" class="btn-primary-sm pm-btn-disabled" onclick="pmSubmitAssign()">Assign Role</button>
+        <button class="btn-outline" style="height:36px;padding:0 16px;" onclick="pmBackToList()">Cancel</button>
+      </div>
+    </div>
+  </div><!-- /pm-assign-view -->
+
+</div><!-- /permission-manager-page -->
+

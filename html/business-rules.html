@@ -1,0 +1,214 @@
+<!-- ═══════════════════════════════════════════
+     BUSINESS RULE MANAGER PAGE
+═══════════════════════════════════════════ -->
+<div id="brm-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- LIST VIEW -->
+  <div id="brm-list-view">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1">Business Rule Manager</h1>
+        <span class="count-badge" id="brm-count-badge">10</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="brmShowCreate()" style="display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Create Rule
+        </button>
+      </div>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Create and manage automated business rules for detecting issues.</p>
+    <nav class="breadcrumb" style="margin-bottom:20px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Business Rule Manager</span>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="position:relative;flex:1;max-width:280px;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--color-text-caption)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="var(--color-text-caption)" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="brm-search" class="search-box" style="padding-left:32px;width:100%;box-sizing:border-box;" placeholder="Search by rule name…" oninput="brmSearch()">
+      </div>
+      <div id="brm-ds-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('brm-ds-panel').classList.toggle('open');document.getElementById('brm-status-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:170px;justify-content:space-between;">
+          <span id="brm-ds-label">Data Source: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="brm-ds-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="brmSetDs('')">All</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Google Merchant Center')">Google Merchant Center</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Search Console')">Search Console</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Google Ads')">Google Ads</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Bing Ads')">Bing Ads</div>
+          <div class="alerts-filter-item" onclick="brmSetDs('Feed Analyzer')">Feed Analyzer</div>
+        </div>
+      </div>
+      <div id="brm-status-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('brm-status-panel').classList.toggle('open');document.getElementById('brm-ds-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:130px;justify-content:space-between;">
+          <span id="brm-status-label">Status: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="brm-status-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="brmSetStatus('')">All</div>
+          <div class="alerts-filter-item" onclick="brmSetStatus('Active')">Active</div>
+          <div class="alerts-filter-item" onclick="brmSetStatus('Draft')">Draft</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Issue ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Impact ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Data Source ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Entity Type ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Status ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Modified ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="brm-tbody"></tbody>
+      </table>
+    </div>
+  </div><!-- /brm-list-view -->
+
+  <!-- CREATE VIEW -->
+  <div id="brm-create-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <h1 class="page-h1" id="brm-create-heading">Create Rule</h1>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Define what the rule is, where it applies, and its context.</p>
+    <nav class="breadcrumb" style="margin-bottom:24px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="brmShowListView()">Business Rule Manager</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="brm-create-bc-label" style="color:var(--color-text-primary);">Create Rule</span>
+    </nav>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <span class="form-section-label" style="margin-top:0;">Rule Details</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Name <span style="color:#d72225;">*</span> <span title="Enter a descriptive name for this rule" style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--color-bg-grey25);color:var(--color-text-caption);font-size:10px;cursor:default;margin-left:4px;">?</span></label>
+          <input type="text" class="modal-input" id="brm-form-name" placeholder="e.g. Missing Product Titles" style="width:100%;box-sizing:border-box;" oninput="brmUpdateCreateBtn()">
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Description <span style="color:#d72225;">*</span></label>
+          <textarea class="modal-textarea" id="brm-form-desc" placeholder="e.g. Detects issues with empty or null fields that could affect user experience" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;min-height:88px;" oninput="brmUpdateCreateBtn()"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Severity <span style="color:#d72225;">*</span></label>
+            <select class="modal-select" id="brm-form-severity" style="width:100%;" onchange="brmUpdateCreateBtn()">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Status</label>
+            <select class="modal-select" id="brm-form-status" style="width:100%;">
+              <option value="Active" selected>Active</option>
+              <option value="Draft">Draft</option>
+            </select>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <span class="form-section-label">Scope</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Data Source <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="brm-form-ds" style="width:100%;" onchange="brmUpdateCreateBtn()">
+            <option value="">Select the data source</option>
+            <option>Google Merchant Center</option>
+            <option>Search Console</option>
+            <option>Google Ads</option>
+            <option>Microsoft Ads / Bing Ads</option>
+            <option>Feed Analyzer</option>
+          </select>
+        </div>
+        <div style="margin-bottom:24px;">
+          <label class="field-label">Entity <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="brm-form-entity" style="width:100%;" onchange="brmUpdateCreateBtn()">
+            <option value="">Select the entity</option>
+            <option>Product</option>
+            <option>Page</option>
+            <option>URL</option>
+            <option>Campaign</option>
+            <option>Ad Group</option>
+            <option>All Ad Groups</option>
+            <option>Selected Ad Groups</option>
+          </select>
+        </div>
+        <hr class="form-hr" style="margin-top:0;">
+        <div style="display:flex;gap:10px;align-items:center;padding-top:4px;">
+          <button class="btn-primary-sm pm-btn-disabled" id="brm-create-btn" disabled onclick="brmSubmitCreate()">Create Rule</button>
+          <button class="btn-outline" onclick="brmShowListView()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /brm-create-view -->
+
+  <!-- DETAIL VIEW -->
+  <div id="brm-detail-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;align-items:flex-start;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1" id="brm-detail-heading">Rule</h1>
+        <span id="brm-detail-impact-badge"></span>
+      </div>
+      <div id="brm-detail-view-btns" style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-outline" style="display:flex;align-items:center;gap:6px;" onclick="brmEnableEdit()">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          Edit
+        </button>
+        <button style="background:#fff0f0;color:#d72225;border:1px solid #d72225;border-radius:8px;padding:7px 14px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="brmConfirmDelete(_brmActiveId)">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Delete
+        </button>
+      </div>
+      <div id="brm-detail-edit-btns" style="display:none;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="brmSaveEdit()">Save Changes</button>
+        <button class="btn-outline" onclick="brmCancelEdit()">Cancel</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" style="margin-bottom:8px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="brmShowListView()">Business Rule Manager</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="brm-detail-bc" style="color:var(--color-text-primary);">Detail</span>
+    </nav>
+    <p id="brm-detail-modified" style="font-size:12px;color:var(--color-text-caption);margin-bottom:24px;"></p>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <span class="form-section-label" style="margin-top:0;">Rule Details</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Name</label>
+          <input type="text" class="modal-input" id="brm-det-name" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Rule Description</label>
+          <textarea class="modal-textarea" id="brm-det-desc" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;min-height:88px;" disabled></textarea>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Severity</label>
+          <div id="brm-det-severity-display" style="margin-top:4px;"></div>
+          <select class="modal-select" id="brm-det-severity" style="width:160px;display:none;" disabled>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+        <hr class="form-hr">
+        <span class="form-section-label">Scope</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Data Source</label>
+          <input type="text" class="modal-input" id="brm-det-ds" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+        <div>
+          <label class="field-label">Entity</label>
+          <input type="text" class="modal-input" id="brm-det-entity" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+      </div>
+    </div>
+  </div><!-- /brm-detail-view -->
+
+</div><!-- /brm-page -->
+

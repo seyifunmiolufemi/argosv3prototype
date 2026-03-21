@@ -32,7 +32,21 @@
     await Promise.all([
       loadPartial('auth-container', 'html/auth.html'),
       loadPartial('onboarding-container', 'html/onboarding.html'),
-      loadPartial('dashboard-container', 'html/dashboard.html')
+      loadPartial('dashboard-container', 'html/dashboard.html'),
+    ]);
+
+    // Load dashboard sub-partials after dashboard shell is in DOM
+    await Promise.all([
+      loadPartial('sidebar-container',            'html/sidebar.html'),
+      loadPartial('issue-center-container',       'html/issue-center.html'),
+      loadPartial('feed-data-tool-container',     'html/feed-data-tool.html'),
+      loadPartial('permission-manager-container', 'html/permission-manager.html'),
+      loadPartial('annotations-container',        'html/annotations.html'),
+      loadPartial('alerts-container',             'html/alerts.html'),
+      loadPartial('business-rules-container',     'html/business-rules.html'),
+      loadPartial('overview-container',           'html/overview.html'),
+      loadPartial('highlights-container',         'html/highlights-table.html'),
+      loadPartial('modals-container',             'html/modals-shared.html'),
     ]);
     // Load scripts after HTML is in the DOM
     function loadScript(src) {
@@ -45,7 +59,13 @@
     }
     await loadScript('js/onboarding.js');
     await loadScript('js/core.js');
-    await loadScript('js/extensions.js');
+    await loadScript('js/feed-data-tool.js');
+    await loadScript('js/permission-manager.js');
+    await loadScript('js/annotations.js');
+    await loadScript('js/alerts.js');
+    await loadScript('js/business-rules.js');
+    await loadScript('js/overview.js');
+    await loadScript('js/highlights-table.js');
   })();
   </script>
 

@@ -1,0 +1,411 @@
+<div id="alerts-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="alertsMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="var(--color-text-primary)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    Edit Alert
+  </div>
+  <div class="pm-dd-item" onclick="alertsMenuAction('duplicate')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="5" y="5" width="7" height="7" rx="1.5" stroke="var(--color-text-primary)" stroke-width="1.3"/><path d="M9 5V3.5A1.5 1.5 0 007.5 2H3.5A1.5 1.5 0 002 3.5v4A1.5 1.5 0 003.5 9H5" stroke="var(--color-text-primary)" stroke-width="1.3"/></svg>
+    Duplicate
+  </div>
+  <div class="pm-dd-item" onclick="alertsMenuAction('toggle')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4.5" width="12" height="5" rx="2.5" stroke="var(--color-text-primary)" stroke-width="1.3"/><circle cx="9.5" cy="7" r="2" fill="var(--color-text-primary)"/></svg>
+    <span id="alerts-dd-toggle-label">Disable Alert</span>
+  </div>
+  <div class="pm-dd-item" onclick="alertsMenuAction('delete')" style="color:#d72225;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete
+  </div>
+</div>
+
+<!-- ANN DELETE MODAL -->
+<div id="ann-delete-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Delete Annotation</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">Are you sure you want to delete this annotation? This action cannot be undone.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="annDeleteCancel()">Cancel</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="annDeleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS DELETE MODAL -->
+<div id="alerts-delete-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Delete Alert</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">Are you sure you want to delete this alert? This action cannot be undone.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-delete-modal').style.display='none'">Cancel</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="alertsDeleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS DUPLICATE MODAL -->
+<div id="alerts-duplicate-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:440px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Duplicate Alert</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin-bottom:16px;">Choose what to duplicate from the original alert.</p>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Alert Name <span style="color:#d72225;">*</span></label>
+        <input type="text" class="modal-input" id="dup-name-input" style="width:100%;box-sizing:border-box;">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-ds" checked> Data Source</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-metrics" checked> Metrics</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-conditions" checked> Conditions</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-schedule" checked> Schedule</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;"><input type="checkbox" id="dup-cb-notifs" checked> Notifications Setup</label>
+      </div>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-duplicate-modal').style.display='none'">Cancel</button>
+      <button class="btn-primary-sm" onclick="alertsDuplicateConfirm()">Duplicate Alert</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS PREVIEW MODAL -->
+<div id="alerts-preview-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:480px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Alert Message Preview</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin-bottom:16px;">This is a preview. Actual values may vary when the alert triggers.</p>
+      <div class="slack-preview-card">
+        <div class="slack-preview-title">🚨 Alert Triggered: <span id="alerts-preview-name">Budget Alert</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Platform:</span><span id="alerts-preview-platform">Google Ads</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Triggered:</span><span>Dec 4, 2025 · 2:00 AM</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Condition:</span><span>COS is greater than 50 over 7 days</span></div>
+        <div class="slack-preview-row"><span class="slack-preview-label">Value:</span><span style="color:#f87171;">54.2%</span></div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid #2e3035;font-size:12px;color:#6b6f73;">View in Argos →</div>
+      </div>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-preview-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS CONDITION MODAL -->
+<div id="alerts-condition-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:460px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Triggered Condition</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:13px;color:var(--color-text-subtitle);margin-bottom:12px;">Condition that triggered this alert for <strong id="condition-modal-client"></strong></p>
+      <p style="font-size:12px;color:var(--color-text-caption);margin-bottom:12px;">Triggered at: <span id="condition-modal-time"></span></p>
+      <div class="condition-display" id="condition-modal-text"></div>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('alerts-condition-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS UNSAVED MODAL -->
+<div id="alerts-unsaved-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Unsaved Changes</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">You've made some updates that haven't been saved yet. If you leave now, you'll lose these changes.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-primary-sm" onclick="alertsStay()">Stay</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="alertsDiscard()">Discard</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PERMISSION MANAGER: Role / Client Access Modal ══ -->
+<div id="pm-role-modal" class="pm-modal-overlay" style="display:none;" onclick="pmModalOverlayClick(event)">
+  <div class="pm-modal-box" onclick="event.stopPropagation()">
+    <div class="pm-modal-header">
+      <div>
+        <h3 class="modal-title" id="pm-modal-username" style="margin-bottom:4px;"></h3>
+        <p class="modal-desc" id="pm-modal-subtitle"></p>
+      </div>
+      <button onclick="pmCloseModal()" style="background:none;border:none;cursor:pointer;font-size:22px;color:var(--color-text-caption);padding:0;line-height:1;flex-shrink:0;">×</button>
+    </div>
+    <div id="pm-modal-tabs" style="display:flex;border-bottom:1px solid var(--color-border);padding:0 24px;margin-top:16px;flex-shrink:0;">
+      <button class="detail-tab active" data-pmtab="roles" onclick="pmSwitchModalTab('roles')">Roles</button>
+      <button class="detail-tab" data-pmtab="clients" onclick="pmSwitchModalTab('clients')">Client Access</button>
+    </div>
+    <div class="pm-modal-body">
+      <div id="pm-modal-tab-roles" style="padding-top:20px;">
+        <div id="pm-modal-roles-cards"></div>
+      </div>
+      <div id="pm-modal-tab-clients" style="display:none;padding-top:20px;">
+        <h4 style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin:0 0 4px;" id="pm-ca-title"></h4>
+        <p style="font-size:13px;color:var(--color-text-subtitle);margin:0 0 16px;">Choose which clients this user should have access to</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--color-border);margin-bottom:14px;">
+          <span style="font-size:14px;font-weight:500;color:var(--color-text-primary);">User has access to all clients by default</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="pm-ca-all-toggle" onchange="pmToggleAllAccess(this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="pm-ca-client-section" style="display:none;">
+          <div class="modal-label" style="margin-bottom:6px;">Clients</div>
+          <div class="pm-client-list" id="pm-ca-client-list"></div>
+        </div>
+        <div class="pm-unsaved-banner" id="pm-unsaved-banner" style="display:none;">
+          You've made some updates that haven't been saved yet. If you leave now, you'll lose these changes.
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button class="btn-primary-sm" onclick="pmStayOnModal()" style="height:32px;font-size:13px;">Stay</button>
+            <button onclick="pmDiscardAndClose()" style="height:32px;font-size:13px;padding:0 14px;background:#fff0f0;color:#d72225;border:1px solid #d72225;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;">Discard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pm-modal-footer" id="pm-modal-footer" style="display:none;">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="pmCloseModal()">Cancel</button>
+      <button id="pm-modal-save" class="btn-primary-sm pm-btn-disabled" onclick="pmSaveModal()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Permission Manager ⋮ Action Dropdown -->
+<div id="pm-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="pmMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Edit Roles
+  </div>
+  <div class="pm-dd-item" onclick="pmMenuAction('view')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    View Roles
+  </div>
+  <div class="pm-dd-item" onclick="pmMenuAction('clients')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Client Access
+  </div>
+</div>
+
+<!-- Permission flyout panel -->
+<div id="pm-perm-flyout" class="pm-perm-flyout" style="display:none;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <strong id="pm-flyout-title" style="font-size:14px;color:var(--color-text-primary);"></strong>
+    <button onclick="document.getElementById('pm-perm-flyout').style.display='none'" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--color-text-caption);line-height:1;padding:0;">×</button>
+  </div>
+  <table class="pm-perm-table" id="pm-flyout-table"></table>
+</div>
+
+<!-- ══ ADD TRANSFORMER MODAL ══ -->
+<div id="add-transformer-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box" style="max-width:480px;width:92%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 class="modal-title" style="margin:0;">Add Transformer</h3>
+      <button onclick="closeAddTransformerModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-text-caption);line-height:1;">×</button>
+    </div>
+    <!-- IF section -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:12px;">
+        <span class="chip-if" style="font-size:12px;padding:2px 7px;">IF</span>
+        <span>Condition</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <div style="flex:1;">
+          <label class="field-label" style="font-size:12px;">Field</label>
+          <select class="modal-select" id="tf-modal-if-field" style="font-size:13px;padding:7px 10px;">
+            <option>title</option><option>description</option><option>brand</option><option>id</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option><option>item_group_id</option><option>color</option><option>custom_label_0</option><option>custom_label_1</option><option>custom_label_2</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label class="field-label" style="font-size:12px;">Operator</label>
+          <select class="modal-select" id="tf-modal-if-op" style="font-size:13px;padding:7px 10px;">
+            <option>contains</option><option>does not contain</option><option>equals</option><option>does not equal</option><option>starts with</option><option>ends with</option><option>is empty</option><option>is not empty</option><option>matches regex</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="font-size:12px;">Value</label>
+        <input type="text" id="tf-modal-if-val" class="modal-input" placeholder='e.g. "Tandem"' style="font-size:13px;padding:7px 10px;">
+      </div>
+    </div>
+    <div style="height:1px;background:var(--color-border);margin-bottom:16px;"></div>
+    <!-- THEN section -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:12px;">
+        <span class="chip-then" style="font-size:12px;padding:2px 7px;">THEN</span>
+        <span>Action</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <div style="flex:1;">
+          <label class="field-label" style="font-size:12px;">Target Field</label>
+          <select class="modal-select" id="tf-modal-then-field" style="font-size:13px;padding:7px 10px;">
+            <option>title</option><option>description</option><option>brand</option><option>id</option><option>price</option><option>sale_price</option><option>condition</option><option>availability</option><option>product_type</option><option>google_product_category</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label class="field-label" style="font-size:12px;">Action</label>
+          <select class="modal-select" id="tf-modal-then-action" style="font-size:13px;padding:7px 10px;">
+            <option>Set to</option><option>Replace</option><option>Append</option><option>Prepend</option><option>To lowercase</option><option>To uppercase</option><option>Remove HTML</option><option>Truncate to</option><option>Set to empty</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="field-label" style="font-size:12px;">Value</label>
+        <input type="text" id="tf-modal-then-val" class="modal-input" placeholder='e.g. "Tandem Sport"' style="font-size:13px;padding:7px 10px;">
+      </div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <label class="field-label" style="font-size:12px;">Apply to Exports</label>
+      <select class="modal-select" style="font-size:13px;padding:7px 10px;">
+        <option selected>All Exports</option><option>Google Shopping</option><option>Bing Ads</option><option>Facebook</option><option>Klorija</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:4px;">
+      <button class="btn-primary-sm" onclick="submitAddTransformer()">Add Transformer</button>
+      <button class="btn-text-link grey" onclick="closeAddTransformerModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FIELD EXECUTION ORDER MODAL ══ -->
+<div id="field-exec-order-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box" style="max-width:400px;width:92%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h3 class="modal-title" style="margin:0;">Field Execution Order</h3>
+      <button onclick="closeFieldExecOrderModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--color-text-caption);line-height:1;">×</button>
+    </div>
+    <table class="feed-table" style="font-size:13px;">
+      <colgroup><col style="width:36px;"><col style="width:auto;"><col style="width:60px;"></colgroup>
+      <thead><tr><th></th><th>Field Name</th><th>Order</th></tr></thead>
+      <tbody id="exec-order-tbody">
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>id</td><td class="exec-order-num">0</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>title</td><td class="exec-order-num">1</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>description</td><td class="exec-order-num">2</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>brand</td><td class="exec-order-num">3</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>product_type</td><td class="exec-order-num">4</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>condition</td><td class="exec-order-num">5</td></tr>
+        <tr draggable="true" ondragstart="execOrderDragStart(event,this)" ondragover="execOrderDragOver(event)" ondrop="execOrderDrop(event,this)"><td style="cursor:grab;color:var(--color-text-caption);text-align:center;">⋮⋮</td><td>google_product_category</td><td class="exec-order-num">6</td></tr>
+      </tbody>
+    </table>
+    <div class="modal-footer" style="margin-top:16px;display:flex;gap:10px;align-items:center;">
+      <button class="btn-primary-sm" onclick="closeFieldExecOrderModal();showToast('Execution order saved')">Save Order</button>
+      <button class="btn-text-link grey" onclick="closeFieldExecOrderModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESOLVE MODAL ══ -->
+<div id="resolve-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.4);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box">
+    <h3 class="modal-title">Mark as Resolved</h3>
+    <p class="modal-desc">You are manually marking this issue as resolved. The system will continue to run checks on the next scheduled run.</p>
+    <div class="modal-field">
+      <label class="modal-label">Note (Optional)</label>
+      <textarea id="resolve-note" class="modal-textarea" placeholder="e.g. Confirmed conflict was intentional — negative added deliberately to prevent tier overlap. No action needed."></textarea>
+    </div>
+    <p class="modal-hint">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      This note will be available in the Activity Log
+    </p>
+    <div class="modal-footer">
+      <button class="btn-outline" id="modal-cancel">Cancel</button>
+      <button class="btn-primary-sm" id="modal-confirm">Mark as Resolved</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-msg" class="toast"></div>
+<!-- Shopify Setup Modal -->
+<div id="shopify-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.3);z-index:9998;align-items:flex-start;justify-content:flex-start;padding-left:228px;opacity:0;transition:opacity 0.22s ease;">
+  <div class="modal-box" style="position:relative;max-width:380px;transform:translateX(-12px);transition:transform 0.25s ease;">
+    <!-- Speech bubble tail pointing left toward Settings in sidebar -->
+    <div style="position:absolute;left:-9px;top:18px;width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:9px solid var(--color-white);pointer-events:none;"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--color-container-warn);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h3 class="modal-title">Connect your store to unlock the full picture</h3>
+    </div>
+    <p class="modal-desc">Your ad accounts are connected and StatBid can see your spend and clicks. But without your Shopify store, StatBid can't see orders, revenue, or product data — so ROAS calculations and feed analysis will be incomplete.</p>
+    <div style="background:var(--color-bg-grey50);border:1px solid var(--color-border);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--color-text-primary);">Google Ads + Search Console + GA4</span>
+        <span class="badge badge-success">Connected</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--color-text-primary);">Microsoft Advertising</span>
+        <span class="badge badge-success">Connected</span>
+      </div>
+      <div style="height:1px;background:var(--color-border);"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--color-text-primary);">Shopify</span>
+        <span class="badge badge-warning">Not connected</span>
+      </div>
+    </div>
+    <div>
+      <p style="font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--color-text-caption);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Limited without Shopify</p>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div style="display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:13px;color:var(--color-text-subtitle);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Revenue attribution and ROAS calculations
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif;font-size:13px;color:var(--color-text-subtitle);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Feed Quality Check and Feed Data Tool
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="align-items:center;">
+      <button id="shopify-modal-skip" class="btn-secondary" style="width:auto;padding:0 16px;">Skip for now</button>
+      <button id="shopify-modal-connect" class="btn-primary-sm">Connect Shopify →</button>
+    </div>
+  </div>
+</div>
+<!-- Add Feed Database Modal -->
+<div id="add-feed-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.45);z-index:9999;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s ease;">
+  <div class="modal-box" style="max-width:460px;width:90%;transform:translateY(8px);transition:transform 0.2s ease;">
+    <h3 class="modal-title">Add Database</h3>
+    <p class="modal-desc">Add a new feed database to manage product data imports and exports.</p>
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:20px;">
+      <div>
+        <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Database name</label>
+        <input type="text" placeholder="e.g. Outdoor Research – Shopping" style="width:100%;box-sizing:border-box;" />
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Client</label>
+        <select style="width:100%;box-sizing:border-box;">
+          <option value="" disabled selected>Select client…</option>
+          <option>All Volleyball</option><option>Backcountry</option><option>Craft Brew Alliance</option>
+          <option>Goal Zero</option><option>Link Imaging</option><option>Monkey Sports</option>
+          <option>NW Sportswear</option><option>Outdoor Research</option>
+          <option>People's Choice Beef Jerky</option><option>Trijicon</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Group</label>
+        <select id="add-feed-group-select" style="width:100%;box-sizing:border-box;">
+          <option value="" selected>None (Ungrouped)</option>
+          <option value="grp-monkey-sports">Monkey Sports</option>
+          <option value="grp-backcountry">Backcountry</option>
+          <option value="grp-goal-zero">Goal Zero</option>
+          <option value="__new__">Create new group +</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer" style="margin-top:24px;">
+      <button id="add-feed-cancel" class="btn-secondary" style="width:auto;padding:0 20px;">Cancel</button>
+      <button class="btn-primary" style="width:auto;padding:0 20px;">Add Database</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

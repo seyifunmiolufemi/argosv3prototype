@@ -1,0 +1,380 @@
+      <!-- ══ LIST VIEW ══ -->
+      <div id="ic-list">
+
+        <!-- Page title row -->
+        <div class="page-title-row">
+          <div class="page-title-left">
+            <div class="page-title-heading">
+              <h1 class="page-h1">Issue Center</h1>
+              <span class="count-badge" id="issue-count-badge">20 issues</span>
+            </div>
+            <p class="page-subtitle">Detected issues from StatBid's business rules</p>
+          </div>
+          <div class="page-title-right">
+            <div class="dd-trigger-wrap" id="date-wrap">
+              <button class="btn-outline" id="date-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span id="date-label">Last 30 Days</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="dropdown-menu" id="date-menu" data-dd="date-wrap">
+                <div class="dd-item dd-active" data-val="Last 30 Days" data-dd-target="date-label">Last 30 Days</div>
+                <div class="dd-item" data-val="Last 7 Days" data-dd-target="date-label">Last 7 Days</div>
+                <div class="dd-item" data-val="Last 14 Days" data-dd-target="date-label">Last 14 Days</div>
+                <div class="dd-item" data-val="Last 60 Days" data-dd-target="date-label">Last 60 Days</div>
+                <div class="dd-item" data-val="Last 90 Days" data-dd-target="date-label">Last 90 Days</div>
+                <div class="dd-item" data-val="This Month" data-dd-target="date-label">This Month</div>
+                <div class="dd-item" data-val="Last Month" data-dd-target="date-label">Last Month</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <span class="bc-item bc-muted">Tools</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bbc0c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="bc-item bc-current">Issue Center</span>
+        </nav>
+
+        <!-- Tier 1 filters: Client + Website -->
+        <div class="filter-row filter-row-top">
+          <div class="dd-trigger-wrap filter-dd-wrap" id="client-wrap">
+            <button class="btn-outline filter-btn" id="client-btn">
+              <span id="client-label">Client: All</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="dropdown-menu dropdown-scroll" id="client-menu" data-dd="client-wrap"></div>
+          </div>
+          <div class="dd-trigger-wrap filter-dd-wrap" id="website-wrap">
+            <button class="btn-outline filter-btn" id="website-btn">
+              <span id="website-label">Website: All</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="dropdown-menu dropdown-scroll" id="website-menu" data-dd="website-wrap"></div>
+          </div>
+        </div>
+
+        <!-- Tier 2 filters: Search + Severity + Status -->
+        <div class="filter-row filter-row-bottom">
+          <div class="search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#737c8c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="issue-search" placeholder="Search issues, clients…" />
+          </div>
+          <div class="dd-trigger-wrap" id="sev-wrap">
+            <button class="btn-outline filter-btn-sm" id="sev-btn">
+              <span id="sev-label">Severity: All</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="dropdown-menu" id="sev-menu" data-dd="sev-wrap" style="min-width:210px;">
+              <div class="dd-item dd-active" data-filter="sev" data-val="">All Severities</div>
+              <div class="dd-item" data-filter="sev" data-val="action-required">Action Required</div>
+              <div class="dd-item" data-filter="sev" data-val="review-recommended">Review Recommended</div>
+              <div class="dd-item" data-filter="sev" data-val="information">Information</div>
+            </div>
+          </div>
+          <div class="dd-trigger-wrap" id="status-wrap">
+            <button class="btn-outline filter-btn-sm" id="status-btn">
+              <span id="status-label">Status: All</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="dropdown-menu" id="status-menu" data-dd="status-wrap" style="min-width:190px;">
+              <div class="dd-item dd-active" data-filter="status" data-val="">All Statuses</div>
+              <div class="dd-item" data-filter="status" data-val="needs-review">Needs Review</div>
+              <div class="dd-item" data-filter="status" data-val="in-progress">In Progress</div>
+              <div class="dd-item" data-filter="status" data-val="resolved">Resolved</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-card">
+          <div class="table-scroll">
+            <table id="issues-table">
+              <colgroup>
+                <col class="col-issue">
+                <col class="col-sev">
+                <col class="col-status">
+                <col class="col-date">
+                <col class="col-mod">
+                <col class="col-action">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th class="th-issue">ISSUE</th>
+                  <th>SEVERITY</th>
+                  <th>STATUS</th>
+                  <th>DATE DISCOVERED</th>
+                  <th>LAST MODIFIED</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="issues-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Empty state (hidden by default) -->
+        <div class="empty-state" id="table-empty" style="display:none;">
+          <div class="empty-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#346ed9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </div>
+          <p class="empty-title">No issues found</p>
+          <p class="empty-sub">Try adjusting your filters or search query</p>
+        </div>
+
+      </div><!-- /ic-list -->
+
+      <!-- ══ DETAIL VIEW ══ -->
+      <div id="ic-detail" style="display:none;">
+
+        <!-- Detail header -->
+        <div class="detail-title-row">
+          <div class="detail-title-left">
+            <div class="detail-title-heading">
+              <h1 class="page-h1" id="detail-title">Issue Title</h1>
+              <span id="detail-severity-badge"></span>
+            </div>
+            <p class="page-subtitle">Detected issues from StatBid's business rules</p>
+          </div>
+          <div class="detail-title-right">
+            <div class="dd-trigger-wrap" id="set-status-wrap">
+              <button class="btn-outline" id="set-status-btn">
+                <span id="current-status-display">Set Status</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="dropdown-menu" id="set-status-menu" data-dd="set-status-wrap" style="min-width:260px;">
+                <div class="dd-section-label">Set Status</div>
+                <div class="dd-item status-option" data-status="needs-review">
+                  <span class="status-dot" style="background:#8c781b;"></span>
+                  <div><div class="status-opt-label">Needs Review</div><div class="status-opt-desc">Issue detected, awaiting action</div></div>
+                </div>
+                <div class="dd-item status-option" data-status="in-progress">
+                  <span class="status-dot" style="background:#346ed9;"></span>
+                  <div><div class="status-opt-label">In Progress</div><div class="status-opt-desc">Fix applied, awaiting verification</div></div>
+                </div>
+                <div class="dd-item status-option" data-status="resolved">
+                  <span class="status-dot" style="background:#289253;"></span>
+                  <div><div class="status-opt-label">Resolved</div><div class="status-opt-desc">Issue confirmed as fixed</div></div>
+                </div>
+              </div>
+            </div>
+            <button class="btn-success" id="mark-resolved-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              Mark as Resolved
+            </button>
+          </div>
+        </div>
+
+        <!-- Detail breadcrumb -->
+        <nav class="breadcrumb">
+          <span class="bc-item bc-link" id="bc-back">Tools</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bbc0c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="bc-item bc-link" id="bc-back2">Issue Center</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bbc0c8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          <span class="bc-item bc-current" id="detail-crumb-title"></span>
+        </nav>
+
+        <!-- Meta strip -->
+        <div class="detail-meta-strip">
+          <div class="meta-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <span>Client: <strong id="meta-client"></strong></span>
+          </div>
+          <div class="meta-sep"></div>
+          <div class="meta-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Website: <strong id="meta-website"></strong></span>
+          </div>
+          <div class="meta-sep"></div>
+          <div class="meta-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <span>Data Source: <strong>Google Ads API</strong></span>
+          </div>
+          <div class="meta-sep"></div>
+          <div class="meta-item">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span>Discovered: <strong id="meta-date"></strong></span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p class="detail-desc" id="detail-desc"></p>
+
+        <!-- Tabs -->
+        <div class="detail-tabs-bar">
+          <button class="detail-tab active" data-tab="detection">Detection Summary</button>
+          <button class="detail-tab" data-tab="affected">Affected Items</button>
+          <button class="detail-tab" data-tab="impact">Impact Analysis</button>
+          <button class="detail-tab" data-tab="resolution">Resolution</button>
+          <button class="detail-tab" data-tab="activity">Activity Log</button>
+        </div>
+
+        <!-- Tab panels -->
+        <div id="tab-detection" class="tab-panel active">
+          <div class="info-card">
+            <div class="info-card-title">Detection Summary</div>
+            <div class="info-card-subtitle">What was found and why this issue was triggered</div>
+            <p class="info-card-body" id="detection-body"></p>
+          </div>
+        </div>
+
+        <div id="tab-affected" class="tab-panel">
+          <div class="table-card" style="margin-top:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0;">
+              <span class="info-card-title" style="margin:0;">Affected Items</span>
+              <button class="btn-outline btn-sm">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export
+              </button>
+            </div>
+            <div class="table-scroll" style="margin-top:10px;" id="affected-table-wrap"></div>
+          </div>
+        </div>
+
+        <div id="tab-impact" class="tab-panel">
+          <div class="info-card"><div class="info-card-title">Business Impact</div><p class="info-card-body" id="impact-biz-body"></p></div>
+          <div class="info-card"><div class="info-card-title">Possible Causes</div><p class="info-card-body" id="impact-causes-body"></p></div>
+        </div>
+
+        <div id="tab-resolution" class="tab-panel">
+          <div class="info-card"><div class="info-card-title">What needs to change</div><p class="info-card-body" id="res-change-body"></p></div>
+          <div class="info-card"><div class="info-card-title">What to consider before acting</div><p class="info-card-body" id="res-consider-body"></p></div>
+          <div class="info-card"><div class="info-card-title">How to know the fix worked</div><p class="info-card-body" id="res-verify-body"></p></div>
+        </div>
+
+        <div id="tab-activity" class="tab-panel">
+          <div class="table-card" style="margin-top:0;overflow:hidden;">
+            <table style="width:100%;border-collapse:collapse;">
+              <thead><tr>
+                <th class="th-small">TIMESTAMP</th>
+                <th class="th-small">ACTION</th>
+                <th class="th-small">NOTES</th>
+                <th class="th-small">MODIFIED BY</th>
+              </tr></thead>
+              <tbody id="activity-tbody">
+                <tr>
+                  <td class="td-cell">Dec 4, 2025 at 8:32 AM</td>
+                  <td class="td-cell"><span class="badge badge-warning">Rule triggered</span></td>
+                  <td class="td-cell td-muted">—</td>
+                  <td class="td-cell">Machine</td>
+                </tr>
+                <tr>
+                  <td class="td-cell">Dec 4, 2025 at 9:15 AM</td>
+                  <td class="td-cell"><span class="badge badge-info">Status updated</span></td>
+                  <td class="td-cell td-muted">—</td>
+                  <td class="td-cell">Shilo Jones</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /ic-detail -->
+
+      <!-- INTEGRATIONS PAGE -->
+      <div id="integrations-page" style="display:none;">
+        <div class="page-title-row">
+          <div>
+            <h1 class="page-h1">Integrations</h1>
+            <p class="page-subtitle">Manage your connected platforms and data sources</p>
+          </div>
+        </div>
+        <nav class="breadcrumb">
+          <span class="bc-item bc-muted">Settings</span>
+          <span class="bc-item bc-muted">›</span>
+          <span class="bc-item bc-current">Integrations</span>
+        </nav>
+
+        <!-- Google -->
+        <div class="connection-card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div class="card-icon">
+              <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjMiIGhlaWdodD0iMjMiIHZpZXdCb3g9IjAgMCAyMyAyMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjc1ODUgMTEuMjcxOEMyMC43NTg1IDEwLjU1NDEgMjAuNjk0MSA5Ljg2Mzk3IDIwLjU3NDUgOS4yMDE0NkgxMS4wNDE3VjEzLjEyMTNIMTYuNDg5QzE2LjI0OTggMTQuMzgxOSAxNS41MzIxIDE1LjQ0OTIgMTQuNDU1NSAxNi4xNjdWMTguNzE1OEgxNy43NDA0QzE5LjY1NDMgMTYuOTQ5MSAyMC43NTg1IDE0LjM1NDMgMjAuNzU4NSAxMS4yNzE4WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNMTEuMDQxOCAyMS4xNjM0QzEzLjc3NDYgMjEuMTYzNCAxNi4wNjU4IDIwLjI2MTYgMTcuNzQwNSAxOC43MTU4TDE0LjQ1NTUgMTYuMTY3QzEzLjU1MzggMTYuNzc0MyAxMi40MDM2IDE3LjE0MjMgMTEuMDQxOCAxNy4xNDIzQzguNDEwMTkgMTcuMTQyMyA2LjE3NDI0IDE1LjM2NjQgNS4zNzM3MSAxMi45NzQxSDIuMDA1OThWMTUuNTg3M0MzLjY3MTQ0IDE4Ljg5MDYgNy4wODUxOCAyMS4xNjM0IDExLjA0MTggMjEuMTYzNFoiIGZpbGw9IiMzNEE4NTMiLz4KPHBhdGggZD0iTTUuMzczNjcgMTIuOTY0OEM1LjE3MTI0IDEyLjM1NzUgNS4wNTE2MiAxMS43MTM0IDUuMDUxNjIgMTEuMDQxN0M1LjA1MTYyIDEwLjM3IDUuMTcxMjQgOS43MjU5MiA1LjM3MzY3IDkuMTE4NjNWNi41MDU0MkgyLjAwNTk0QzEuMzE1ODMgNy44NjcyMyAwLjkyMDE2NiA5LjQwMzg3IDAuOTIwMTY2IDExLjA0MTdDMC45MjAxNjYgMTIuNjc5NiAxLjMxNTgzIDE0LjIxNjIgMi4wMDU5NCAxNS41NzhMNC42MjgzNSAxMy41MzUzTDUuMzczNjcgMTIuOTY0OFoiIGZpbGw9IiNGQkJDMDUiLz4KPHBhdGggZD0iTTExLjA0MTggNC45NTAzOUMxMi41MzI0IDQuOTUwMzkgMTMuODU3NSA1LjQ2NTY3IDE0LjkxNTYgNi40NTk0M0wxNy44MTQxIDMuNTYwOTdDMTYuMDU2NiAxLjkyMzExIDEzLjc3NDYgMC45MjAxNTEgMTEuMDQxOCAwLjkyMDE1MUM3LjA4NTE4IDAuOTIwMTUxIDMuNjcxNDQgMy4xOTI5MSAyLjAwNTk4IDYuNTA1NDNMNS4zNzM3MSA5LjExODY1QzYuMTc0MjQgNi43MjYyNyA4LjQxMDE5IDQuOTUwMzkgMTEuMDQxOCA0Ljk1MDM5WiIgZmlsbD0iI0VBNDMzNSIvPgo8L3N2Zz4K" width="22" height="22" alt="Google" />
+            </div>
+            <div class="card-title-group">
+              <div class="card-title">Google</div>
+              <div class="card-desc">Google Ads · Google Analytics 4 · Search Console</div>
+            </div>
+            <span class="connected-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Connected
+            </span>
+          </div>
+          <p style="font-size:13px;color:var(--color-text-caption);margin-top:8px;">3 Google Ads accounts · 1 GA4 property · 1 Search Console property</p>
+          <div style="text-align:right;margin-top:8px;">
+            <span style="font-size:13px;color:var(--color-text-info);cursor:pointer;">Reconnect</span>
+          </div>
+        </div>
+
+        <!-- Google Analytics 4 -->
+        <div class="connection-card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div class="card-icon">
+              <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjMiIGhlaWdodD0iMjMiIHZpZXdCb3g9IjAgMCAyMyAyMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjc1ODUgMTEuMjcxOEMyMC43NTg1IDEwLjU1NDEgMjAuNjk0MSA5Ljg2Mzk3IDIwLjU3NDUgOS4yMDE0NkgxMS4wNDE3VjEzLjEyMTNIMTYuNDg5QzE2LjI0OTggMTQuMzgxOSAxNS41MzIxIDE1LjQ0OTIgMTQuNDU1NSAxNi4xNjdWMTguNzE1OEgxNy43NDA0QzE5LjY1NDMgMTYuOTQ5MSAyMC43NTg1IDE0LjM1NDMgMjAuNzU4NSAxMS4yNzE4WiIgZmlsbD0iIzQyODVGNCIvPgo8cGF0aCBkPSJNMTEuMDQxOCAyMS4xNjM0QzEzLjc3NDYgMjEuMTYzNCAxNi4wNjU4IDIwLjI2MTYgMTcuNzQwNSAxOC43MTU4TDE0LjQ1NTUgMTYuMTY3QzEzLjU1MzggMTYuNzc0MyAxMi40MDM2IDE3LjE0MjMgMTEuMDQxOCAxNy4xNDIzQzguNDEwMTkgMTcuMTQyMyA2LjE3NDI0IDE1LjM2NjQgNS4zNzM3MSAxMi45NzQxSDIuMDA1OThWMTUuNTg3M0MzLjY3MTQ0IDE4Ljg5MDYgNy4wODUxOCAyMS4xNjM0IDExLjA0MTggMjEuMTYzNFoiIGZpbGw9IiMzNEE4NTMiLz4KPHBhdGggZD0iTTUuMzczNjcgMTIuOTY0OEM1LjE3MTI0IDEyLjM1NzUgNS4wNTE2MiAxMS43MTM0IDUuMDUxNjIgMTEuMDQxN0M1LjA1MTYyIDEwLjM3IDUuMTcxMjQgOS43MjU5MiA1LjM3MzY3IDkuMTE4NjNWNi41MDU0MkgyLjAwNTk0QzEuMzE1ODMgNy44NjcyMyAwLjkyMDE2NiA5LjQwMzg3IDAuOTIwMTY2IDExLjA0MTdDMC45MjAxNjYgMTIuNjc5NiAxLjMxNTgzIDE0LjIxNjIgMi4wMDU5NCAxNS41NzhMNC42MjgzNSAxMy41MzUzTDUuMzczNjcgMTIuOTY0OFoiIGZpbGw9IiNGQkJDMDUiLz4KPHBhdGggZD0iTTExLjA0MTggNC45NTAzOUMxMi41MzI0IDQuOTUwMzkgMTMuODU3NSA1LjQ2NTY3IDE0LjkxNTYgNi40NTk0M0wxNy44MTQxIDMuNTYwOTdDMTYuMDU2NiAxLjkyMzExIDEzLjc3NDYgMC45MjAxNTEgMTEuMDQxOCAwLjkyMDE1MUM3LjA4NTE4IDAuOTIwMTUxIDMuNjcxNDQgMy4xOTI5MSAyLjAwNTk4IDYuNTA1NDNMNS4zNzM3MSA5LjExODY1QzYuMTc0MjQgNi43MjYyNyA4LjQxMDE5IDQuOTUwMzkgMTEuMDQxOCA0Ljk1MDM5WiIgZmlsbD0iI0VBNDMzNSIvPgo8L3N2Zz4K" width="22" height="22" alt="GA4" />
+            </div>
+            <div class="card-title-group">
+              <div class="card-title">Google Analytics 4</div>
+              <div class="card-desc">GA4 property connected to your website</div>
+            </div>
+            <span class="connected-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Connected
+            </span>
+          </div>
+          <p style="font-size:13px;color:var(--color-text-caption);margin-top:8px;">1 GA4 property · mystore.com (G-XXXXXXXXXX)</p>
+          <div style="text-align:right;margin-top:8px;">
+            <span style="font-size:13px;color:var(--color-text-info);cursor:pointer;">Reconnect</span>
+          </div>
+        </div>
+
+        <!-- Microsoft Advertising -->
+        <div class="connection-card" style="margin-bottom:16px;">
+          <div class="card-header">
+            <div class="card-icon">
+              <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzMxNDRfMjM0NSkiPgo8cGF0aCBkPSJNMjQgMTMuMDkwOUgxMy4wOTA5VjI0SDI0VjEzLjA5MDlaIiBmaWxsPSIjRkVCQTA4Ii8+CjxwYXRoIGQ9Ik0xMC45MDkxIDEzLjA5MDlIMFYyNEgxMC45MDkxVjEzLjA5MDlaIiBmaWxsPSIjMDVBNkYwIi8+CjxwYXRoIGQ9Ik0yNCAwSDEzLjA5MDlWMTAuOTA5MUgyNFYwWiIgZmlsbD0iIzgwQkMwNiIvPgo8cGF0aCBkPSJNMTAuOTA5MSAwSDBWMTAuOTA5MUgxMC45MDkxVjBaIiBmaWxsPSIjRjI1MzI1Ii8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMzE0NF8yMzQ1Ij4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=" width="22" height="22" alt="Microsoft" />
+            </div>
+            <div class="card-title-group">
+              <div class="card-title">Microsoft Advertising</div>
+              <div class="card-desc">Microsoft Advertising (Bing Ads)</div>
+            </div>
+            <span class="connected-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Connected
+            </span>
+          </div>
+          <p style="font-size:13px;color:var(--color-text-caption);margin-top:8px;">1 Microsoft Ads account</p>
+          <div style="text-align:right;margin-top:8px;">
+            <span style="font-size:13px;color:var(--color-text-info);cursor:pointer;">Reconnect</span>
+          </div>
+        </div>
+
+        <!-- Shopify -->
+        <div class="connection-card" style="margin-bottom:16px;border-left:3px solid #f59e0b;">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 5.5C15.5 3.567 13.933 2 12 2C10.067 2 8.5 3.567 8.5 5.5" stroke="#96BF48" stroke-width="1.5" stroke-linecap="round"/><path d="M3.5 7L4.5 20H19.5L20.5 7L17 6L15.5 5.5C15.5 3.567 13.933 2 12 2C10.067 2 8.5 3.567 8.5 5.5L7 6L3.5 7Z" stroke="#96BF48" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 11V17M9 14H15" stroke="#96BF48" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="card-title-group">
+              <div class="card-title">Shopify</div>
+              <div class="card-desc">Store orders, revenue, and product catalog data</div>
+            </div>
+            <span class="badge badge-warning">Not connected</span>
+          </div>
+          <div class="info-box" style="margin-top:12px;">Connect your Shopify store to enable accurate revenue attribution, feed analysis, and order-level reporting.</div>
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
+            <div>
+              <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Store URL</label>
+              <input type="text" placeholder="yourstore.myshopify.com" style="width:100%;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="font-size:13px;font-weight:500;color:var(--color-text-primary);display:block;margin-bottom:6px;">Access Token</label>
+              <input type="password" placeholder="shpat_xxxxxxxxxxxx" style="width:100%;box-sizing:border-box;" />
+            </div>
+            <button class="btn-primary" style="width:100%;">Connect Shopify Store</button>
+            <p style="font-size:12px;color:var(--color-text-caption);margin:0;">Need help? <span style="cursor:pointer;">View Shopify connection guide →</span></p>
+          </div>
+        </div>
+
+      </div>
+

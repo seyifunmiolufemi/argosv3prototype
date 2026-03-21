@@ -1,0 +1,204 @@
+<!-- ═══════════════════════════════════════════
+     ANNOTATIONS PAGE
+═══════════════════════════════════════════ -->
+<div id="annotations-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- LIST VIEW -->
+  <div id="ann-list-view">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1">Annotations</h1>
+        <span class="count-badge" id="ann-count-badge">10</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="annShowAddView()" style="display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Add Annotation
+        </button>
+      </div>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Track campaign events, site changes, and other notes tied to specific dates.</p>
+    <nav class="breadcrumb" style="margin-bottom:20px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Annotations</span>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div style="position:relative;flex:1;max-width:320px;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--color-text-caption)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="var(--color-text-caption)" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="ann-search" class="search-box" style="padding-left:32px;width:100%;box-sizing:border-box;" placeholder="Search annotations…" oninput="annSearch()">
+      </div>
+    </div>
+    <div class="table-card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Title ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Client ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Website ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Date ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Modified ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="ann-tbody"></tbody>
+      </table>
+    </div>
+  </div><!-- /ann-list-view -->
+
+  <!-- ADD ANNOTATION VIEW -->
+  <div id="ann-add-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <h1 class="page-h1">Add Annotation</h1>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Add a new annotation to track a campaign event or site change.</p>
+    <nav class="breadcrumb" style="margin-bottom:24px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="annShowListView()">Annotations</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Add Annotation</span>
+    </nav>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <!-- Client & Website -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Client <span style="color:#d72225;">*</span></label>
+            <select class="modal-select" id="ann-form-client" onchange="annOnClientChange()" style="width:100%;">
+              <option value="">Select Client</option>
+              <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+              <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+              <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+              <option>Harbor Light</option><option>Sunset Brands</option><option>Blue Ridge Co.</option>
+              <option>Crestwood Market</option><option>Elm &amp; Oak</option><option>Frost &amp; Co.</option>
+              <option>Golden Gate Goods</option><option>Hillside Home</option><option>Iron Ridge</option>
+              <option>Juniper Lane</option><option>Keystone Shop</option><option>Lakeside Living</option>
+              <option>Maple Grove</option><option>Northpoint</option><option>Orchard Street</option>
+              <option>Pinecrest Supply</option><option>Quarry Stone</option><option>Ridgeline Retail</option>
+              <option>Summit Supply</option><option>Thornwood Co.</option><option>Upland Goods</option>
+              <option>Valley View</option><option>Westbrook</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Website <span style="color:#d72225;">*</span></label>
+            <select class="modal-select" id="ann-form-website" disabled style="width:100%;opacity:0.6;">
+              <option value="">Select Website</option>
+            </select>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <!-- Date -->
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Date <span style="color:#d72225;">*</span></label>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <input type="date" class="modal-input" id="ann-form-date" style="width:180px;">
+            <span id="ann-add-end-link" style="font-size:13px;color:var(--color-blue);cursor:pointer;" onclick="annToggleEndDate(true)">+ Add end date (optional)</span>
+          </div>
+          <div id="ann-end-date-row" style="display:none;align-items:center;gap:8px;margin-top:8px;">
+            <span style="font-size:13px;color:var(--color-text-caption);">to</span>
+            <input type="date" class="modal-input" id="ann-form-end-date" style="width:180px;">
+            <span style="font-size:13px;color:#d72225;cursor:pointer;" onclick="annToggleEndDate(false)">× Remove</span>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <!-- Title -->
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Title <span style="color:#d72225;">*</span></label>
+          <input type="text" class="modal-input" id="ann-form-title" placeholder="e.g. Black Friday campaign launched" style="width:100%;box-sizing:border-box;">
+        </div>
+        <!-- Notes -->
+        <div style="margin-bottom:24px;">
+          <label class="field-label">Additional Notes</label>
+          <textarea class="modal-textarea" id="ann-form-notes" placeholder="Optional notes about this annotation…" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;"></textarea>
+        </div>
+        <!-- Buttons -->
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-primary-sm" onclick="annSubmitAdd()">Add Annotation</button>
+          <button class="btn-outline" onclick="annShowListView()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /ann-add-view -->
+
+  <!-- DETAIL / EDIT VIEW -->
+  <div id="ann-detail-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;align-items:flex-start;">
+      <div>
+        <h1 class="page-h1" id="ann-detail-heading">Annotation</h1>
+      </div>
+      <div id="ann-detail-edit-btns" style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="annEnableEdit()">Edit</button>
+        <button class="btn-outline" style="border-color:#d72225;color:#d72225;" onclick="annConfirmDelete(_annActiveId)">Delete</button>
+      </div>
+      <div id="ann-detail-save-btns" style="display:none;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="annSaveEdit()">Save Changes</button>
+        <button class="btn-outline" onclick="annCancelEdit()">Cancel</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" style="margin-bottom:8px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="annShowListView()">Annotations</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="ann-detail-bc-title" style="color:var(--color-text-primary);">Detail</span>
+    </nav>
+    <p id="ann-detail-modified" style="font-size:12px;color:var(--color-text-caption);margin-bottom:24px;"></p>
+    <div style="max-width:649px;">
+      <div class="table-card" style="padding:24px 28px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label class="field-label">Client</label>
+            <select class="modal-select" id="ann-detail-client-input" style="width:100%;" disabled>
+              <option value="">Select Client</option>
+              <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+              <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+              <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+              <option>Harbor Light</option><option>Sunset Brands</option><option>Blue Ridge Co.</option>
+              <option>Crestwood Market</option><option>Elm &amp; Oak</option><option>Frost &amp; Co.</option>
+              <option>Golden Gate Goods</option><option>Hillside Home</option><option>Iron Ridge</option>
+              <option>Juniper Lane</option><option>Keystone Shop</option><option>Lakeside Living</option>
+              <option>Maple Grove</option><option>Northpoint</option><option>Orchard Street</option>
+              <option>Pinecrest Supply</option><option>Quarry Stone</option><option>Ridgeline Retail</option>
+              <option>Summit Supply</option><option>Thornwood Co.</option><option>Upland Goods</option>
+              <option>Valley View</option><option>Westbrook</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Website</label>
+            <select class="modal-select" id="ann-detail-website-input" style="width:100%;" disabled>
+              <option value="">Select Website</option>
+              <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+              <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+              <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+              <option>Harbor Light</option><option>Sunset Brands</option><option>Blue Ridge Co.</option>
+              <option>Crestwood Market</option><option>Elm &amp; Oak</option><option>Frost &amp; Co.</option>
+              <option>Golden Gate Goods</option><option>Hillside Home</option><option>Iron Ridge</option>
+              <option>Juniper Lane</option><option>Keystone Shop</option><option>Lakeside Living</option>
+              <option>Maple Grove</option><option>Northpoint</option><option>Orchard Street</option>
+              <option>Pinecrest Supply</option><option>Quarry Stone</option><option>Ridgeline Retail</option>
+              <option>Summit Supply</option><option>Thornwood Co.</option><option>Upland Goods</option>
+              <option>Valley View</option><option>Westbrook</option>
+            </select>
+          </div>
+        </div>
+        <hr class="form-hr">
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Date</label>
+          <input type="date" class="modal-input" id="ann-detail-date-input" style="width:180px;" disabled>
+        </div>
+        <hr class="form-hr">
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Title</label>
+          <input type="text" class="modal-input" id="ann-detail-title-input" style="width:100%;box-sizing:border-box;" disabled>
+        </div>
+        <div>
+          <label class="field-label">Additional Notes</label>
+          <textarea class="modal-textarea" id="ann-detail-notes-input" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;" disabled></textarea>
+        </div>
+      </div>
+    </div>
+  </div><!-- /ann-detail-view -->
+
+</div><!-- /annotations-page -->
+

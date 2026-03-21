@@ -1,0 +1,147 @@
+<div id="highlights-page" style="display:none; padding:32px 32px 64px;">
+  <!-- Header row -->
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px;">
+    <div>
+      <h1 style="font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px;">Product Segment Performance</h1>
+      <p class="page-subtitle" style="margin:0 0 4px;">Monitor key metrics to optimize performance</p>
+      <div style="font-size:12px; color:var(--color-text-caption);">
+        <span style="cursor:pointer; color:var(--color-blue);">Reports</span>
+        <span style="margin:0 4px; color:var(--color-text-caption);">›</span>
+        <span>Highlights Table</span>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,0.04); overflow:hidden;">
+      <button style="padding:7px 14px; border:none; background:transparent; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:flex; align-items:center; gap:5px;">Client <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div style="width:1px; height:20px; background:var(--color-border);"></div>
+      <button style="padding:7px 14px; border:none; background:transparent; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:flex; align-items:center; gap:5px;">Website <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Context bar -->
+  <div style="display:flex; align-items:center; gap:8px; background:#f3f4f6; border-radius:8px; padding:6px 12px; margin-bottom:14px;">
+    <button class="hl-context-btn"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Last 30 Days <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="hl-context-sep"></div>
+    <button class="hl-context-btn">Google Ads <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+  </div>
+
+  <!-- Table toolbar -->
+  <div class="hl-toolbar">
+    <input id="hl-search" class="hl-toolbar-search" type="text" placeholder="Search pages by URL or assigned keywords…" oninput="hlRender()">
+    <button class="hl-sort-dd" onclick="hlCycleLevel()">Product Type <span id="hl-level-label" style="font-weight:600;">L2</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div style="position:relative; display:inline-block;">
+      <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-sort-panel');p.style.display=p.style.display==='block'?'none':'block'">Sort by: <span id="hl-sort-label">Impact</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div id="hl-sort-panel" style="display:none; position:absolute; top:calc(100% + 4px); right:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:100; min-width:200px; padding:4px 0;">
+        <div class="pm-dd-item" onclick="hlSetSort('impact','Impact')">Impact (Conv. Val. High-Low)</div>
+        <div class="pm-dd-item" onclick="hlSetSort('cos-desc','COS: High to Low')">COS: High to Low</div>
+        <div class="pm-dd-item" onclick="hlSetSort('cos-asc','COS: Low to High')">COS: Low to High</div>
+        <div class="pm-dd-item" onclick="hlSetSort('convval-desc','Conv. Val.: High to Low')">Conv. Val.: High to Low</div>
+        <div class="pm-dd-item" onclick="hlSetSort('cost-desc','Cost: High to Low')">Cost: High to Low</div>
+      </div>
+    </div>
+    <button class="hl-sort-dd" onclick="hlOpenDrawer()" style="padding:7px 10px;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <button style="padding:7px 14px; border:none; border-radius:8px; background:var(--color-blue); color:white; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:5px;"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card" style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; min-width:880px;">
+      <thead>
+        <tr style="background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border);">
+          <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; text-transform:uppercase;">Product Type (<span id="hl-th-level">L2</span>)</th>
+          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('convVal')">Conv. Val. <span id="hl-sort-convVal" style="color:var(--color-blue);">↓</span></th>
+          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('cost')">Cost <span id="hl-sort-cost">↓</span></th>
+          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('conv')">Conv. <span id="hl-sort-conv">↓</span></th>
+          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('convRate')">Conv. Rate <span id="hl-sort-convRate">↓</span></th>
+          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('aov')">AOV <span id="hl-sort-aov">↓</span></th>
+          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('cos')">COS <span id="hl-sort-cos">↓</span></th>
+          <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; text-transform:uppercase;">90-Day COS <span title="Trend over last 90 days" style="cursor:help;">ⓘ</span></th>
+        </tr>
+      </thead>
+      <tbody id="hl-tbody"></tbody>
+    </table>
+  </div>
+  <div style="margin-top:10px; font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;" id="hl-footer-text">Showing 8 of 8 results</div>
+
+  <!-- Filter Drawer -->
+  <div id="hl-filter-drawer">
+    <div style="height:4px; background:var(--color-blue); flex-shrink:0;"></div>
+    <div style="padding:20px; border-bottom:1px solid var(--color-border); flex-shrink:0; display:flex; align-items:center; justify-content:space-between;">
+      <div>
+        <div style="font-size:16px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif;">Filters</div>
+        <div style="font-size:13px; color:var(--color-text-subtitle); margin-top:2px;">Customise your highlights view</div>
+      </div>
+      <button onclick="hlCloseDrawer()" style="border:none; background:none; cursor:pointer; padding:4px; color:var(--color-text-subtitle);"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div style="flex:1; overflow-y:auto; padding:16px 20px;">
+      <div class="ov-drawer-section" style="margin-bottom:12px;">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>COS Target</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="ov-drawer-section-body open" style="display:block;">
+          <p style="font-size:12px; color:var(--color-text-caption); margin:0 0 10px;">COS ≤ (target−2)% = green · ≤ (target+1)% = amber · else red</p>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <label style="font-size:13px; font-family:'DM Sans',sans-serif;">Target %</label>
+            <input type="number" id="hl-cos-target-input" value="29" min="1" max="100" style="width:70px; padding:6px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif;">
+          </div>
+        </div>
+      </div>
+      <div class="ov-drawer-section">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>Display Options</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="ov-drawer-section-body open" style="display:block;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;"><input type="checkbox" id="hl-chk-sparklines" checked style="accent-color:var(--color-blue);"> Show 90-Day COS sparklines</label>
+        </div>
+      </div>
+    </div>
+    <div style="padding:16px 20px; border-top:1px solid var(--color-border); display:flex; gap:10px; align-items:center; flex-shrink:0;">
+      <button onclick="hlApplyFilters()" class="btn-primary-sm">Apply Filters</button>
+      <button onclick="hlClearFilters()" class="btn-outline">Clear All</button>
+    </div>
+  </div>
+  <div id="hl-drawer-overlay" style="display:none; position:fixed; inset:0; z-index:800;" onclick="hlCloseDrawer()"></div>
+</div><!-- /highlights-page -->
+
+    </div><!-- /page-content -->
+  </main>
+
+</div><!-- /app-shell -->
+</div><!-- /screen-dashboard -->
+
+<!-- BRM ACTION DROPDOWN -->
+<div id="brm-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="brmMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="var(--color-text-primary)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    Edit
+  </div>
+  <div class="pm-dd-item" onclick="brmMenuAction('delete')" style="color:#d72225;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete
+  </div>
+</div>
+
+<!-- BRM DELETE MODAL -->
+<div id="brm-delete-modal" class="pm-modal-overlay" style="display:none;">
+  <div class="pm-modal-box" style="width:420px;">
+    <div class="pm-modal-header">
+      <span style="font-size:16px;font-weight:600;color:var(--color-text-primary);">Delete Rule</span>
+    </div>
+    <div class="pm-modal-body">
+      <p style="font-size:14px;color:var(--color-text-primary);margin:0;">Delete this rule? This cannot be undone.</p>
+    </div>
+    <div class="pm-modal-footer" style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-outline" onclick="document.getElementById('brm-delete-modal').style.display='none'">Cancel</button>
+      <button style="background:#d72225;color:white;border:none;border-radius:8px;padding:8px 18px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;" onclick="brmDeleteConfirmed()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANN ACTION DROPDOWN -->
+<div id="ann-action-dd" style="display:none;">
+  <div class="pm-dd-item" onclick="annMenuAction('edit')">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="var(--color-text-primary)" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    Edit
+  </div>
+  <div class="pm-dd-item" onclick="annMenuAction('delete')" style="color:#d72225;">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M5 3.5V2.5h4v1M5.5 6v4M8.5 6v4M3 3.5l.7 8h6.6l.7-8" stroke="#d72225" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Delete
+  </div>
+</div>
+
+<!-- ALERTS ACTION DROPDOWN -->

@@ -1,0 +1,277 @@
+<!-- ═══════════════════════════════════════════
+     ALERTS PAGE
+═══════════════════════════════════════════ -->
+<div id="alerts-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- LIST VIEW -->
+  <div id="alerts-list-view">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1">Alerts Management</h1>
+        <span class="count-badge" id="alerts-count-badge">9</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary-sm" onclick="alertsShowCreate(null)" style="display:flex;align-items:center;gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Create Alert
+        </button>
+      </div>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Set up automated alerts to monitor key metrics and get notified when thresholds are breached.</p>
+    <nav class="breadcrumb" style="margin-bottom:20px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" style="color:var(--color-text-primary);">Alerts Management</span>
+    </nav>
+    <!-- Filter bar -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="position:relative;flex:1;max-width:280px;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--color-text-caption)" stroke-width="1.3"/><path d="M10 10l2.5 2.5" stroke="var(--color-text-caption)" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <input id="alerts-search" class="search-box" style="padding-left:32px;width:100%;box-sizing:border-box;" placeholder="Search alerts…" oninput="alertsSearch()">
+      </div>
+      <div id="alerts-ds-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('alerts-ds-panel').classList.toggle('open');document.getElementById('alerts-status-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:160px;justify-content:space-between;">
+          <span id="alerts-ds-btn-label">Data Source: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="alerts-ds-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('','')">All</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Google Ads','')">Google Ads</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Meta Ads','')">Meta Ads</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Organic Search (SEO)','')">Organic Search (SEO)</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterDs('Microsoft Ads','')">Microsoft Ads</div>
+        </div>
+      </div>
+      <div id="alerts-status-wrap" style="position:relative;">
+        <button class="btn-filter" onclick="document.getElementById('alerts-status-panel').classList.toggle('open');document.getElementById('alerts-ds-panel').classList.remove('open');" style="display:flex;align-items:center;gap:6px;min-width:130px;justify-content:space-between;">
+          <span id="alerts-status-btn-label">Status: All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="alerts-status-panel" class="alerts-filter-panel">
+          <div class="alerts-filter-item" onclick="alertsSetFilterStatus('')">All</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterStatus('Active')">Active</div>
+          <div class="alerts-filter-item" onclick="alertsSetFilterStatus('Draft')">Draft</div>
+        </div>
+      </div>
+    </div>
+    <div class="table-card">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Alert ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Data Source ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Scope ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Status ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Run ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Triggered ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Last Modified ↕</th>
+            <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="alerts-tbody"></tbody>
+      </table>
+    </div>
+  </div><!-- /alerts-list-view -->
+
+  <!-- CREATE ALERT VIEW -->
+  <div id="alerts-create-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;">
+      <h1 class="page-h1" id="alerts-create-heading">Create Alert</h1>
+    </div>
+    <p class="page-subtitle" style="margin-bottom:20px;">Configure the conditions, schedule, and notification settings for your alert.</p>
+    <nav class="breadcrumb" style="margin-bottom:24px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="alertsBackToList()">Alerts Management</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="alerts-create-bc-label" style="color:var(--color-text-primary);">Create Alert</span>
+    </nav>
+    <div style="max-width:680px;">
+      <div class="table-card" style="padding:24px 28px;">
+
+        <!-- Alert Identity -->
+        <span class="form-section-label" style="margin-top:0;">Alert Identity</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Alert Name <span style="color:#d72225;">*</span></label>
+          <input type="text" class="modal-input" id="alerts-form-name" placeholder="e.g. Budget Alert" style="width:100%;box-sizing:border-box;" oninput="alertsFormDirty();alertsUpdateCreateBtn()">
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Data Source -->
+        <span class="form-section-label">Data Source</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Data Source <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="alerts-form-ds" onchange="alertsFormDirty();alertsOnDataSourceChange()" style="width:100%;">
+            <option value="">Select Data Source</option>
+            <option>Google Ads</option>
+            <option>Meta Ads</option>
+            <option>Organic Search (SEO)</option>
+            <option>Microsoft Ads</option>
+          </select>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Scope -->
+        <span class="form-section-label">Scope</span>
+        <div style="margin-bottom:8px;">
+          <label class="field-label">Apply To <span style="color:#d72225;">*</span></label>
+          <div class="scope-radio-group">
+            <div class="scope-radio-option selected" data-scope="All Clients" onclick="alertsSelectScope(this)">
+              <span class="scope-radio-dot"></span>All Clients
+            </div>
+            <div class="scope-radio-option" data-scope="Specific Clients" onclick="alertsSelectScope(this)">
+              <span class="scope-radio-dot"></span>Specific Clients
+            </div>
+          </div>
+        </div>
+        <div id="alerts-client-select-row" style="display:none;margin-top:10px;margin-bottom:8px;">
+          <label class="field-label">Select Clients</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;" id="alerts-client-chips"></div>
+          <select class="modal-select" id="alerts-client-dd" onchange="alertsAddClient(this.value);this.value='';" style="width:240px;">
+            <option value="">+ Add client…</option>
+            <option>MojoMotoSport</option><option>Blossom Beauty</option><option>Peak Performance</option>
+            <option>Coastal Living</option><option>Urban Threads</option><option>Bright Minds</option>
+            <option>Terra Gardens</option><option>Apex Fitness</option><option>Silver Creek</option>
+            <option>Harbor Light</option>
+          </select>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Metrics -->
+        <span class="form-section-label">Metrics</span>
+        <div style="margin-bottom:8px;">
+          <label class="field-label">Select Metrics <span style="color:#d72225;">*</span></label>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;min-height:28px;" id="alerts-metric-chips"></div>
+          <div id="alerts-metrics-wrap" style="position:relative;display:inline-block;">
+            <button class="btn-filter" id="alerts-metrics-btn" onclick="alertsToggleMetricsPanel()" style="display:flex;align-items:center;gap:6px;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Add Metric
+            </button>
+            <div id="alerts-metrics-panel" class="metrics-dd-panel"></div>
+          </div>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Conditions -->
+        <span class="form-section-label">Conditions</span>
+        <div id="alerts-conditions-container" style="margin-bottom:8px;">
+          <p style="font-size:13px;color:var(--color-text-caption);margin:0;">Select at least one metric to define alert conditions.</p>
+        </div>
+        <div id="alerts-summary-box" class="alert-summary-box muted" style="margin-bottom:0;">
+          Set up the alert conditions in order to view the alert summary.
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Schedule -->
+        <span class="form-section-label">Schedule</span>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Check Frequency <span style="color:#d72225;">*</span></label>
+          <select class="modal-select" id="alerts-form-freq" onchange="alertsFormDirty()" style="width:220px;">
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+          </select>
+        </div>
+
+        <hr class="form-hr">
+
+        <!-- Alert Message Preview -->
+        <span class="form-section-label">Alert Message Preview</span>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0 0 8px;">
+          <span style="color:var(--color-blue);cursor:pointer;text-decoration:underline;" onclick="alertsShowPreview()">Preview alert message</span> — see how the notification will look in Slack.
+        </p>
+
+        <hr class="form-hr">
+
+        <!-- Notifications -->
+        <span class="form-section-label">Notifications</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+          <div>
+            <label class="field-label">Slack Channel</label>
+            <select class="modal-select" id="alerts-form-slack-ch" onchange="alertsFormDirty()" style="width:100%;">
+              <option value="">None</option>
+              <option>#alerts-general</option>
+              <option>#alerts-budget</option>
+              <option>#alerts-performance</option>
+              <option>#team-paid-search</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Slack DM</label>
+            <select class="modal-select" id="alerts-form-slack-dm" onchange="alertsFormDirty()" style="width:100%;">
+              <option value="">None</option>
+              <option>Shilo Jones</option>
+              <option>Seyifunmi Olufemi</option>
+              <option>Marcus Reid</option>
+              <option>Priya Nair</option>
+              <option>Devon Blake</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Button row -->
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--color-border);padding-top:20px;">
+          <button class="btn-primary-sm pm-btn-disabled" id="alerts-create-btn" disabled onclick="alertsSubmitCreate()">Create Alert</button>
+          <button class="btn-outline" onclick="alertsBackToList()">Cancel</button>
+          <button class="btn-outline" style="margin-left:auto;" onclick="alertsShowPreview()">Test Alert</button>
+          <button class="btn-outline" onclick="alertsSaveDraft()">Save to Drafts</button>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /alerts-create-view -->
+
+  <!-- ALERT DETAIL VIEW -->
+  <div id="alerts-detail-view" style="display:none;">
+    <div class="page-title-row" style="margin-bottom:4px;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h1 class="page-h1" id="alerts-detail-heading">Alert</h1>
+        <span id="alerts-detail-status"></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button class="btn-outline" id="alerts-detail-toggle-btn" onclick="alertsDetailToggle()">Disable</button>
+        <button class="btn-outline" onclick="alertsShowCreate(_alertsActiveId)">Edit</button>
+        <button class="btn-outline" onclick="alertsOpenDuplicate(_alertsActiveId)">Duplicate</button>
+        <button class="btn-outline" style="border-color:#d72225;color:#d72225;" onclick="alertsConfirmDelete(_alertsActiveId)">Delete</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" style="margin-bottom:8px;">
+      <span class="bc-item bc-muted">Tools</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item bc-muted" style="cursor:pointer;" onclick="alertsShowListView()">Alerts Management</span>
+      <span class="bc-muted" style="margin:0 4px;">›</span>
+      <span class="bc-item" id="alerts-detail-bc-title" style="color:var(--color-text-primary);">Detail</span>
+    </nav>
+    <p id="alerts-detail-modified" style="font-size:12px;color:var(--color-text-caption);margin-bottom:24px;"></p>
+
+    <div style="max-width:700px;">
+      <!-- Detail sections rendered by JS -->
+      <div id="alerts-detail-sections" class="table-card" style="padding:24px 28px;margin-bottom:20px;"></div>
+
+      <!-- Activity -->
+      <div>
+        <h2 style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin-bottom:16px;">Alert Activity</h2>
+        <div class="table-card">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:var(--color-bg-grey50);border-bottom:1px solid var(--color-border);">
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Client</th>
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Triggered At</th>
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:left;">Condition</th>
+                <th style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--color-text-accent);padding:10px 16px;text-align:center;">View</th>
+              </tr>
+            </thead>
+            <tbody id="alerts-activity-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div><!-- /alerts-detail-view -->
+
+</div><!-- /alerts-page -->
+

@@ -1,0 +1,1427 @@
+      <!-- ══ FEED DATA TOOL PAGE ══ -->
+      <div id="feed-data-page" style="display:none;">
+
+        <!-- Page header -->
+        <div class="page-title-row">
+          <div class="page-title-left">
+            <h1 class="page-h1" style="margin-bottom:4px;">Feed Database</h1>
+            <p class="page-subtitle">Manage and transform your product data feeds</p>
+          </div>
+          <div class="page-title-right">
+            <button class="btn-primary" id="add-feed-btn" style="width:auto;padding:0 18px;display:inline-flex;align-items:center;gap:7px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Database
+            </button>
+          </div>
+        </div>
+
+        <nav class="breadcrumb" style="margin-bottom:20px;">
+          <span class="bc-item bc-muted">Tools</span>
+          <span class="bc-item bc-muted">›</span>
+          <span class="bc-item bc-muted">Feed Data Tool</span>
+          <span class="bc-item bc-muted">›</span>
+          <span class="bc-item bc-current">Feed Database</span>
+        </nav>
+
+        <!-- Search + Sort + Filters -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+          <div class="search-box" style="flex:1;max-width:100%;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#737c8c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="feed-search" placeholder="Search" />
+          </div>
+          <div class="dd-trigger-wrap" id="feed-sort-wrap">
+            <button class="btn-outline filter-btn" id="feed-sort-btn">
+              <span id="feed-sort-label">Sort by: All</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="dropdown-menu" id="feed-sort-menu" data-dd="feed-sort-wrap" style="min-width:160px;">
+              <div class="dd-item dd-active" data-filter="feed-sort" data-val="">All</div>
+              <div class="dd-item" data-filter="feed-sort" data-val="name">Name</div>
+              <div class="dd-item" data-filter="feed-sort" data-val="client">Client</div>
+              <div class="dd-item" data-filter="feed-sort" data-val="activity">Last Activity</div>
+            </div>
+          </div>
+          <button class="btn-outline" style="display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:36px;white-space:nowrap;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filters
+          </button>
+        </div>
+
+        <!-- ══ FEED TABLES ══ -->
+        <div class="table-card" id="feed-table-card" style="padding:0;overflow:hidden;">
+
+          <!-- shared colgroup template (defines widths used by both tables) -->
+          <!-- NAME 23% | CLIENT 17% | IMPORTS 16% | EXPORTS 16% | LAST ACTIVITY 22% | ACTIONS 6% -->
+
+          <!-- ── GROUPED heading ── -->
+          <div class="feed-table-heading">Grouped</div>
+          <div class="feed-table-divider"></div>
+
+          <!-- ── GROUPED table ── -->
+          <div class="table-scroll" id="feed-grouped-section">
+            <table class="feed-table" id="feed-grouped-table">
+              <colgroup>
+                <col style="width:23%;">
+                <col style="width:17%;">
+                <col style="width:16%;">
+                <col style="width:16%;">
+                <col style="width:22%;">
+                <col style="width:6%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Client</th>
+                  <th>Scheduled Imports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Scheduled Exports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Last Activity <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Group: Monkey Sports -->
+                <tr class="feed-group-row" data-group="monkey-sports"><td colspan="6"><div class="feed-group-row-inner"><svg class="feed-group-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="feed-group-label">Monkey Sports</span><span class="feed-group-pill">4 feeds</span></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="hockey site – shopping" data-client="monkey sports"><td><span class="feed-name">Hockey Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 4 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="lacrosse site – shopping" data-client="monkey sports"><td><span class="feed-name">Lacrosse Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 12 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="baseball site – shopping" data-client="monkey sports"><td><span class="feed-name">Baseball Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 1 hr ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row feed-group-child" data-group="monkey-sports" data-name="goalie site – shopping" data-client="monkey sports"><td><span class="feed-name">Goalie Site – Shopping</span></td><td><span class="feed-client-link">Monkey Sports</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 3 hrs ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ── UNGROUPED heading ── -->
+          <div class="feed-table-divider"></div>
+          <div class="feed-table-heading" style="padding-top:18px;">Ungrouped</div>
+          <div class="feed-table-divider"></div>
+
+          <!-- ── UNGROUPED table ── -->
+          <div class="table-scroll" id="feed-ungrouped-section">
+            <table class="feed-table" id="feed-ungrouped-table">
+              <colgroup>
+                <col style="width:23%;">
+                <col style="width:17%;">
+                <col style="width:16%;">
+                <col style="width:16%;">
+                <col style="width:22%;">
+                <col style="width:6%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Client</th>
+                  <th>Scheduled Imports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Scheduled Exports <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Last Activity <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;opacity:0.5;margin-left:2px;"><path d="m6 9 6 6 6-6"/></svg></th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="feed-ungrouped-body">
+                <tr class="feed-row" data-name="outdoor research" data-client="outdoor research"><td><span class="feed-name">Outdoor Research</span></td><td><span class="feed-client-link">Outdoor Research</span></td><td><span class="feed-import-count">3 Imports</span></td><td><span class="feed-import-count">2 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 20 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row" data-name="pcbj feed" data-client="people's choice beef jerky"><td><span class="feed-name">PCBJ Feed</span></td><td><span class="feed-client-link">People's Choice Beef Jerky</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 35 mins ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+                <tr class="feed-row" data-name="li – new_inkcartridges" data-client="link imaging"><td><span class="feed-name">LI – New_InkCartridges</span></td><td><span class="feed-client-link">Link Imaging</span></td><td><span class="feed-import-count">1 Import</span></td><td><span class="feed-import-count">3 Exports</span></td><td><span class="activity-type">Import</span><span class="activity-time"> · 1 hr ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+<tr class="feed-row" data-name="all volleyball – shopping" data-client="all volleyball"><td><span class="feed-name">All Volleyball – Shopping</span></td><td><span class="feed-client-link">All Volleyball</span></td><td><span class="feed-import-count">2 Imports</span></td><td><span class="feed-import-count">4 Exports</span></td><td><span class="activity-type">Export</span><span class="activity-time"> · 2 days ago</span></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Feed</div><div class="dd-item">Pause Imports</div><div class="dd-item">Pause Exports</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Feed</div></div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div><!-- /feed-data-page -->
+
+<!-- ══ ADD DATABASE MODAL ══ -->
+<div id="add-db-modal" style="display:none;position:fixed;inset:0;background:rgba(1,3,7,0.45);z-index:9999;align-items:center;justify-content:center;">
+  <div class="modal-box" style="width:400px;padding:0;max-height:90vh;overflow-y:auto;">
+    <div class="add-db-modal-header">
+      <span class="modal-title" style="font-size:16px;font-weight:600;">Add Database</span>
+      <button onclick="closeAddDbModal()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--color-text-caption);line-height:1;padding:0 2px;">×</button>
+    </div>
+    <div class="add-db-modal-body">
+      <!-- Database name -->
+      <div>
+        <label class="field-label">Database name <span class="field-required">*</span></label>
+        <input type="text" id="add-db-name" class="modal-input" placeholder="Enter database name">
+        <div class="field-error" id="add-db-name-error">Database name is required.</div>
+      </div>
+      <!-- Client -->
+      <div>
+        <label class="field-label">Client</label>
+        <select id="add-db-client" class="modal-select">
+          <option value="">Select client</option>
+        </select>
+      </div>
+      <!-- Group -->
+      <div>
+        <label class="field-label">Group</label>
+        <select id="add-db-group" class="modal-select" onchange="handleAddDbGroupChange(this.value)">
+          <option value="">None (Ungrouped)</option>
+          <option value="monkey-sports">Monkey Sports</option>
+          <option value="__new__">+ Create new group</option>
+        </select>
+        <div id="add-db-new-group-wrap" style="display:none;" class="new-group-input-row">
+          <input type="text" id="add-db-new-group-name" class="modal-input" placeholder="Enter group name" style="margin:0;">
+          <button class="btn-danger-icon" onclick="clearNewGroup()" title="Cancel">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          </button>
+        </div>
+        <div class="field-helper">Grouping databases allows easier organization for clients with multiple sites.</div>
+      </div>
+    </div>
+    <div class="add-db-modal-footer">
+      <button class="btn-primary-sm" onclick="submitAddDb()">Add Database</button>
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="closeAddDbModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATABASE OVERVIEW PAGE ══ -->
+<div id="db-overview-page" style="display:none;">
+
+  <!-- Page header -->
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1" id="db-overview-title">Database Name</h1>
+      <div class="db-pills-row">
+        <span class="db-pill" id="db-overview-client-pill">Client: —</span>
+        <span class="db-pill" id="db-overview-group-pill">Ungrouped</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="breadcrumb" style="margin-bottom:20px;">
+    <span class="bc-item bc-muted">Tools</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-current" id="db-overview-bc-name">Database</span>
+  </nav>
+
+  <!-- Tab bar -->
+  <div class="detail-tabs-bar" id="db-tabs-bar">
+    <button class="detail-tab active" data-dbtab="overview">Overview</button>
+    <button class="detail-tab" data-dbtab="imports">Imports</button>
+    <button class="detail-tab" data-dbtab="dataview">Data View</button>
+    <button class="detail-tab" data-dbtab="transformers">Transformers</button>
+    <button class="detail-tab" data-dbtab="exports">Exports</button>
+    <button class="detail-tab" data-dbtab="logs">Logs</button>
+  </div>
+
+  <!-- Overview tab panel -->
+  <div class="tab-panel active" id="db-tab-overview">
+    <div style="margin-top:20px;">
+      <p class="page-h1" style="font-size:16px;margin-bottom:2px;">Overview</p>
+      <p class="page-subtitle" style="text-align:left;">A summary of your database activity and health</p>
+    </div>
+
+    <!-- Action cards -->
+    <div class="action-cards-row">
+      <div class="action-card" onclick="switchDbTab('imports')">
+        <div class="action-card-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <span class="action-card-title">Run Import</span>
+        <span class="action-card-arrow">→</span>
+      </div>
+      <div class="action-card" onclick="switchDbTab('dataview')">
+        <div class="action-card-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <span class="action-card-title">View Data</span>
+        <span class="action-card-arrow">→</span>
+      </div>
+      <div class="action-card" onclick="switchDbTab('exports')">
+        <div class="action-card-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <span class="action-card-title">Run Export</span>
+        <span class="action-card-arrow">→</span>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-block">
+        <div class="stat-block-value">24,338</div>
+        <div class="stat-block-label">Total SKUs</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block-value">2</div>
+        <div class="stat-block-label">Imports Scheduled</div>
+        <div class="stat-block-sub">Last: 1hr ago</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block-value">2</div>
+        <div class="stat-block-label">Exports Scheduled</div>
+        <div class="stat-block-sub">Last: 1hr ago</div>
+      </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div style="margin-top:24px;">
+      <p style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:12px;">Recent Activities</p>
+      <div class="table-card" style="padding:0;">
+        <div class="table-scroll">
+          <table class="feed-table" style="table-layout:fixed;width:100%;">
+            <colgroup><col style="width:52%;"><col style="width:16%;"><col style="width:32%;"></colgroup>
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Status</th>
+                <th style="text-align:left;">Modified By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Export to Google Merchant Center completed · 14,523 items</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-system" style="font-size:9px;">S</span><div class="modified-by-info"><span class="modified-by-name">System</span><span class="modified-by-time">30 mins ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Export to Microsoft Merchant Center completed · 14,521 items</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-system" style="font-size:9px;">S</span><div class="modified-by-info"><span class="modified-by-name">System</span><span class="modified-by-time">32 mins ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Import from Shopify completed · 14,612 items</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-system" style="font-size:9px;">S</span><div class="modified-by-info"><span class="modified-by-name">System</span><span class="modified-by-time">32 mins ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Transformer 'Clear invalid image links' created</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-person">AS</span><div class="modified-by-info"><span class="modified-by-name">Amy Sams</span><span class="modified-by-time">2 hours ago</span></div></div></td></tr>
+              <tr><td style="font-size:13px;color:var(--color-text-primary);">Transformer 'Fix price format USD' modified</td><td><span class="badge" style="background:var(--color-container-success);color:var(--color-text-success);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Completed</span></td><td><div class="modified-by-cell"><span class="avatar-circle avatar-person">AS</span><div class="modified-by-info"><span class="modified-by-name">Amy Sams</span><span class="modified-by-time">2 hours ago</span></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Imports tab panel -->
+  <div class="tab-panel" id="db-tab-imports">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-top:20px;gap:12px;">
+      <div>
+        <p class="page-h1" style="font-size:16px;margin-bottom:2px;">Imports</p>
+        <p class="page-subtitle">Manage your data sources and import schedules</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+        <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="showFieldMappingPage()">Field Mapping</button>
+        <button class="btn-primary-sm" onclick="showAddImportPage()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Import
+        </button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:16px;margin-bottom:16px;">
+      <div class="search-box" style="flex:1;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#737c8c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search imports...">
+      </div>
+      <button class="btn-outline" style="display:inline-flex;align-items:center;gap:6px;padding:0 14px;height:36px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters
+      </button>
+    </div>
+    <div class="table-card" style="padding:0;">
+      <div class="table-scroll">
+        <table class="feed-table" id="imports-table" style="table-layout:fixed;width:100%;">
+          <colgroup>
+            <col style="width:22%;">
+            <col style="width:16%;">
+            <col style="width:12%;">
+            <col style="width:18%;">
+            <col style="width:10%;">
+            <col style="width:18%;">
+            <col style="width:4%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Source</th>
+              <th>Type</th>
+              <th>Schedule</th>
+              <th>From</th>
+              <th>Last Run</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="imports-tbody">
+            <tr class="feed-row"><td><span class="feed-name">Shopify Products</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#96bf48;"></span>Shopify</span></td><td>Main Feed</td><td>Every four hours</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+            <tr class="feed-row"><td><span class="feed-name">Inventory Levels</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#6b7280;"></span>CSV</span></td><td>Join</td><td>Every 15 mins</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+            <tr class="feed-row"><td><span class="feed-name">Pricing Override</span></td><td><span style="display:inline-flex;align-items:center;"><span class="source-dot" style="background:#6b7280;"></span>SFTP</span></td><td>Join</td><td>Daily at 9:00 AM</td><td>14,812</td><td>Feb 1, 2:00 PM UTC</td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">View Details</div><div class="dd-item">Edit Import</div><div class="dd-item">Pause Import</div><div style="height:1px;background:var(--color-border);margin:4px 2px;"></div><div class="dd-item danger">Delete Import</div></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DATA VIEW TAB ══ -->
+  <div class="tab-panel" id="db-tab-dataview">
+    <!-- top bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 3px;">Data View</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">View and search your product data</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:13px;color:var(--color-text-caption);">Data View <strong style="color:var(--color-text-primary);">51,395</strong> rows</span>
+        <!-- View dropdown -->
+        <div style="position:relative;" id="dv-view-wrap">
+          <button class="btn-filter" id="dv-view-btn" onclick="toggleDvPanel('view')">
+            <span id="dv-view-label">View: Raw Data</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="custom-dd-panel" id="dv-view-panel" style="min-width:160px;">
+            <div class="custom-dd-item active" onclick="setDvView('Raw Data')">Raw Data</div>
+            <div class="custom-dd-item" onclick="setDvView('Transformed Data')">Transformed Data</div>
+          </div>
+        </div>
+        <button class="btn-primary-sm" onclick="dvDownloadAll()">Download Data</button>
+      </div>
+    </div>
+    <!-- search row -->
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <!-- Fields dropdown -->
+      <div style="position:relative;" id="dv-fields-wrap">
+        <button class="btn-filter" id="dv-fields-btn" onclick="toggleDvPanel('fields')">
+          <span id="dv-fields-label">All fields</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="dv-fields-panel" style="min-width:220px;max-height:280px;overflow-y:auto;">
+          <label style="display:flex;align-items:center;gap:8px;padding:5px 4px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dv-fields-all" checked onchange="dvToggleAllFields(this)"> <strong>All fields</strong></label>
+          <hr style="border:none;border-top:1px solid var(--color-border);margin:4px 0;">
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="id" checked> id</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="title" checked> title</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="price" checked> price</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="sale_price" checked> sale_price</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="brand" checked> brand</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="availability" checked> availability</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="condition" checked> condition</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="product_type" checked> product_type</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="google_product_category" checked> google_product_category</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="item_group_id" checked> item_group_id</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="color" checked> color</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="description" checked> description</label>
+          <label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;"><input type="checkbox" class="dv-field-cb" data-field="link" checked> link</label>
+        </div>
+      </div>
+      <!-- Operator dropdown -->
+      <div style="position:relative;" id="dv-op-wrap">
+        <button class="btn-filter" id="dv-op-btn" onclick="toggleDvPanel('op')">
+          <span id="dv-op-label">Contains</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="dv-op-panel" style="min-width:180px;">
+          <div class="custom-dd-item active" onclick="setDvOp('Contains')">Contains</div>
+          <div class="custom-dd-item" onclick="setDvOp('Does not contain')">Does not contain</div>
+          <div class="custom-dd-item" onclick="setDvOp('Equals')">Equals</div>
+          <div class="custom-dd-item" onclick="setDvOp('Starts with')">Starts with</div>
+          <div class="custom-dd-item" onclick="setDvOp('Is empty')">Is empty</div>
+          <div class="custom-dd-item" onclick="setDvOp('Is not empty')">Is not empty</div>
+        </div>
+      </div>
+      <input type="text" id="dv-keyword" class="modal-input" placeholder="Enter keyword..." style="padding:8px 11px;font-size:14px;flex:1;min-width:140px;" onkeydown="if(event.key==='Enter')dvSearch()">
+      <!-- Columns dropdown -->
+      <div style="position:relative;" id="dv-cols-wrap">
+        <button class="btn-filter" id="dv-cols-btn" onclick="toggleDvPanel('cols')">
+          Columns: All
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="dv-cols-panel" style="min-width:240px;max-height:340px;overflow-y:auto;right:0;left:auto;">
+          <input type="text" class="modal-input" placeholder="Search columns" style="padding:6px 9px;font-size:13px;margin-bottom:6px;width:100%;box-sizing:border-box;" oninput="dvFilterColPanel(this.value)">
+          <label style="display:flex;align-items:center;gap:8px;padding:5px 4px;font-size:13px;cursor:pointer;"><input type="checkbox" id="dv-cols-all" checked onchange="dvToggleAllCols(this)"> <strong>Select all</strong></label>
+          <hr style="border:none;border-top:1px solid var(--color-border);margin:4px 0;">
+          <div id="dv-col-rows">
+            <div class="dv-col-row" data-col-name="id"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="2" checked> id</label><button onclick="dvDownloadCol('id')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="title"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="3" checked> title</label><button onclick="dvDownloadCol('title')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="price"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="4" checked> price</label><button onclick="dvDownloadCol('price')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="sale_price"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="5" checked> sale_price</label><button onclick="dvDownloadCol('sale_price')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="brand"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="6" checked> brand</label><button onclick="dvDownloadCol('brand')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="availability"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="7" checked> availability</label><button onclick="dvDownloadCol('availability')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="condition"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="8" checked> condition</label><button onclick="dvDownloadCol('condition')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="product_type"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="9" checked> product_type</label><button onclick="dvDownloadCol('product_type')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="google_product_category"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="10" checked> google_product_category</label><button onclick="dvDownloadCol('google_product_category')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="item_group_id"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="11" checked> item_group_id</label><button onclick="dvDownloadCol('item_group_id')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="color"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="12" checked> color</label><button onclick="dvDownloadCol('color')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="description"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="13" checked> description</label><button onclick="dvDownloadCol('description')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+            <div class="dv-col-row" data-col-name="link"><label style="display:flex;align-items:center;gap:8px;padding:4px;font-size:13px;cursor:pointer;flex:1;"><input type="checkbox" class="dv-col-toggle" data-col-index="14" checked> link</label><button onclick="dvDownloadCol('link')" style="background:none;border:none;cursor:pointer;color:var(--color-blue);font-size:14px;padding:4px;" title="Download column">↓</button></div>
+          </div>
+          <button class="btn-primary-sm" style="width:100%;margin-top:8px;justify-content:center;" onclick="dvDownloadAll()">Download (All)</button>
+        </div>
+      </div>
+      <button class="btn-primary-sm" onclick="dvSearch()">Search</button>
+    </div>
+    <!-- data table -->
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table class="feed-table" id="dv-table" style="font-size:13px;min-width:1200px;">
+          <colgroup>
+            <col style="width:36px;"><!-- # -->
+            <col style="width:48px;"><!-- image -->
+            <col style="width:90px;"><!-- id -->
+            <col style="width:160px;"><!-- title -->
+            <col style="width:72px;"><!-- price -->
+            <col style="width:80px;"><!-- sale_price -->
+            <col style="width:100px;"><!-- brand -->
+            <col style="width:90px;"><!-- availability -->
+            <col style="width:60px;"><!-- condition -->
+            <col style="width:160px;"><!-- product_type -->
+            <col style="width:200px;"><!-- google_product_category -->
+            <col style="width:100px;"><!-- item_group_id -->
+            <col style="width:80px;"><!-- color -->
+            <col style="width:120px;"><!-- description -->
+            <col style="width:90px;"><!-- link -->
+          </colgroup>
+          <thead><tr>
+            <th>#</th><th>Image</th><th>ID</th><th>Title</th>
+            <th>Price</th><th>Sale Price</th><th>Brand</th>
+            <th>Availability</th><th>Condition</th>
+            <th>Product Type</th><th>Google Product Category</th>
+            <th>Item Group ID</th><th>Color</th>
+            <th>Description</th><th>Link</th>
+          </tr></thead>
+          <tbody id="dv-tbody">
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="mvbsut molten mvb set suitcase 49.95 44.95 molten in stock new volleyball bags backpacks sporting goods team sports mvbsut-grp blue/white">
+              <td>1</td><td><div class="img-placeholder">🖼</div></td><td>MVBSUT</td><td>Molten MVB Set Suitcase</td>
+              <td>$49.95</td><td>$44.95</td><td>Molten</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Bags and Backpacks</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>MVBSUT-GRP</td><td>Blue/White</td><td>Molten ball bag</td><td style="color:var(--color-blue);">molten...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="tvb-blu tachikara tvb set suitcase 34.99 tachikara in stock new volleyball bags backpacks bat suitcases sporting goods team sports tvb-blu-grp blue">
+              <td>2</td><td><div class="img-placeholder">🖼</div></td><td>TVB-BLU</td><td>Tachikara TVB Set Suitcase</td>
+              <td>$34.99</td><td></td><td>Tachikara</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Bags &gt; Bat Suitcases</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>TVB-BLU-GRP</td><td>Blue</td><td>Tachikara ball bag</td><td style="color:var(--color-blue);">tachikara...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="blckblstr block blaster training aid 89.00 79.00 tandem sport out of stock new volleyball training blck-grp black">
+              <td>3</td><td><div class="img-placeholder">🖼</div></td><td>BLCKBLSTR</td><td>Block Blaster Training Aid</td>
+              <td>$89.00</td><td>$79.00</td><td>Tandem Sport</td><td>Out of Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>BLCK-GRP</td><td>Black</td><td>Training aid</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="bumblck bumper blocker 24.95 tandem sport in stock new volleyball training bumblck-grp yellow">
+              <td>4</td><td><div class="img-placeholder">🖼</div></td><td>BUMBLCK</td><td>Bumper Blocker</td>
+              <td>$24.95</td><td></td><td>Tandem Sport</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>BUMBLCK-GRP</td><td>Yellow</td><td>Blocker trainer</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="blz4000 coaches spike set stand ball nets 149.99 129.99 blitzter in stock new volleyball training blz4000-grp red">
+              <td>5</td><td><div class="img-placeholder">🖼</div></td><td>BLZ4000</td><td>Coaches Spike Set Stand with Ball Nets</td>
+              <td>$149.99</td><td>$129.99</td><td>Blitzter</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>BLZ4000-GRP</td><td>Red</td><td>Spike stand</td><td style="color:var(--color-blue);">blizter...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="fngrsup finger supports 10-pack 12.99 9.99 mikasa in stock new volleyball accessories finger protection fngrsup-grp white">
+              <td>6</td><td><div class="img-placeholder">🖼</div></td><td>FNGRSUP</td><td>Finger Supports 10-Pack</td>
+              <td>$12.99</td><td>$9.99</td><td>Mikasa</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Accessories &gt; Finger Protection</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>FNGRSUP-GRP</td><td>White</td><td>Finger supports</td><td style="color:var(--color-blue);">mikasa...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="netxt net extender training aid 39.95 tandem sport out of stock new volleyball training netxt-grp black">
+              <td>7</td><td><div class="img-placeholder">🖼</div></td><td>NETXT</td><td>Net Extender Training Aid</td>
+              <td>$39.95</td><td></td><td>Tandem Sport</td><td>Out of Stock</td><td>New</td>
+              <td>Volleyball &gt; Training Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>NETXT-GRP</td><td>Black</td><td>Net extender</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="passchr pass catcher target 19.99 17.99 tandem sport in stock new volleyball coaching passchr-grp orange">
+              <td>8</td><td><div class="img-placeholder">🖼</div></td><td>PASSCHR</td><td>Pass Catcher Target</td>
+              <td>$19.99</td><td>$17.99</td><td>Tandem Sport</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Coaching Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>PASSCHR-GRP</td><td>Orange</td><td>Pass catcher</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr style="cursor:pointer;" onclick="showRowDetailPage(0)" data-search="spikchgr spike challenger pro 64.95 54.95 tandem sport in stock new volleyball spiking spikchgr-grp green">
+              <td>9</td><td><div class="img-placeholder">🖼</div></td><td>SPIKCHGR</td><td>Spike Challenger Pro</td>
+              <td>$64.95</td><td>$54.95</td><td>Tandem Sport</td><td>In Stock</td><td>New</td>
+              <td>Volleyball &gt; Spiking Equipment</td><td>Sporting Goods &gt; Team Sports &gt; Volleyball</td>
+              <td>SPIKCHGR-GRP</td><td>Green</td><td>Spike trainer</td><td style="color:var(--color-blue);">tandem...</td>
+            </tr>
+            <tr id="dv-no-results" style="display:none;"><td colspan="15" style="text-align:center;padding:24px;color:var(--color-text-caption);">No results found</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;font-size:13px;color:var(--color-text-caption);">
+      <span>Showing 1 to 9 of 100 results</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="btn-filter" style="font-size:12px;padding:4px 8px;height:28px;">10 per page <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <div style="display:flex;gap:4px;">
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">‹</button>
+          <button class="btn-primary-sm" style="padding:4px 8px;font-size:12px;height:28px;">1</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">2</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">3</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">4</button>
+          <button class="btn-outline" style="padding:4px 8px;font-size:12px;height:28px;">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TRANSFORMERS TAB ══ -->
+  <div class="tab-panel" id="db-tab-transformers">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Transformers</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">Create rules to transform your product data</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="openFieldExecOrderModal()">Field Execution Order</button>
+        <button class="btn-primary-sm" onclick="openAddTransformerModal()">+ Add Transformer</button>
+      </div>
+    </div>
+    <!-- filter row -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;position:relative;">
+        <span style="font-size:13px;color:var(--color-text-caption);">Filter by field:</span>
+        <button class="btn-filter" id="tf-filter-btn" onclick="toggleTfFilterPanel()">
+          <span id="tf-filter-label">All Fields</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="tf-filter-panel" style="top:calc(100% + 4px);left:100px;min-width:180px;">
+          <div class="custom-dd-item active" onclick="filterTransformerByField('')">All Fields</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('description')">description</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('title')">title</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('brand')">brand</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('salePriceEffectiveDate')">salePriceEffectiveDate</div>
+          <div class="custom-dd-item" onclick="filterTransformerByField('product_type')">product_type</div>
+        </div>
+      </div>
+      <span style="font-size:13px;color:var(--color-text-caption);margin-left:auto;" id="tf-count">7 transformers · 5 active</span>
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table" id="tf-table">
+          <colgroup><col style="width:70px;"><col style="width:auto;"><col style="width:auto;"><col style="width:110px;"><col style="width:90px;"><col style="width:80px;"></colgroup>
+          <thead><tr>
+            <th>Status</th>
+            <th>Condition (IF)</th>
+            <th>Action (THEN)</th>
+            <th>Exports</th>
+            <th>Reorder</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody id="tf-tbody">
+            <tr data-if="description"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[description]</span> <span style="font-size:13px;color:var(--color-text-caption);">contains</span> <span class="chip-value">"Tandem"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[description]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-field">[description]</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="title"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[title]</span> <span style="font-size:13px;color:var(--color-text-caption);">≠</span> <span class="chip-value">"al mflds"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[sale_price]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-fn">{custom_label_0}</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="brand"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[brand]</span> <span style="font-size:13px;color:var(--color-text-caption);">equals</span> <span class="chip-value">"Tandem"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[brand]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="title" class="transformer-row--inactive"><td><label class="toggle-switch"><input type="checkbox" onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-fn">{toLowerCase}</span> <span class="chip-field">[title]</span> <span style="font-size:13px;color:var(--color-text-caption);">are</span> <span class="chip-value">"thinking"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[brand]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"Tandem Sport"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="salePriceEffectiveDate"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[salePriceEffectiveDate]</span> <span style="font-size:13px;color:var(--color-text-caption);">are</span> <span class="chip-value">""</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[salePriceEffectiveDate]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"null_alt_check"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="product_type"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[product_type]</span> <span style="font-size:13px;color:var(--color-text-caption);">contains</span> <span class="chip-value">"Training"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[condition]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"new"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+            <tr data-if="title"><td><label class="toggle-switch"><input type="checkbox" checked onchange="toggleTransformerRow(this)"><span class="toggle-slider"></span></label></td><td><span class="chip-if">IF</span><span class="chip-field">[title]</span> <span style="font-size:13px;color:var(--color-text-caption);">contains</span> <span class="chip-value">"Volleyball"</span></td><td><span class="chip-then">THEN</span><span style="font-size:13px;color:var(--color-text-caption);">set</span> <span class="chip-field">[google_product_category]</span> <span style="font-size:13px;color:var(--color-text-caption);">to</span> <span class="chip-value">"Sporting Goods"</span></td><td style="font-size:12px;color:var(--color-text-caption);">All Exports</td><td><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;margin-right:2px;" onclick="moveTransformerRow(this,-1)">∧</button><button class="btn-outline" style="height:26px;padding:0 8px;font-size:12px;" onclick="moveTransformerRow(this,1)">∨</button></td><td><div class="feed-action-wrap"><button class="feed-action-btn">⋮</button><div class="feed-action-menu"><div class="dd-item">Edit</div><div class="dd-item danger" onclick="this.closest('tr').remove();updateTfCount()">Delete</div></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:12px 0;font-size:13px;color:var(--color-text-caption);">Showing 1 to 7 of 7 results · 10 per page</div>
+  </div>
+
+  <!-- ══ EXPORTS TAB ══ -->
+  <div class="tab-panel" id="db-tab-exports">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Exports</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">Manage your data export destinations</p>
+      </div>
+      <button class="btn-primary-sm" onclick="showAddExportPage()">+ Add Export</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+      <div style="position:relative;flex:1;max-width:280px;">
+        <input type="text" class="modal-input" placeholder="🔍 Search..." style="padding:7px 11px;font-size:13px;">
+      </div>
+      <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showToast('Filters coming soon')">Filters</button>
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table">
+          <colgroup><col style="width:70px;"><col style="width:auto;"><col style="width:180px;"><col style="width:130px;"><col style="width:200px;"><col style="width:70px;"></colgroup>
+          <thead><tr><th>Status</th><th>Name</th><th>Destination</th><th>Schedule</th><th>Last Run</th><th>Actions</th></tr></thead>
+          <tbody id="exports-tbody">
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Google Shopping</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#34a853;margin-right:6px;vertical-align:middle;"></span>Google Merchant Center</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC · <strong>14,423</strong></td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Bing Ads</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0078d4;margin-right:6px;vertical-align:middle;"></span>Microsoft Ads</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC · <strong>14,423</strong></td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Facebook</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1877f2;margin-right:6px;vertical-align:middle;"></span>Meta</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC · <strong>14,423</strong></td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></td><td>Klorija</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6b7280;margin-right:6px;vertical-align:middle;"></span>SFTP</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+            <tr><td><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></td><td>ShopAGain</td><td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff4500;margin-right:6px;vertical-align:middle;"></span>Reddit</td><td>Every 6 hours</td><td>Feb 1, 2:00 PM UTC</td><td><button class="feed-action-btn" style="font-size:16px;">⋯</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:12px 0;font-size:13px;color:var(--color-text-caption);">Showing 1 to 5 of 5 results · 10 per page</div>
+  </div>
+
+  <!-- ══ LOGS TAB ══ -->
+  <div class="tab-panel" id="db-tab-logs">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <h3 style="font-family:'Instrument Sans',sans-serif;font-size:18px;font-weight:600;margin:0 0 4px;">Logs</h3>
+        <p style="font-size:13px;color:var(--color-text-caption);margin:0;">View import and export activity</p>
+      </div>
+      <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showToast('Exporting logs...')">⬇ Export Logs</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <!-- Name filter -->
+      <span style="font-size:13px;color:var(--color-text-caption);">Name:</span>
+      <div style="position:relative;">
+        <button class="btn-filter" style="font-size:13px;padding:6px 10px;" onclick="toggleLogFilter('name')">
+          <span id="lf-name-label">All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="lf-name-panel" style="min-width:200px;">
+          <div class="custom-dd-item active" onclick="setLogFilter('name','','All')">All</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Google Export_Opt','Google Export_Opt')">Google Export_Opt</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Bing','Bing')">Bing</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Facebook','Facebook')">Facebook</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','All Imports','All Imports')">All Imports</div>
+          <div class="custom-dd-item" onclick="setLogFilter('name','Netsuite Product Feed','Netsuite Product Feed')">Netsuite Product Feed</div>
+        </div>
+      </div>
+      <!-- Operation filter -->
+      <span style="font-size:13px;color:var(--color-text-caption);">Operation:</span>
+      <div style="position:relative;">
+        <button class="btn-filter" style="font-size:13px;padding:6px 10px;" onclick="toggleLogFilter('op')">
+          <span id="lf-op-label">All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="lf-op-panel" style="min-width:160px;">
+          <div class="custom-dd-item active" onclick="setLogFilter('op','','All')">All</div>
+          <div class="custom-dd-item" onclick="setLogFilter('op','Export','Export')">Export</div>
+          <div class="custom-dd-item" onclick="setLogFilter('op','Import','Import')">Import</div>
+          <div class="custom-dd-item" onclick="setLogFilter('op','Download','Download')">Download</div>
+        </div>
+      </div>
+      <!-- Status filter -->
+      <span style="font-size:13px;color:var(--color-text-caption);">Status:</span>
+      <div style="position:relative;">
+        <button class="btn-filter" style="font-size:13px;padding:6px 10px;" onclick="toggleLogFilter('status')">
+          <span id="lf-status-label">All</span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="custom-dd-panel" id="lf-status-panel" style="min-width:160px;">
+          <div class="custom-dd-item active" onclick="setLogFilter('status','','All')">All</div>
+          <div class="custom-dd-item" onclick="setLogFilter('status','Successful','Successful')">Successful</div>
+          <div class="custom-dd-item" onclick="setLogFilter('status','Failed','Failed')">Failed</div>
+          <div class="custom-dd-item" onclick="setLogFilter('status','Running','Running')">Running</div>
+        </div>
+      </div>
+      <span style="font-size:13px;color:var(--color-text-caption);">From:</span>
+      <input type="date" id="lf-from" class="modal-input" value="2026-01-02" style="padding:6px 9px;font-size:13px;width:auto;" onchange="filterLogs()">
+      <span style="font-size:13px;color:var(--color-text-caption);">To:</span>
+      <input type="date" id="lf-to" class="modal-input" value="2026-01-02" style="padding:6px 9px;font-size:13px;width:auto;" onchange="filterLogs()">
+    </div>
+    <div class="table-card" style="padding:0;overflow:hidden;">
+      <div class="table-scroll">
+        <table class="feed-table">
+          <colgroup><col style="width:22%;"><col style="width:10%;"><col style="width:10%;"><col style="width:auto;"></colgroup>
+          <thead><tr><th>Name</th><th>Operation</th><th>Status</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr data-log-name="Google Export_Opt" data-log-op="Export" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Google Export_Opt</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="Bing" data-log-op="Export" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Bing</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="Facebook" data-log-op="Export" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Facebook</a></td><td>Export</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Exporting 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr data-log-name="All Imports" data-log-op="Import" data-log-status="Successful" data-log-date="2026-01-02" id="log-imports-row"><td><span id="log-expand-btn" onclick="toggleLogExpand()" style="cursor:pointer;color:var(--color-text-caption);font-size:11px;margin-right:4px;">∨</span><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">All Imports</a></td><td>Import</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Importing 26,331 Rows in 5 min 9 sec · 5:20:32 PM</td></tr>
+            <tr class="log-sub-row" style="display:none;"><td colspan="4"><table style="width:100%;border-collapse:collapse;"><thead><tr><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Name</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Type</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 12px 4px 0;text-align:left;">Load</th><th style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--color-text-caption);padding:4px 0;text-align:left;">Update</th></tr></thead><tbody><tr><td style="padding:4px 12px 4px 0;">Shopify Products</td><td style="padding:4px 12px 4px 0;">Main feed</td><td style="padding:4px 12px 4px 0;">24,013</td><td style="padding:4px 0;">0</td></tr><tr><td style="padding:4px 12px 4px 0;">Inventory Levels</td><td style="padding:4px 12px 4px 0;">Join</td><td style="padding:4px 12px 4px 0;">45,465</td><td style="padding:4px 0;">33,224</td></tr><tr><td style="padding:4px 12px 4px 0;">Pricing Override</td><td style="padding:4px 12px 4px 0;">Join</td><td style="padding:4px 12px 4px 0;">3,344</td><td style="padding:4px 0;">5,675</td></tr></tbody></table></td></tr>
+            <tr data-log-name="Netsuite Product Feed" data-log-op="Download" data-log-status="Successful" data-log-date="2026-01-02"><td><a href="#" style="color:var(--color-blue);text-decoration:none;" onclick="showToast('Opening log detail');return false;">Netsuite Product Feed</a></td><td>Download</td><td style="color:var(--color-text-success);font-weight:500;">Successful</td><td>Finished Downloading Import File · 5:20:32 PM</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="padding:12px 0;font-size:13px;color:var(--color-text-caption);">Showing 1 to 5 of 5 results · 10 per page</div>
+  </div>
+
+</div><!-- /db-overview-page -->
+
+<!-- ══ ADD IMPORT PAGE ══ -->
+<div id="add-import-page" style="display:none;">
+
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Add Import</h1>
+      <p class="page-subtitle">Select an import source for your data</p>
+    </div>
+  </div>
+
+  <nav class="breadcrumb" style="margin-bottom:24px;">
+    <span class="bc-item bc-muted">Tools</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" id="add-import-db-bc" style="cursor:pointer;" onclick="hideAddImportPage();showDbOverviewPage(currentDb);">Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-current">Add Import</span>
+  </nav>
+
+  <!-- Step 1: Source -->
+  <div style="margin-bottom:24px;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Step 1 — Select import source</p>
+    <div class="source-cards-row">
+      <div class="source-card" id="src-shopify" onclick="selectImportSource('Shopify')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#96bf48;">SH</div>
+        <div class="source-card-title">Shopify</div>
+        <div class="source-card-sub">Connect to a Shopify store via API</div>
+      </div>
+      <div class="source-card" id="src-csv" onclick="selectImportSource('CSV')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#6b7280;">CSV</div>
+        <div class="source-card-title">CSV</div>
+        <div class="source-card-sub">Import from a CSV file hosted on the web</div>
+      </div>
+      <div class="source-card" id="src-sftp" onclick="selectImportSource('SFTP')">
+        <div class="source-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="source-card-icon" style="background:#374151;">SF</div>
+        <div class="source-card-title">SFTP</div>
+        <div class="source-card-sub">Import from a file on an SFTP server</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Type -->
+  <div style="margin-bottom:28px;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">Step 2 — Select import type</p>
+    <div class="type-cards-row">
+      <div class="type-card" id="type-mainfeed" onclick="selectImportType('Main Feed')">
+        <div class="type-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="type-card-title">Main Feed</div>
+        <div class="type-card-sub">The primary data source for this database. It loads into your database.</div>
+      </div>
+      <div class="type-card" id="type-joinfeed" onclick="selectImportType('Join Feed')">
+        <div class="type-card-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="type-card-title">Join Feed</div>
+        <div class="type-card-sub">Supplements your main feed. It adds into the existing rows in your database with extra data.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px;">
+    <button class="btn-primary-sm" id="add-import-continue-btn" disabled onclick="continueToConfigureImport()">Continue</button>
+    <button class="btn-text-link grey" onclick="cancelAddImport()">Cancel</button>
+  </div>
+
+</div><!-- /add-import-page -->
+
+<!-- ══ CONFIGURE IMPORT PAGE ══ -->
+<div id="configure-import-page" style="display:none;">
+
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Configure Import</h1>
+    </div>
+  </div>
+
+  <nav class="breadcrumb" style="margin-bottom:16px;">
+    <span class="bc-item bc-muted">Tools</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" id="cfg-import-db-bc" style="cursor:pointer;" onclick="hideConfigureImportPage();showDbOverviewPage(currentDb);">Database</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="hideConfigureImportPage();showAddImportPage();">Add Import</span>
+    <span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-current">Configure Import</span>
+  </nav>
+
+  <!-- Sub-header -->
+  <div class="wizard-subheader">
+    <span>Import Source:</span>
+    <span class="source-badge" id="cfg-source-badge">Shopify</span>
+    <span style="margin-left:8px;">Import Type:</span>
+    <span class="type-badge" id="cfg-type-badge">Main Feed</span>
+  </div>
+
+  <!-- Wizard step tabs -->
+  <div class="detail-tabs-bar" id="wizard-tabs-bar" style="margin-bottom:24px;">
+    <button class="detail-tab active" data-wizardtab="1">General Settings</button>
+    <button class="detail-tab" data-wizardtab="2">Connection Settings</button>
+    <button class="detail-tab" data-wizardtab="3">Data Types</button>
+    <button class="detail-tab" data-wizardtab="4">Schedule</button>
+    <button class="detail-tab" data-wizardtab="5">Preprocessing</button>
+  </div>
+
+  <!-- Step 1: General Settings -->
+  <div class="wizard-step active" id="wizard-step-1">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:18px;">
+        <label class="field-label">Import Name <span class="field-required">*</span></label>
+        <input type="text" id="wizard-import-name" class="modal-input" placeholder="e.g. 'Shopify Products'" style="max-width:100%;">
+        <div class="field-error" id="wizard-name-error">Import name is required.</div>
+      </div>
+      <!-- SFTP-only: Platform dropdown -->
+      <div id="wizard-step1-sftp-platform" style="display:none;margin-bottom:18px;">
+        <label class="field-label">Platform <span class="field-required">*</span></label>
+        <select class="modal-select">
+          <option selected>Shopify</option>
+          <option>WooCommerce</option>
+          <option>Magento</option>
+          <option>BigCommerce</option>
+          <option>Custom</option>
+        </select>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="showAddImportPage();hideConfigureImportPage();">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(2)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Connection Settings -->
+  <div class="wizard-step" id="wizard-step-2">
+    <div style="max-width:520px;">
+
+      <!-- Shopify fields -->
+      <div id="wizard-step2-shopify">
+        <div style="margin-bottom:18px;">
+          <label class="field-label" style="display:flex;align-items:center;gap:6px;">
+            OAuth token / App password
+            <span class="tooltip-icon" title="Find this in your Shopify admin under Apps > Private apps">?</span>
+          </label>
+          <div class="password-input-wrap">
+            <input type="password" id="wizard-oauth-token" class="modal-input" placeholder="Enter your Shopify access token">
+            <button class="password-toggle" onclick="togglePasswordField('wizard-oauth-token',this)" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+        <div style="margin-bottom:6px;">
+          <label class="field-label">Shop name <span class="field-required">*</span></label>
+          <div class="input-suffix-wrap">
+            <input type="text" id="wizard-shop-name" placeholder="your-store-name">
+            <span class="input-suffix-text">.myshopify.com</span>
+          </div>
+          <button class="btn-text-link" style="margin-top:8px;" type="button">Test Connection</button>
+        </div>
+      </div>
+
+      <!-- CSV fields -->
+      <div id="wizard-step2-csv" style="display:none;">
+        <div style="margin-bottom:18px;">
+          <label class="field-label">URL <span class="field-required">*</span></label>
+          <input type="text" class="modal-input" placeholder="https://www.content.docs/yourFeed.csv">
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Import a file from a URL. Supported types: CSV, TXT</div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:4px;">URL Parameters <span style="font-weight:400;color:var(--color-text-caption);">(Optional)</span></div>
+          <div style="font-size:12px;color:var(--color-text-caption);margin-bottom:10px;">Add parameters if the URL requires authentication or additional values</div>
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-caption);padding:0 8px 6px 0;text-align:left;">Parameter Name</th>
+                <th style="font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--color-text-caption);padding:0 8px 6px 0;text-align:left;">Parameter Value</th>
+                <th style="width:32px;"></th>
+              </tr>
+            </thead>
+            <tbody id="csv-params-tbody">
+              <tr>
+                <td style="padding:0 8px 6px 0;"><input type="text" class="modal-input" placeholder="e.g. username" style="padding:6px 9px;font-size:13px;"></td>
+                <td style="padding:0 8px 6px 0;"><input type="text" class="modal-input" placeholder="e.g. mypassword" style="padding:6px 9px;font-size:13px;"></td>
+                <td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;padding:0;">🗑</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="btn-text-link" style="margin-top:4px;" onclick="addCsvParam()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add parameter
+          </button>
+        </div>
+        <div style="margin-bottom:18px;">
+          <label class="field-label">User Agent <span style="font-weight:400;color:var(--color-text-caption);">(Optional)</span></label>
+          <textarea class="modal-input" rows="3" placeholder="Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/12.0" style="resize:vertical;"></textarea>
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Provide a user agent if the host server requires one</div>
+        </div>
+      </div>
+
+      <!-- SFTP fields -->
+      <div id="wizard-step2-sftp" style="display:none;">
+        <div style="margin-bottom:16px;">
+          <label class="field-label">FTP Protocol <span class="field-required">*</span></label>
+          <select class="modal-select">
+            <option selected>SFTP</option>
+            <option>FTP</option>
+            <option>FTPS</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+          <div style="flex:7;">
+            <label class="field-label">Host <span class="field-required">*</span></label>
+            <input type="text" class="modal-input" placeholder="e.g., sftp.example.com">
+          </div>
+          <div style="flex:3;">
+            <label class="field-label">Port <span class="field-required">*</span></label>
+            <input type="text" class="modal-input" placeholder="22">
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-bottom:16px;">
+          <div style="flex:1;">
+            <label class="field-label">Username <span class="field-required">*</span></label>
+            <input type="text" class="modal-input" placeholder="username">
+          </div>
+          <div style="flex:1;">
+            <label class="field-label">Password <span class="field-required">*</span></label>
+            <input type="password" class="modal-input" placeholder="••••••••">
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Private Key <span style="font-weight:400;color:var(--color-text-caption);">(Optional)</span></label>
+          <textarea class="modal-input" rows="3" placeholder="Paste private key here..." style="resize:vertical;"></textarea>
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Use instead of password for key-based authentication.</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="field-label">Directory <span class="field-required">*</span></label>
+          <input type="text" class="modal-input" placeholder="/feeds/">
+          <div style="font-size:12px;color:var(--color-text-caption);margin-top:5px;">Path to the folder containing the file</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(1)">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(3)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Data Types -->
+  <div class="wizard-step" id="wizard-step-3">
+    <div style="max-width:560px;">
+      <div class="info-banner-blue">These operations run on the file before it's imported into the database. Adjustments you can't change at the source level are easier to make here than try to address after import.</div>
+      <div class="checkbox-group">
+        <div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="dt-products" checked disabled>
+            <div>
+              <label class="checkbox-label" for="dt-products">Products</label>
+              <div class="checkbox-sub">Core product information</div>
+            </div>
+          </div>
+          <div class="checkbox-sub-group" id="products-sub-options">
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Include: GMC Transition ID</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Markets</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Presentation group</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Contextual pricing</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Variant names into individual columns</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Extra parent fields</label></div>
+            <div class="checkbox-item"><input type="checkbox"><label class="checkbox-label" style="font-size:13px;font-weight:400;">Tax rate <span class="checkbox-sub">(Optional as cost)</span></label></div>
+          </div>
+        </div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Collections</label><div class="checkbox-sub">Product collections/categories</div></div></div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Inventory Item</label><div class="checkbox-sub">Inventory data (cost, country of origin)</div></div></div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Inventory Levels</label><div class="checkbox-sub">Stock quantities</div></div></div>
+        <div class="checkbox-item"><input type="checkbox"><div><label class="checkbox-label">Metafields</label><div class="checkbox-sub">Shop-level metadata</div></div></div>
+      </div>
+      <div class="info-banner-warn" style="margin-top:16px;">Every additional data type may increase import run time.</div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(2)">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(4)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Schedule -->
+  <div class="wizard-step" id="wizard-step-4">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:18px;">
+        <label class="field-label">Frequency <span class="field-required">*</span></label>
+        <select id="wizard-frequency" class="modal-select" onchange="handleFrequencyChange(this.value)">
+          <option value="">Select the import schedule</option>
+          <option value="weekdays">Weekdays (Mon–Fri)</option>
+          <option value="weekends">Weekends (Sat–Sun)</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+      <div id="custom-schedule-fields" style="display:none;">
+        <div style="margin-bottom:14px;">
+          <label class="field-label">Day</label>
+          <select class="modal-select">
+            <option value="">Select the import days</option>
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="field-label">Time</label>
+          <select class="modal-select">
+            <option value="">Select the import times</option>
+            <option>12:00 AM</option><option>6:00 AM</option><option>9:00 AM</option>
+            <option>12:00 PM</option><option>3:00 PM</option><option>6:00 PM</option><option>9:00 PM</option>
+          </select>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="field-label">Timezone</label>
+          <select class="modal-select">
+            <option selected>New York City, United States (EST, UTC -05:00)</option>
+            <option>Los Angeles, United States (PST, UTC -08:00)</option>
+            <option>Chicago, United States (CST, UTC -06:00)</option>
+            <option>London, United Kingdom (GMT, UTC +00:00)</option>
+            <option>Berlin, Germany (CET, UTC +01:00)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(3)">Back</button>
+      <button class="btn-primary-sm" onclick="goWizardStep(5)">Next</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Preprocessing -->
+  <div class="wizard-step" id="wizard-step-5">
+    <div style="max-width:600px;">
+      <div class="info-banner-warn">These operations run on the file before it's imported into the database. Unlike when the source file is imported, adjustments you can't change at the source level are easier to make here than try to address after import.</div>
+
+      <!-- Product Filters -->
+      <div class="section-block" style="border-top:none;margin-top:0;padding-top:0;">
+        <div class="section-block-title">Product Filters</div>
+        <div class="section-block-sub">Only import products that match these conditions.</div>
+        <div class="filter-table-wrap">
+          <table class="filter-table">
+            <tbody id="filter-rows-tbody">
+              <tr>
+                <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Filter</td>
+                <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Value</td>
+                <td style="width:36px;"></td>
+              </tr>
+              <tr>
+                <td><select class="modal-select" style="padding:8px 11px;font-size:14px;"><option selected>Published Status</option></select></td>
+                <td><select class="modal-select" style="padding:8px 11px;font-size:14px;"><option selected>Published Products</option></select></td>
+                <td><button class="btn-danger-icon" onclick="removeFilterRow(this)" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="btn-text-link" onclick="addFilterRow()" style="margin-top:4px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Filter
+        </button>
+      </div>
+
+      <!-- File Actions — CSV only -->
+      <div id="wizard-step5-file-actions" style="display:none;">
+        <div class="section-block">
+          <div class="section-block-title">File Actions</div>
+          <div class="section-block-sub">Operations to run on the file before import.</div>
+          <select class="modal-select" style="margin-top:8px;max-width:300px;">
+            <option>Remove BOM</option>
+            <option>Strip quotes</option>
+            <option>Normalize line endings</option>
+            <option>Remove empty rows</option>
+          </select>
+          <br>
+          <button class="btn-text-link" style="margin-top:8px;" onclick="showToast('Add header coming soon')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add header
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goWizardStep(4)">Back</button>
+      <button class="btn-primary-sm" style="padding:0 20px;" onclick="submitImport()">Save &amp; Import</button>
+      <button class="btn-text-link grey" onclick="cancelConfigureImport()">Cancel</button>
+    </div>
+  </div>
+
+</div><!-- /configure-import-page -->
+
+<!-- ══ FIELD MAPPING PAGE ══ -->
+<div id="field-mapping-page" style="display:none;">
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Field Mapping</h1>
+      <p class="page-subtitle" style="text-align:left;">Map source fields to the database fields</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="background:#e8f5e2;color:#3a7d0a;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:500;">Shopify</span>
+      <button class="btn-text-link" style="font-size:13px;" onclick="showToast('Parse settings coming soon')">⚙ Parse Settings</button>
+    </div>
+  </div>
+  <nav class="breadcrumb" style="margin-bottom:12px;">
+    <span class="bc-item bc-muted">Tools</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage()">Feed Database</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage();switchDbTab('imports')">Imports</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item">Field Mapping</span>
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+    <span style="font-size:14px;font-weight:600;color:var(--color-text-primary);">45/48 fields mapped</span>
+    <button class="btn-text-link" style="font-size:13px;" onclick="showToast('Unmapped fields coming soon')">View unmapped ∨</button>
+  </div>
+  <div class="table-card" style="padding:0;overflow:hidden;">
+    <div class="table-scroll">
+      <table class="feed-table">
+        <colgroup><col style="width:35%;"><col style="width:28%;"><col style="width:28%;"><col style="width:9%;"></colgroup>
+        <thead><tr>
+          <th>Internal Fields</th>
+          <th>Source Fields <span style="font-size:11px;cursor:help;" title="The field name from the source data">ⓘ</span></th>
+          <th>Value</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="field-mapping-tbody">
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="id" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">product_id</td><td style="font-size:13px;color:var(--color-text-caption);">47728851222814</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="title" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">product_title</td><td style="font-size:13px;color:var(--color-text-caption);">9005505052958</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="cost" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">price</td><td style="font-size:13px;color:var(--color-text-caption);">49.95</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="availability" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">stock_status</td><td style="font-size:13px;color:var(--color-text-caption);">out of stock</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:4px;"><span style="color:#ef4444;font-weight:600;font-size:12px;">*</span><div class="autocomplete-wrapper" style="flex:1;"><input type="text" class="autocomplete-input modal-input" value="link" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></div></td><td style="font-size:13px;">product_link</td><td style="font-size:13px;color:var(--color-text-caption);">https://www.allvolleyball.com/...</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="brand" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">manufacturer</td><td style="font-size:13px;color:var(--color-text-caption);">Wilson Team Sports</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="description" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">body_html</td><td style="font-size:13px;color:var(--color-text-caption);">Volleyball Bags and Backpacks...</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="image_link" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">featured_image</td><td style="font-size:13px;color:var(--color-text-caption);">https://cdn.shopify.com/...</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          <tr><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="google_product_category" style="padding:5px 8px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td style="font-size:13px;">product_category</td><td style="font-size:13px;color:var(--color-text-caption);">Sporting Goods &gt; Team Sports</td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;flex-wrap:wrap;gap:10px;">
+    <button class="btn-text-link" onclick="showToast('Field mapping row added')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Field Mapping
+    </button>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-primary-sm" onclick="showToast('Field mapping saved')">💾 Save field mapping</button>
+      <button class="btn-outline" style="height:36px;padding:0 14px;font-size:13px;" onclick="showDbOverviewPage();switchDbTab('transformers')">Go to Transformers</button>
+    </div>
+  </div>
+</div><!-- /field-mapping-page -->
+
+<!-- ══ ROW DETAIL PAGE ══ -->
+<div id="row-detail-page" style="display:none;">
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1" id="row-detail-title">Molten MVB Set Suitcase</h1>
+    </div>
+  </div>
+  <nav class="breadcrumb" style="margin-bottom:16px;">
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="hideRowDetailPage();switchDbTab('dataview');">← Back to Data View</span>
+  </nav>
+  <div class="detail-tabs-bar" id="row-detail-tabs-bar" style="margin-bottom:20px;">
+    <button class="detail-tab active" onclick="showToast('Raw Data view active')">Raw Data</button>
+    <button class="detail-tab" onclick="showToast('Transformed Data view active')">Transformed Data</button>
+  </div>
+  <div class="table-card" style="padding:0;overflow:hidden;">
+    <div class="table-scroll">
+      <table class="feed-table">
+        <colgroup><col style="width:22%;"><col style="width:39%;"><col style="width:39%;"></colgroup>
+        <thead><tr><th>Field</th><th>Transformed Data</th><th>Raw Data</th></tr></thead>
+        <tbody id="row-detail-tbody">
+          <tr><td>image_link</td><td>https://d2.amazonaws.com/shops/...</td><td>https://d2.amazonaws.com/shops/...</td></tr>
+          <tr><td>id</td><td>MVBSUT</td><td>MVBSUT</td></tr>
+          <tr><td>title</td><td class="field-changed">Molten MVB Set Suitcase</td><td>Molten MVB Ball Suitcase</td></tr>
+          <tr><td>product_type</td><td class="field-changed">Equipment &gt; Bags and Backpacks &gt; molten-mvb-ball-suitc...</td><td>Equipment &gt; Bags and Backpacks &gt; molten-mvb-ball-suitcase &gt; ...</td></tr>
+          <tr><td>google_product_category</td><td class="field-changed">Sporting Goods &gt; Team Sports &gt; Indoor Volleyball &gt; Volleyball...</td><td>Sporting Goods &gt; Team Sports &gt; Indoor Volleyball bag</td></tr>
+          <tr><td>description</td><td>Volleyball Bags and Backpacks. Rectangular nylon ball bag...</td><td>Volleyball Bags and Backpacks. Rectangular nylon ball bag...</td></tr>
+          <tr><td>link</td><td>https://www.allvolleyball.com/products/...</td><td>https://www.allvolleyball.com/products/...</td></tr>
+          <tr><td>additional_image_link_opt</td><td style="color:var(--color-text-caption);">(empty)</td><td style="color:var(--color-text-caption);">(empty)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <button class="btn-outline" style="height:36px;padding:0 16px;font-size:13px;" onclick="hideRowDetailPage();switchDbTab('dataview');">← Back</button>
+  </div>
+</div><!-- /row-detail-page -->
+
+<!-- ══ ADD EXPORT PAGE ══ -->
+<div id="add-export-page" style="display:none;">
+  <div class="page-title-row">
+    <div class="page-title-left">
+      <h1 class="page-h1">Add Export</h1>
+      <p class="page-subtitle" style="text-align:left;">Set up your export settings</p>
+    </div>
+  </div>
+  <nav class="breadcrumb" style="margin-bottom:16px;">
+    <span class="bc-item bc-muted">Tools</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showFeedDataPage()">Feed Data Tool</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage()">Feed Database</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item bc-muted" style="cursor:pointer;" onclick="showDbOverviewPage();switchDbTab('exports')">Exports</span><span class="bc-item bc-muted">›</span>
+    <span class="bc-item">Add Export</span>
+  </nav>
+
+  <!-- Wizard tabs -->
+  <div class="detail-tabs-bar" id="export-wizard-tabs-bar" style="margin-bottom:24px;">
+    <button class="detail-tab active" data-exporttab="1">General</button>
+    <button class="detail-tab" data-exporttab="2">Connection</button>
+    <button class="detail-tab" data-exporttab="3">Schedule</button>
+    <button class="detail-tab" data-exporttab="4">Filters</button>
+    <button class="detail-tab" data-exporttab="5">Field Mapping</button>
+  </div>
+
+  <!-- Step 1: General -->
+  <div class="wizard-step active" id="export-step-1">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Export Name <span class="field-required">*</span></label>
+        <input type="text" id="export-name-input" class="modal-input" placeholder="e.g. Google Shopping Feed">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Destination <span class="field-required">*</span></label>
+        <select class="modal-select" id="export-destination-select">
+          <option value="">Select destination</option>
+          <option>Google Merchant Center</option>
+          <option>Microsoft Ads</option>
+          <option>Meta / Facebook</option>
+          <option>Reddit</option>
+          <option>SFTP</option>
+          <option>FTP</option>
+          <option>Custom URL</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">File Name <span class="field-required">*</span></label>
+        <input type="text" class="modal-input" placeholder="e.g. products-feed">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">File Format <span class="field-required">*</span></label>
+        <select class="modal-select"><option>CSV</option><option>TSV</option><option>XML</option><option>TXT</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Compression <span class="field-required">*</span></label>
+        <select class="modal-select"><option>None</option><option>Gzip</option><option>Zip</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Rule Delimiter <span class="field-required">*</span></label>
+        <select class="modal-select"><option>Tab</option><option>Comma</option><option>Pipe</option><option>Semicolon</option></select>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(2)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Connection -->
+  <div class="wizard-step" id="export-step-2" style="display:none;">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Google Merchant Center ID <span class="field-required">*</span></label>
+        <input type="text" class="modal-input" placeholder="e.g. 123456789">
+        <button class="btn-text-link" style="margin-top:8px;" onclick="showToast('Testing connection...')">Test Connection</button>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(1)">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(3)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Schedule -->
+  <div class="wizard-step" id="export-step-3" style="display:none;">
+    <div style="max-width:520px;">
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Frequency <span class="field-required">*</span></label>
+        <select class="modal-select"><option>Hourly</option><option selected>Every 6 hours</option><option>Every 12 hours</option><option>Daily</option><option>Weekly</option><option>Custom</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Time <span class="field-required">*</span></label>
+        <select class="modal-select">
+          <option>12:00 AM</option><option>1:00 AM</option><option>2:00 AM</option><option>3:00 AM</option><option>4:00 AM</option><option>5:00 AM</option>
+          <option selected>6:00 AM</option><option>7:00 AM</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+          <option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option><option>5:00 PM</option>
+          <option>6:00 PM</option><option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option><option>10:00 PM</option><option>11:00 PM</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label class="field-label">Time Zone <span class="field-required">*</span></label>
+        <select class="modal-select">
+          <option selected>New York City, United States (EST, UTC -05:00)</option>
+          <option>Los Angeles, United States (PST, UTC -08:00)</option>
+          <option>Chicago, United States (CST, UTC -06:00)</option>
+          <option>London, United Kingdom (GMT, UTC +00:00)</option>
+        </select>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(2)">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(4)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Filters -->
+  <div class="wizard-step" id="export-step-4" style="display:none;">
+    <div style="max-width:600px;">
+      <div class="section-block" style="border-top:none;margin-top:0;padding-top:0;">
+        <div class="section-block-title">Product Filters</div>
+        <div class="section-block-sub">Only export products that match ALL these conditions.</div>
+        <table class="filter-table" style="margin-top:8px;">
+          <tbody id="export-filter-tbody">
+            <tr>
+              <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Field</td>
+              <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Operator</td>
+              <td style="color:var(--color-text-caption);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;">Value</td>
+              <td style="width:36px;"></td>
+            </tr>
+            <tr>
+              <td><select class="modal-select" style="padding:7px 10px;font-size:13px;"><option>title</option><option>id</option><option>brand</option><option>availability</option><option>price</option></select></td>
+              <td><select class="modal-select" style="padding:7px 10px;font-size:13px;"><option>contains</option><option selected>is not empty</option><option>equals</option><option>starts with</option></select></td>
+              <td><input type="text" class="modal-input" placeholder="Value" style="padding:7px 10px;font-size:13px;"></td>
+              <td><button onclick="this.closest('tr').remove()" class="btn-danger-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn-text-link" style="margin-top:6px;" onclick="showToast('Filter added')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Filter
+        </button>
+      </div>
+      <div class="section-block">
+        <div class="section-block-title">Safety Thresholds</div>
+        <div style="margin-bottom:12px;">
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
+            <input type="checkbox" checked style="margin-top:2px;">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Minimum product count</div>
+              <div style="font-size:12px;color:var(--color-text-caption);margin-bottom:8px;">Only export if the total number of products meets a minimum</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:13px;color:var(--color-text-caption);">Product count must be:</span>
+                <select class="modal-select" style="padding:5px 8px;font-size:13px;width:auto;"><option>greater than</option><option>equal to</option></select>
+                <input type="number" class="modal-input" value="20000" style="padding:5px 8px;font-size:13px;width:90px;">
+              </div>
+            </div>
+          </label>
+        </div>
+        <div>
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
+            <input type="checkbox" checked style="margin-top:2px;">
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);">Threshold protection</div>
+              <div style="font-size:12px;color:var(--color-text-caption);margin-bottom:8px;">Block export if product count drops significantly from last export</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:13px;color:var(--color-text-caption);">Block export if count drops below:</span>
+                <input type="number" class="modal-input" value="90" style="padding:5px 8px;font-size:13px;width:70px;">
+                <span style="font-size:13px;color:var(--color-text-caption);">% of last export</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(3)">Back</button>
+      <button class="btn-primary-sm" onclick="goExportStep(5)">Next</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Field Mapping -->
+  <div class="wizard-step" id="export-step-5" style="display:none;">
+    <p style="font-size:13px;color:var(--color-text-caption);margin:0 0 14px;">Map your database fields to export column names</p>
+    <div class="table-card" style="padding:0;overflow:hidden;max-width:640px;">
+      <div class="table-scroll">
+        <table class="fm-table">
+          <colgroup><col style="width:38%;"><col style="width:38%;"><col style="width:24%;"></colgroup>
+          <thead><tr><th>Database Field</th><th>Export Name</th><th>Action</th></tr></thead>
+          <tbody id="export-fm-tbody">
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option><option>condition</option><option>availability</option><option>product_type</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="id" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option selected>title</option><option>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="title" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option selected>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="description" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option selected>link</option><option>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="link" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option selected>image_link</option><option>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="image_link" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option>image_link</option><option selected>price</option><option>sale_price</option><option>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="price" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+            <tr><td><select class="modal-select" style="padding:6px 9px;font-size:13px;"><option>id</option><option>title</option><option>description</option><option>link</option><option>image_link</option><option>price</option><option>sale_price</option><option selected>brand</option></select></td><td><div class="autocomplete-wrapper"><input type="text" class="autocomplete-input modal-input" value="brand" style="padding:6px 9px;font-size:13px;" autocomplete="off"><ul class="autocomplete-dropdown"></ul></div></td><td><button onclick="this.closest('tr').remove()" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;padding:0;">🗑</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <button class="btn-text-link" style="margin-top:8px;" onclick="showToast('Field mapping row added')">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Field Mapping
+    </button>
+    <div class="wizard-btn-row">
+      <button class="btn-outline" style="height:36px;padding:0 14px;" onclick="goExportStep(4)">Back</button>
+      <button class="btn-primary-sm" onclick="createExport()">Create Export</button>
+      <button class="btn-text-link grey" onclick="hideAddExportPage();showDbOverviewPage();switchDbTab('exports')">Cancel</button>
+    </div>
+  </div>
+</div><!-- /add-export-page -->
+
