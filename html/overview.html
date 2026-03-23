@@ -119,11 +119,11 @@
 
   </div>
 
-  <!-- ── Section 1: Two columns ── -->
-  <div style="display:flex; gap:24px; align-items:flex-start; margin-bottom:32px;">
+  <!-- ── Section 1: Three cards 40/30/30 ── -->
+  <div style="display:flex; gap:24px; align-items:stretch; margin-bottom:32px;">
 
-    <!-- Left: Narrative Block (62%) -->
-    <div class="table-card" style="flex:0 0 calc(62% - 12px); padding:24px;">
+    <!-- Card 1: Narrative Block (40%) -->
+    <div class="table-card" style="flex:0 0 40%; padding:24px; min-width:0;">
       <div class="ov-section-label">What happened this period</div>
 
       <!-- Severity tabs -->
@@ -143,8 +143,8 @@
       <div id="ov-insight-panel" style="max-height:340px; overflow-y:auto;"></div>
     </div>
 
-    <!-- Right: KPI Snapshot (38%) -->
-    <div class="table-card" style="flex:1; padding:24px; min-width:0;">
+    <!-- Card 2: Performance Snapshot (30%) -->
+    <div class="table-card" style="flex:0 0 30%; padding:24px; min-width:0;">
 
       <!-- Header row: label + delta toggle -->
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
@@ -159,10 +159,14 @@
       </div>
 
       <!-- 2×2 KPI grid (populated by JS) -->
-      <div id="ov-kpi-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px;"></div>
+      <div id="ov-kpi-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;"></div>
 
-      <!-- Channel comparison sub-section -->
-      <div class="ov-section-label" style="margin-bottom:10px;">vs comparison period</div>
+    </div>
+
+    <!-- Card 3: VS Comparison Period (30%) -->
+    <div class="table-card" style="flex:0 0 30%; padding:24px; min-width:0;">
+
+      <div class="ov-section-label" style="margin-bottom:10px;">VS Comparison Period</div>
 
       <!-- Revenue / Sessions toggle -->
       <div style="display:flex; gap:4px; margin-bottom:14px;">
