@@ -257,6 +257,8 @@ window.ovSetChannel = function(ch) {
   });
   ovRender();
   updateSection2(ch);
+  renderS3Tiles(ch);
+  initSection4(ch);
 };
 
 /* ── Delta toggle ── */
@@ -384,6 +386,8 @@ function showOverviewPage() {
   ovBuildWebsiteDd();
   ovRender();
   updateSection2(_ovChannel);
+  renderS3Tiles(_ovChannel);
+  setTimeout(function() { initSection4(_ovChannel); }, 0);
 }
 window.showOverviewPage = showOverviewPage;
 
@@ -799,3 +803,317 @@ function updateSection2(channel) {
     });
   });
 }
+
+/* ═══════════════════════════════════════════════
+   SECTION 3 — WHAT'S SELLING
+═══════════════════════════════════════════════ */
+
+var OV_S3_SEM_TILES = [
+  { label:'Footwear',         convVal:'$9,311',  cos:29.32 },
+  { label:'Outerwear',        convVal:'$7,609',  cos:34.80 },
+  { label:'Accessories',      convVal:'$6,797',  cos:34.80 },
+  { label:'Base Layers',      convVal:'$5,609',  cos:30.80 },
+  { label:'Gloves & Mittens', convVal:'$4,797',  cos:34.80 },
+];
+
+var OV_S3_SEO_TILES = [
+  { label:'Product Detail Pages', convVal:'$124,532', cos:null },
+  { label:'Category Pages',       convVal:'$89,210',  cos:null },
+  { label:'Blog Posts',           convVal:'$24,180',  cos:null },
+  { label:'Landing Pages',        convVal:'$18,940',  cos:null },
+  { label:'Others',               convVal:'$8,420',   cos:null },
+];
+
+var _ovS3Channel = 'SEM';
+var OV_COS_TARGET = 29;
+
+function getCOSStyle(cos) {
+  if (cos === null) return { bg:'var(--color-bg-grey50)', dot:'#9ca3af', text:'var(--color-text-subtitle)', label:'\u2014' };
+  if (cos <= OV_COS_TARGET - 2) return { bg:'rgba(52,199,89,0.10)',  dot:'#22c55e', text:'#166534', label:cos.toFixed(1) + '% COS' };
+  if (cos <= OV_COS_TARGET + 1) return { bg:'rgba(255,196,0,0.10)',  dot:'#eab308', text:'#854d0e', label:cos.toFixed(1) + '% COS' };
+  return                               { bg:'rgba(239,68,68,0.08)',   dot:'#ef4444', text:'#991b1b', label:cos.toFixed(1) + '% COS' };
+}
+
+function renderS3Tiles(channel) {
+  _ovS3Channel = channel;
+  var isSEM = channel === 'SEM';
+  var tiles = isSEM ? OV_S3_SEM_TILES : OV_S3_SEO_TILES;
+
+  var sub = document.getElementById('ov-s3-subtitle');
+  if (sub) sub.textContent = isSEM
+    ? 'Performance by product category through this channel'
+    : 'Performance by page type through organic search';
+
+  var container = document.getElementById('ov-s3-tiles');
+  if (!container) return;
+
+  container.innerHTML = tiles.map(function(tile) {
+    var style = getCOSStyle(tile.cos);
+    return '<div class="ov-s3-tile" style="background:' + style.bg + ';border-color:rgba(0,0,0,0.08);" onclick="ovDrillHighlights(event)">' +
+      '<div class="ov-s3-tile-label">' + tile.label + '</div>' +
+      '<div class="ov-s3-tile-value">' + tile.convVal + '</div>' +
+      '<div class="ov-s3-tile-metric">' + (isSEM ? 'Conv. Value' : 'Organic Revenue') + '</div>' +
+      '<div class="ov-s3-tile-cos">' +
+        '<span class="ov-s3-cos-dot" style="background:' + style.dot + ';"></span>' +
+        '<span style="font-size:12px;font-weight:500;color:' + style.text + ';">' + style.label + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+window.ovDrillHighlights = function(e) {
+  e.preventDefault();
+  document.querySelectorAll('.sb-kid').forEach(function(k){ k.classList.remove('sb-kid-active'); });
+  var hlItem = document.querySelector('[data-nav="highlights-table"]');
+  if (hlItem) hlItem.classList.add('sb-kid-active');
+  if (typeof window.hideFeedDetailPages === 'function') window.hideFeedDetailPages();
+  document.querySelectorAll('#page-content > div').forEach(function(p){ p.style.display='none'; });
+  var hlPage = document.getElementById('highlights-page');
+  if (hlPage) hlPage.style.display = 'block';
+};
+
+/* ═══════════════════════════════════════════════
+   SECTION 4 — SEARCH INTELLIGENCE
+═══════════════════════════════════════════════ */
+
+var OV_S4_SEM = {
+  stats: [
+    { label:'Wasted Spend',    value:'$4,210', delta:'+1.2% vs prev period', deltaPositive:false },
+    { label:'New This Period', value:'234',    suffix:'terms', delta:null }
+  ],
+  scatterDots: [
+    { term:'"outdoor research"',        spend:1920, convVal:12400, size:18, quadrant:'scale'      },
+    { term:'"best rain jacket"',        spend:890,  convVal:8200,  size:13, quadrant:'scale'      },
+    { term:'"heated gloves"',           spend:340,  convVal:6100,  size:8,  quadrant:'hidden-gem' },
+    { term:'"waterproof hiking boots"', spend:210,  convVal:5400,  size:6,  quadrant:'hidden-gem' },
+    { term:'"outdoor research jacket"', spend:1200, convVal:3100,  size:15, quadrant:'bleeding'   },
+    { term:'"outdoor gear store"',      spend:980,  convVal:1200,  size:12, quadrant:'bleeding'   },
+    { term:'"camping supplies"',        spend:420,  convVal:890,   size:7,  quadrant:'bleeding'   },
+    { term:'"rain gear"',               spend:180,  convVal:4200,  size:5,  quadrant:'hidden-gem' },
+    { term:'"fleece jacket"',           spend:650,  convVal:7100,  size:10, quadrant:'scale'      },
+    { term:'"outdoor clothing"',        spend:290,  convVal:980,   size:6,  quadrant:'ignore'     },
+    { term:'"hiking backpack"',         spend:120,  convVal:340,   size:4,  quadrant:'ignore'     },
+    { term:'"ski gloves"',              spend:560,  convVal:5800,  size:9,  quadrant:'scale'      },
+  ],
+  termsLeft: [
+    { term:'"outdoor research"',  meta:'127 conv \u00b7 2.1k COS', value:'$1,920,399' },
+    { term:'"best rain jacket"',  meta:'98 conv \u00b7 1.8k COS',  value:'$36,961'    },
+    { term:'"heated gloves"',     meta:'84 conv \u00b7 1.4k COS',  value:'$32,556'    },
+    { term:'"rain jacket"',       meta:'76 conv \u00b7 1.2k COS',  value:'$30,134'    },
+    { term:'"fleece pullover"',   meta:'61 conv \u00b7 0.9k COS',  value:'$28,910'    },
+  ],
+  termsRight: [
+    { term:'"outdoor research"',     meta:'0 conv \u00b7 100 clicks', value:'$5,678', isWaste:true },
+    { term:'"outdoor gear store"',   meta:'0 conv \u00b7 300 clicks', value:'$4,485', isWaste:true },
+    { term:'"best rain jacket for"', meta:'2 conv \u00b7 200 clicks', value:'$2,522', isWaste:true },
+    { term:'"camping gear"',         meta:'1 conv \u00b7 98 clicks',  value:'$2,345', isWaste:true },
+    { term:'"outdoor clothing"',     meta:'0 conv \u00b7 49 clicks',  value:'$1,012', isWaste:true },
+  ]
+};
+
+var OV_S4_SEO = {
+  stats: [
+    { label:'Traffic Lost',         value:'2,840', suffix:'clicks',   delta:'-8.3% vs prev period', deltaPositive:false },
+    { label:'New Keywords Ranking', value:'47',    suffix:'keywords', delta:null }
+  ],
+  scatterDots: [
+    { term:'"outdoor research jacket"', spend:1840, convVal:9200, size:16, quadrant:'scale'      },
+    { term:'"best waterproof jacket"',  spend:620,  convVal:7400, size:9,  quadrant:'hidden-gem' },
+    { term:'"fleece pullover women"',   spend:290,  convVal:5100, size:6,  quadrant:'hidden-gem' },
+    { term:'"hiking boots waterproof"', spend:980,  convVal:2100, size:13, quadrant:'bleeding'   },
+    { term:'"outdoor gear"',            spend:1200, convVal:1400, size:15, quadrant:'bleeding'   },
+    { term:'"camping gear store"',      spend:180,  convVal:3800, size:5,  quadrant:'hidden-gem' },
+    { term:'"rain jacket"',             spend:740,  convVal:6200, size:11, quadrant:'scale'      },
+    { term:'"winter gloves"',           spend:120,  convVal:280,  size:4,  quadrant:'ignore'     },
+  ],
+  termsLeft: [
+    { term:'"outdoor research jacket"', meta:'Pos 1 \u2192 Pos 1 \u00b7 +340 clicks', value:'+$9,200' },
+    { term:'"best waterproof jacket"',  meta:'Pos 4 \u2192 Pos 2 \u00b7 +180 clicks', value:'+$7,400' },
+    { term:'"fleece pullover women"',   meta:'Pos 8 \u2192 Pos 4 \u00b7 +94 clicks',  value:'+$5,100' },
+    { term:'"rain jacket review"',      meta:'Pos 12 \u2192 Pos 6 \u00b7 +71 clicks', value:'+$4,800' },
+    { term:'"hiking boots trail"',      meta:'Pos 9 \u2192 Pos 5 \u00b7 +58 clicks',  value:'+$3,600' },
+  ],
+  termsRight: [
+    { term:'"outdoor gear cheap"',  meta:'Pos 3 \u2192 Pos 11 \u00b7 -280 clicks', value:'-$4,200', isWaste:true },
+    { term:'"camping supplies"',    meta:'Pos 5 \u2192 Pos 14 \u00b7 -190 clicks', value:'-$3,100', isWaste:true },
+    { term:'"waterproof pants"',    meta:'Pos 4 \u2192 Pos 9 \u00b7 -140 clicks',  value:'-$2,400', isWaste:true },
+    { term:'"hiking backpack"',     meta:'Pos 6 \u2192 Pos 12 \u00b7 -98 clicks',  value:'-$1,800', isWaste:true },
+    { term:'"ski jacket"',          meta:'Pos 7 \u2192 Pos 15 \u00b7 -72 clicks',  value:'-$1,200', isWaste:true },
+  ]
+};
+
+var _ovS4Channel = 'SEM';
+
+function renderS4Stats(channel) {
+  var data = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
+  var el = document.getElementById('ov-s4-stats');
+  if (!el) return;
+  el.innerHTML = data.stats.map(function(s) {
+    var deltaHtml = '';
+    if (s.delta) {
+      var color = s.deltaPositive ? 'var(--color-text-success)' : '#d72225';
+      deltaHtml = '<div style="font-size:12px;color:' + color + ';margin-top:2px;">' + s.delta + '</div>';
+    }
+    return '<div class="ov-s4-stat-tile">' +
+      '<div class="ov-s4-stat-label">' + s.label + '</div>' +
+      '<div class="ov-s4-stat-value">' + s.value +
+        (s.suffix ? '<span style="font-size:14px;font-weight:400;color:var(--color-text-subtitle);margin-left:4px;">' + s.suffix + '</span>' : '') +
+      '</div>' +
+      deltaHtml +
+    '</div>';
+  }).join('');
+}
+
+function renderS4Labels(channel) {
+  var isSEM = channel === 'SEM';
+  var els = {
+    title:        document.getElementById('ov-s4-title'),
+    sub:          document.getElementById('ov-s4-subtitle'),
+    scatterLabel: document.getElementById('ov-s4-scatter-label'),
+    leftLabel:    document.getElementById('ov-s4-left-label'),
+    leftSub:      document.getElementById('ov-s4-left-sub'),
+    rightLabel:   document.getElementById('ov-s4-right-label'),
+    rightSub:     document.getElementById('ov-s4-right-sub'),
+  };
+  if (els.title)        els.title.textContent        = isSEM ? 'Search Intelligence'                                    : 'SEO Keyword Performance';
+  if (els.sub)          els.sub.textContent          = isSEM ? 'Understand where spend is working and where it\'s being wasted' : 'Understand which keywords are gaining and losing ground';
+  if (els.scatterLabel) els.scatterLabel.textContent = isSEM ? 'Spend vs Conversion Value'                             : 'Organic Clicks vs Organic Revenue';
+  if (els.leftLabel)    els.leftLabel.textContent    = isSEM ? 'Top Converting Terms'                                  : 'Top Gainers';
+  if (els.leftSub)      els.leftSub.textContent      = isSEM ? 'Highest revenue search queries'                        : 'Keywords with improving rank';
+  if (els.rightLabel)   els.rightLabel.textContent   = isSEM ? 'Highest Wasted Spend'                                  : 'Top Losers';
+  if (els.rightSub)     els.rightSub.textContent     = isSEM ? 'Spend with zero or near-zero conversions'              : 'Keywords with declining rank';
+}
+
+function renderS4TermLists(channel) {
+  var data = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
+
+  function termRow(t) {
+    var valueColor = t.isWaste ? '#d72225' : 'var(--color-text-primary)';
+    return '<div class="ov-term-row">' +
+      '<div>' +
+        '<div style="font-size:13px;font-style:italic;color:var(--color-text-primary);">' + t.term + '</div>' +
+        '<div style="font-size:11px;color:var(--color-text-caption);margin-top:2px;">' + t.meta + '</div>' +
+      '</div>' +
+      '<div style="font-size:13px;font-weight:600;color:' + valueColor + ';white-space:nowrap;padding-left:12px;">' + t.value + '</div>' +
+    '</div>';
+  }
+
+  var leftEl  = document.getElementById('ov-s4-terms-left');
+  var rightEl = document.getElementById('ov-s4-terms-right');
+  if (leftEl)  leftEl.innerHTML  = data.termsLeft.map(termRow).join('');
+  if (rightEl) rightEl.innerHTML = data.termsRight.map(termRow).join('');
+}
+
+function renderS4Scatter(channel) {
+  var canvas = document.getElementById('ov-scatter-canvas');
+  if (!canvas) return;
+  var data  = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
+  var dots  = data.scatterDots;
+  var isSEM = channel === 'SEM';
+  var ctx   = canvas.getContext('2d');
+
+  var W = canvas.parentElement.offsetWidth || 400;
+  var H = 300;
+  canvas.width  = W;
+  canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+
+  var pad   = { top:24, right:20, bottom:44, left:52 };
+  var plotW = W - pad.left - pad.right;
+  var plotH = H - pad.top  - pad.bottom;
+
+  /* Quadrant backgrounds */
+  ctx.fillStyle = 'rgba(34,197,94,0.07)';
+  ctx.fillRect(pad.left,           pad.top,           plotW/2, plotH/2);
+  ctx.fillStyle = 'rgba(34,197,94,0.11)';
+  ctx.fillRect(pad.left + plotW/2, pad.top,           plotW/2, plotH/2);
+  ctx.fillStyle = 'rgba(156,163,175,0.06)';
+  ctx.fillRect(pad.left,           pad.top + plotH/2, plotW/2, plotH/2);
+  ctx.fillStyle = 'rgba(239,68,68,0.08)';
+  ctx.fillRect(pad.left + plotW/2, pad.top + plotH/2, plotW/2, plotH/2);
+
+  /* Quadrant labels */
+  ctx.font      = '10px Inter, sans-serif';
+  ctx.fillStyle = 'rgba(107,114,128,0.75)';
+  ctx.fillText('Hidden gems', pad.left + 6,            pad.top + 13);
+  ctx.fillText('Scale these', pad.left + plotW/2 + 6,  pad.top + 13);
+  ctx.fillText('Ignore',      pad.left + 6,            pad.top + plotH - 6);
+  ctx.fillText('Bleeding',    pad.left + plotW/2 + 6,  pad.top + plotH - 6);
+
+  /* Quadrant dividers */
+  ctx.strokeStyle = 'rgba(226,229,237,0.9)';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  ctx.moveTo(pad.left + plotW/2, pad.top);
+  ctx.lineTo(pad.left + plotW/2, pad.top + plotH);
+  ctx.moveTo(pad.left,           pad.top + plotH/2);
+  ctx.lineTo(pad.left + plotW,   pad.top + plotH/2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  var maxSpend = Math.max.apply(null, dots.map(function(d){ return d.spend;   }));
+  var maxConv  = Math.max.apply(null, dots.map(function(d){ return d.convVal; }));
+
+  function toX(v) { return pad.left + (v / maxSpend) * plotW; }
+  function toY(v) { return pad.top  + plotH - (v / maxConv) * plotH; }
+
+  /* Dots */
+  dots.forEach(function(dot) {
+    var x = toX(dot.spend);
+    var y = toY(dot.convVal);
+    var r = dot.size / 2;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = dot.quadrant === 'bleeding'
+      ? 'rgba(239,68,68,0.75)'
+      : (isSEM ? 'rgba(24,95,165,0.65)' : 'rgba(59,109,17,0.65)');
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth   = 1.5;
+    ctx.stroke();
+  });
+
+  /* Label top 3 dots by convVal */
+  var labeled = dots.slice().sort(function(a,b){ return b.convVal - a.convVal; }).slice(0, 3);
+  ctx.font      = '10px Inter, sans-serif';
+  ctx.fillStyle = '#374151';
+  labeled.forEach(function(dot) {
+    var x   = toX(dot.spend);
+    var y   = toY(dot.convVal);
+    var lbl = dot.term.replace(/"/g, '');
+    if (lbl.length > 18) lbl = lbl.substring(0, 18) + '\u2026';
+    ctx.fillText(lbl, x + dot.size / 2 + 4, y + 3);
+  });
+
+  /* Axis labels */
+  ctx.fillStyle = '#9ca3af';
+  ctx.font      = '10px Inter, sans-serif';
+  ctx.fillText(isSEM ? 'Spend \u2192' : 'Organic Clicks \u2192', pad.left + plotW/2 - 24, H - 8);
+  ctx.save();
+  ctx.translate(13, pad.top + plotH/2 + 30);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(isSEM ? 'Conv. Value \u2191' : 'Organic Revenue \u2191', 0, 0);
+  ctx.restore();
+}
+
+function initSection4(channel) {
+  _ovS4Channel = channel;
+  renderS4Labels(channel);
+  renderS4Stats(channel);
+  renderS4TermLists(channel);
+  renderS4Scatter(channel);
+}
+
+window.ovDrillSearchTerm = function(e) {
+  e.preventDefault();
+  document.querySelectorAll('.sb-kid').forEach(function(k){ k.classList.remove('sb-kid-active'); });
+  var stItem = document.querySelector('[data-nav="search-term"]');
+  if (stItem) stItem.classList.add('sb-kid-active');
+  if (typeof window.hideFeedDetailPages === 'function') window.hideFeedDetailPages();
+  document.querySelectorAll('#page-content > div').forEach(function(p){ p.style.display='none'; });
+  var stPage = document.getElementById('search-term-page');
+  if (stPage) { stPage.style.display = 'block'; return; }
+  var graderPage = document.getElementById('search-term-grader-page');
+  if (graderPage) graderPage.style.display = 'block';
+};

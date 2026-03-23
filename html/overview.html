@@ -233,14 +233,56 @@
     </div>
   </div>
 
-  <!-- ── Section 3 placeholder ── -->
-  <div id="ov-section3" class="ov-section-placeholder">
-    <p style="margin:0;">Section 3 — What's Selling — Coming in Session 3</p>
+  <!-- ── Section 3: What's Selling ── -->
+  <div id="ov-section3" class="ov-section" style="margin-bottom:32px;">
+    <div class="ov-section-header" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;">
+      <div>
+        <h2 class="ov-section-title">What's Selling</h2>
+        <p class="ov-section-subtitle" id="ov-s3-subtitle">Performance by product category through this channel</p>
+      </div>
+      <a href="#" class="ov-view-all-link" onclick="ovDrillHighlights(event)">View full table →</a>
+    </div>
+    <div class="ov-s3-tiles" id="ov-s3-tiles"></div>
   </div>
 
-  <!-- ── Section 4 placeholder ── -->
-  <div id="ov-section4" class="ov-section-placeholder">
-    <p style="margin:0;">Section 4 — Search Intelligence — Coming in Session 3</p>
+  <!-- ── Section 4: Search Intelligence ── -->
+  <div id="ov-section4" class="ov-section" style="margin-bottom:48px;">
+    <div class="ov-section-header" style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;">
+      <div>
+        <h2 class="ov-section-title" id="ov-s4-title">Search Intelligence</h2>
+        <p class="ov-section-subtitle" id="ov-s4-subtitle">Understand where spend is working and where it's being wasted</p>
+      </div>
+      <a href="#" class="ov-view-all-link" id="ov-s4-viewall" onclick="ovDrillSearchTerm(event)">View full report →</a>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="ov-s4-stats" id="ov-s4-stats"></div>
+
+    <!-- Two column: scatter left, term lists right -->
+    <div class="ov-s4-columns">
+      <!-- Scatter plot -->
+      <div class="ov-chart-card" style="flex:1.1;">
+        <div class="ov-chart-label" style="margin-bottom:4px;" id="ov-s4-scatter-label">Spend vs Conversion Value</div>
+        <div class="ov-chart-sublabel" style="margin-bottom:16px;">Each dot is one search term — size reflects spend volume</div>
+        <div style="position:relative;">
+          <canvas id="ov-scatter-canvas" height="300"></canvas>
+        </div>
+      </div>
+
+      <!-- Term lists -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+        <div class="ov-chart-card" style="flex:1;">
+          <div class="ov-chart-label" style="margin-bottom:2px;" id="ov-s4-left-label">Top Converting Terms</div>
+          <div class="ov-chart-sublabel" style="margin-bottom:12px;" id="ov-s4-left-sub">Highest revenue search queries</div>
+          <div id="ov-s4-terms-left"></div>
+        </div>
+        <div class="ov-chart-card" style="flex:1;">
+          <div class="ov-chart-label" style="margin-bottom:2px;" id="ov-s4-right-label">Highest Wasted Spend</div>
+          <div class="ov-chart-sublabel" style="margin-bottom:12px;" id="ov-s4-right-sub">Spend with zero or near-zero conversions</div>
+          <div id="ov-s4-terms-right"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Chart.js and ECharts are loaded dynamically by overview.js -->

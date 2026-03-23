@@ -1970,3 +1970,26 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
 .ov-trend-filter-btn { padding:3px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; background:white; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; transition:background 0.12s,color 0.12s,border-color 0.12s; }
 .ov-trend-filter-btn.ov-trend-filter-active { background:var(--color-blue); border-color:var(--color-blue); color:white; }
 .ov-trend-filter-btn:hover:not(.ov-trend-filter-active) { background:var(--color-bg-grey50); }
+
+/* ─── OVERVIEW: shared link ─── */
+.ov-view-all-link { font-size:13px; font-weight:500; color:var(--color-blue); text-decoration:none; white-space:nowrap; }
+.ov-view-all-link:hover { text-decoration:underline; }
+
+/* ─── OVERVIEW SECTION 3 — CATEGORY TILES ─── */
+.ov-s3-tiles { display:flex; gap:12px; }
+.ov-s3-tile { flex:1; padding:16px; border-radius:10px; border:1px solid var(--color-border); cursor:pointer; transition:box-shadow 0.15s, transform 0.15s; }
+.ov-s3-tile:hover { box-shadow:0 4px 12px rgba(0,0,0,0.08); transform:translateY(-1px); }
+.ov-s3-tile-label { font-size:13px; font-weight:600; color:var(--color-text-primary); margin-bottom:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ov-s3-tile-value { font-size:20px; font-weight:700; color:var(--color-text-primary); margin-bottom:2px; letter-spacing:-0.5px; }
+.ov-s3-tile-metric { font-size:11px; color:var(--color-text-caption); margin-bottom:12px; }
+.ov-s3-tile-cos { display:flex; align-items:center; gap:5px; }
+.ov-s3-cos-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+
+/* ─── OVERVIEW SECTION 4 ─── */
+.ov-s4-columns   { display:flex; gap:20px; align-items:flex-start; }
+.ov-s4-stats     { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+.ov-s4-stat-tile { padding:16px 20px; background:var(--color-bg-grey50); border-radius:8px; min-width:160px; }
+.ov-s4-stat-label { font-size:12px; color:var(--color-text-subtitle); margin-bottom:4px; }
+.ov-s4-stat-value { font-size:24px; font-weight:700; color:var(--color-text-primary); }
+.ov-term-row:last-child { border-bottom:none; }
+@media (max-width:960px) { .ov-s4-columns { flex-direction:column; } }
