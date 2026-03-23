@@ -942,7 +942,8 @@ var OV_S4_SEO = {
   ]
 };
 
-var _ovS4Channel = 'SEM';
+var _ovS4Channel  = 'SEM';
+var _ovS4TermTab  = 'left'; /* 'left' = top converting, 'right' = wasted spend */
 
 function renderS4Stats(channel) {
   var data = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
@@ -966,43 +967,62 @@ function renderS4Stats(channel) {
 
 function renderS4Labels(channel) {
   var isSEM = channel === 'SEM';
-  var els = {
-    title:        document.getElementById('ov-s4-title'),
-    sub:          document.getElementById('ov-s4-subtitle'),
-    scatterLabel: document.getElementById('ov-s4-scatter-label'),
-    leftLabel:    document.getElementById('ov-s4-left-label'),
-    leftSub:      document.getElementById('ov-s4-left-sub'),
-    rightLabel:   document.getElementById('ov-s4-right-label'),
-    rightSub:     document.getElementById('ov-s4-right-sub'),
+  var titleEl   = document.getElementById('ov-s4-title');
+  var subEl     = document.getElementById('ov-s4-subtitle');
+  var scatterEl = document.getElementById('ov-s4-scatter-label');
+  if (titleEl)   titleEl.textContent   = isSEM ? 'Search Intelligence'                                           : 'SEO Keyword Performance';
+  if (subEl)     subEl.textContent     = isSEM ? "Understand where spend is working and where it's being wasted" : 'Understand which keywords are gaining and losing ground';
+  if (scatterEl) scatterEl.textContent = isSEM ? 'Spend vs Conversion Value'                                     : 'Organic Clicks vs Organic Revenue';
+  /* Update term-list tab labels to match channel */
+  var tabLeftBtn  = document.getElementById('ov-s4-tab-left');
+  var tabRightBtn = document.getElementById('ov-s4-tab-right');
+  if (tabLeftBtn)  tabLeftBtn.textContent  = isSEM ? 'Top Converting Terms' : 'Top Gainers';
+  if (tabRightBtn) tabRightBtn.textContent = isSEM ? 'Highest Wasted Spend' : 'Top Losers';
+  ovS4UpdateTermSub();
+}
+
+function ovS4TermRow(t) {
+  var valueColor = t.isWaste ? '#d72225' : 'var(--color-text-primary)';
+  return '<div class="ov-term-row">' +
+    '<div>' +
+      '<div style="font-size:13px;font-style:italic;color:var(--color-text-primary);">' + t.term + '</div>' +
+      '<div style="font-size:11px;color:var(--color-text-caption);margin-top:2px;">' + t.meta + '</div>' +
+    '</div>' +
+    '<div style="font-size:13px;font-weight:600;color:' + valueColor + ';white-space:nowrap;padding-left:12px;">' + t.value + '</div>' +
+  '</div>';
+}
+
+function ovS4UpdateTermSub() {
+  var isSEM  = _ovS4Channel === 'SEM';
+  var subEl  = document.getElementById('ov-s4-terms-sub');
+  if (!subEl) return;
+  var subMap = {
+    SEM:  { left:'Highest revenue search queries',              right:'Spend with zero or near-zero conversions' },
+    SEO:  { left:'Keywords with improving rank',                right:'Keywords with declining rank'             }
   };
-  if (els.title)        els.title.textContent        = isSEM ? 'Search Intelligence'                                    : 'SEO Keyword Performance';
-  if (els.sub)          els.sub.textContent          = isSEM ? 'Understand where spend is working and where it\'s being wasted' : 'Understand which keywords are gaining and losing ground';
-  if (els.scatterLabel) els.scatterLabel.textContent = isSEM ? 'Spend vs Conversion Value'                             : 'Organic Clicks vs Organic Revenue';
-  if (els.leftLabel)    els.leftLabel.textContent    = isSEM ? 'Top Converting Terms'                                  : 'Top Gainers';
-  if (els.leftSub)      els.leftSub.textContent      = isSEM ? 'Highest revenue search queries'                        : 'Keywords with improving rank';
-  if (els.rightLabel)   els.rightLabel.textContent   = isSEM ? 'Highest Wasted Spend'                                  : 'Top Losers';
-  if (els.rightSub)     els.rightSub.textContent     = isSEM ? 'Spend with zero or near-zero conversions'              : 'Keywords with declining rank';
+  var ch = OV_S4_SEM === OV_S4_SEM ? _ovS4Channel : 'SEM'; // always use _ovS4Channel
+  var map = subMap[_ovS4Channel] || subMap.SEM;
+  subEl.textContent = map[_ovS4TermTab] || map.left;
 }
 
 function renderS4TermLists(channel) {
-  var data = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
-
-  function termRow(t) {
-    var valueColor = t.isWaste ? '#d72225' : 'var(--color-text-primary)';
-    return '<div class="ov-term-row">' +
-      '<div>' +
-        '<div style="font-size:13px;font-style:italic;color:var(--color-text-primary);">' + t.term + '</div>' +
-        '<div style="font-size:11px;color:var(--color-text-caption);margin-top:2px;">' + t.meta + '</div>' +
-      '</div>' +
-      '<div style="font-size:13px;font-weight:600;color:' + valueColor + ';white-space:nowrap;padding-left:12px;">' + t.value + '</div>' +
-    '</div>';
-  }
-
-  var leftEl  = document.getElementById('ov-s4-terms-left');
-  var rightEl = document.getElementById('ov-s4-terms-right');
-  if (leftEl)  leftEl.innerHTML  = data.termsLeft.map(termRow).join('');
-  if (rightEl) rightEl.innerHTML = data.termsRight.map(termRow).join('');
+  var data  = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
+  var panel = document.getElementById('ov-s4-terms-panel');
+  if (!panel) return;
+  var rows  = _ovS4TermTab === 'left' ? data.termsLeft : data.termsRight;
+  panel.innerHTML = rows.map(ovS4TermRow).join('');
 }
+
+window.ovS4SwitchTermTab = function(side) {
+  _ovS4TermTab = side;
+  /* Update button active states */
+  ['left','right'].forEach(function(s) {
+    var btn = document.getElementById('ov-s4-tab-' + s);
+    if (btn) btn.className = 'ov-s4-term-tab' + (s === side ? ' ov-s4-term-tab-active' : '');
+  });
+  ovS4UpdateTermSub();
+  renderS4TermLists(_ovS4Channel);
+};
 
 function renderS4Scatter(channel) {
   var canvas = document.getElementById('ov-scatter-canvas');
@@ -1012,10 +1032,14 @@ function renderS4Scatter(channel) {
   var isSEM = channel === 'SEM';
   var ctx   = canvas.getContext('2d');
 
+  var dpr = window.devicePixelRatio || 1;
   var W = canvas.parentElement.offsetWidth || 400;
   var H = 300;
-  canvas.width  = W;
-  canvas.height = H;
+  canvas.width        = W * dpr;
+  canvas.height       = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
 
   var pad   = { top:24, right:20, bottom:44, left:52 };
@@ -1099,6 +1123,12 @@ function renderS4Scatter(channel) {
 
 function initSection4(channel) {
   _ovS4Channel = channel;
+  _ovS4TermTab = 'left'; /* reset to first tab on channel switch */
+  /* Reset tab button active states */
+  var tL = document.getElementById('ov-s4-tab-left');
+  var tR = document.getElementById('ov-s4-tab-right');
+  if (tL) tL.className = 'ov-s4-term-tab ov-s4-term-tab-active';
+  if (tR) tR.className = 'ov-s4-term-tab';
   renderS4Labels(channel);
   renderS4Stats(channel);
   renderS4TermLists(channel);

@@ -34,6 +34,51 @@
 .ov-toggle input:checked + .ov-toggle-slider:before { transform:translateX(14px); }
 .ov-section-placeholder { background:var(--color-bg-grey50); border:1px dashed var(--color-border); border-radius:8px; padding:24px; color:var(--color-text-caption); font-size:13px; margin-bottom:24px; }
 .ov-tabs-nowrap::-webkit-scrollbar { display:none; }
+.ov-s4-term-tab { padding:5px 12px; border:none; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; background:var(--color-bg-grey50); color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; transition:background 0.15s,color 0.15s; }
+.ov-s4-term-tab.ov-s4-term-tab-active { background:var(--color-blue); color:white; }
+/* ── Section 2 ── */
+.ov-s2-columns { display:flex; gap:20px; align-items:stretch; }
+.ov-chart-card { background:white; border:1px solid var(--color-border); border-radius:12px; padding:20px 24px; }
+.ov-chart-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.ov-chart-label { font-size:14px; font-weight:600; color:var(--color-text-primary); }
+.ov-chart-sublabel { font-size:12px; color:var(--color-text-caption); margin-top:2px; }
+.ov-trend-legend { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
+.ov-legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.ov-legend-text { font-size:12px; color:var(--color-text-subtitle); }
+.ov-annotations-row { display:flex; gap:0; margin-top:8px; position:relative; height:24px; }
+.ov-annotation-pin { position:absolute; display:flex; flex-direction:column; align-items:center; cursor:pointer; transform:translateX(-50%); }
+.ov-annotation-pin-line { width:1px; height:8px; background:var(--color-text-caption); }
+.ov-annotation-pin-dot { width:6px; height:6px; border-radius:50%; background:var(--color-text-accent); border:1.5px solid white; box-shadow:0 0 0 1.5px var(--color-text-accent); }
+.ov-annotation-tooltip { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); background:#1a1a1a; color:white; font-size:11px; padding:4px 8px; border-radius:4px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:100; }
+.ov-annotation-pin:hover .ov-annotation-tooltip { opacity:1; }
+.ov-chart-footnote { font-size:12px; color:var(--color-text-caption); font-style:italic; margin-top:8px; line-height:1.5; }
+.ov-section-header { margin-bottom:16px; }
+.ov-section-title { font-size:18px; font-weight:600; color:var(--color-text-primary); margin-bottom:2px; }
+.ov-section-subtitle { font-size:13px; color:var(--color-text-subtitle); }
+.ov-trend-filter-btn { padding:3px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; background:white; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; transition:background 0.12s,color 0.12s,border-color 0.12s; }
+.ov-trend-filter-btn.ov-trend-filter-active { background:var(--color-blue); border-color:var(--color-blue); color:white; }
+.ov-trend-filter-btn:hover:not(.ov-trend-filter-active) { background:var(--color-bg-grey50); }
+.ov-view-all-link { font-size:13px; font-weight:500; color:var(--color-blue); text-decoration:none; white-space:nowrap; }
+.ov-view-all-link:hover { text-decoration:underline; }
+/* ── Section 3 ── */
+.ov-s3-tiles { display:flex; gap:12px; flex-wrap:wrap; }
+.ov-s3-tile { flex:1; min-width:140px; padding:16px; border-radius:10px; border:1px solid var(--color-border); cursor:pointer; transition:box-shadow 0.15s, transform 0.15s; }
+.ov-s3-tile:hover { box-shadow:0 4px 12px rgba(0,0,0,0.08); transform:translateY(-1px); }
+.ov-s3-tile-label { font-size:13px; font-weight:600; color:var(--color-text-primary); margin-bottom:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ov-s3-tile-value { font-size:20px; font-weight:700; color:var(--color-text-primary); margin-bottom:2px; letter-spacing:-0.5px; }
+.ov-s3-tile-metric { font-size:11px; color:var(--color-text-caption); margin-bottom:12px; }
+.ov-s3-tile-cos { display:flex; align-items:center; gap:5px; }
+.ov-s3-cos-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+/* ── Section 4 ── */
+.ov-s4-columns { display:flex; gap:20px; align-items:flex-start; }
+.ov-s4-stats { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
+.ov-s4-stat-tile { padding:16px 20px; background:var(--color-bg-grey50); border-radius:8px; min-width:160px; }
+.ov-s4-stat-label { font-size:12px; color:var(--color-text-subtitle); margin-bottom:4px; }
+.ov-s4-stat-value { font-size:24px; font-weight:700; color:var(--color-text-primary); }
+.ov-term-row { display:flex; align-items:center; padding:10px 0; border-bottom:1px solid var(--color-border); gap:10px; }
+.ov-term-row:last-child { border-bottom:none; }
+@media (max-width:960px) { .ov-s4-columns { flex-direction:column; } }
+@media (max-width:900px) { .ov-s2-columns { flex-direction:column; } }
 </style>
 <div id="overview-page" style="display:none; padding:32px 32px 64px;">
 
@@ -258,29 +303,25 @@
     <!-- Summary stats -->
     <div class="ov-s4-stats" id="ov-s4-stats"></div>
 
-    <!-- Two column: scatter left, term lists right -->
+    <!-- Two column: scatter left, tabbed term lists right -->
     <div class="ov-s4-columns">
       <!-- Scatter plot -->
-      <div class="ov-chart-card" style="flex:1.1;">
+      <div class="ov-chart-card" style="flex:1;min-width:0;">
         <div class="ov-chart-label" style="margin-bottom:4px;" id="ov-s4-scatter-label">Spend vs Conversion Value</div>
         <div class="ov-chart-sublabel" style="margin-bottom:16px;">Each dot is one search term — size reflects spend volume</div>
         <div style="position:relative;">
-          <canvas id="ov-scatter-canvas" height="300"></canvas>
+          <canvas id="ov-scatter-canvas"></canvas>
         </div>
       </div>
 
-      <!-- Term lists -->
-      <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
-        <div class="ov-chart-card" style="flex:1;">
-          <div class="ov-chart-label" style="margin-bottom:2px;" id="ov-s4-left-label">Top Converting Terms</div>
-          <div class="ov-chart-sublabel" style="margin-bottom:12px;" id="ov-s4-left-sub">Highest revenue search queries</div>
-          <div id="ov-s4-terms-left"></div>
+      <!-- Tabbed term lists -->
+      <div class="ov-chart-card" style="flex:1;min-width:0;display:flex;flex-direction:column;">
+        <div style="display:flex;gap:4px;margin-bottom:8px;">
+          <button id="ov-s4-tab-left" class="ov-s4-term-tab ov-s4-term-tab-active" onclick="ovS4SwitchTermTab('left')">Top Converting Terms</button>
+          <button id="ov-s4-tab-right" class="ov-s4-term-tab" onclick="ovS4SwitchTermTab('right')">Highest Wasted Spend</button>
         </div>
-        <div class="ov-chart-card" style="flex:1;">
-          <div class="ov-chart-label" style="margin-bottom:2px;" id="ov-s4-right-label">Highest Wasted Spend</div>
-          <div class="ov-chart-sublabel" style="margin-bottom:12px;" id="ov-s4-right-sub">Spend with zero or near-zero conversions</div>
-          <div id="ov-s4-terms-right"></div>
-        </div>
+        <div class="ov-chart-sublabel" id="ov-s4-terms-sub" style="margin-bottom:12px;">Highest revenue search queries</div>
+        <div id="ov-s4-terms-panel"></div>
       </div>
     </div>
   </div>
