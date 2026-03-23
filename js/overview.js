@@ -882,18 +882,18 @@ var OV_S4_SEM = {
     { label:'New This Period', value:'234',    suffix:'terms', delta:null }
   ],
   scatterDots: [
-    { term:'"outdoor research"',        spend:1920, convVal:12400, size:18, quadrant:'scale'      },
-    { term:'"best rain jacket"',        spend:890,  convVal:8200,  size:13, quadrant:'scale'      },
-    { term:'"heated gloves"',           spend:340,  convVal:6100,  size:8,  quadrant:'hidden-gem' },
-    { term:'"waterproof hiking boots"', spend:210,  convVal:5400,  size:6,  quadrant:'hidden-gem' },
-    { term:'"outdoor research jacket"', spend:1200, convVal:3100,  size:15, quadrant:'bleeding'   },
-    { term:'"outdoor gear store"',      spend:980,  convVal:1200,  size:12, quadrant:'bleeding'   },
-    { term:'"camping supplies"',        spend:420,  convVal:890,   size:7,  quadrant:'bleeding'   },
-    { term:'"rain gear"',               spend:180,  convVal:4200,  size:5,  quadrant:'hidden-gem' },
-    { term:'"fleece jacket"',           spend:650,  convVal:7100,  size:10, quadrant:'scale'      },
-    { term:'"outdoor clothing"',        spend:290,  convVal:980,   size:6,  quadrant:'ignore'     },
-    { term:'"hiking backpack"',         spend:120,  convVal:340,   size:4,  quadrant:'ignore'     },
-    { term:'"ski gloves"',              spend:560,  convVal:5800,  size:9,  quadrant:'scale'      },
+    { term:'"outdoor research"',        spend:1920, convVal:12400, size:18, quadrant:'scale',      conv:127 },
+    { term:'"best rain jacket"',        spend:890,  convVal:8200,  size:13, quadrant:'scale',      conv:98  },
+    { term:'"heated gloves"',           spend:340,  convVal:6100,  size:8,  quadrant:'hidden-gem', conv:84  },
+    { term:'"waterproof hiking boots"', spend:210,  convVal:5400,  size:6,  quadrant:'hidden-gem', conv:61  },
+    { term:'"outdoor research jacket"', spend:1200, convVal:3100,  size:15, quadrant:'bleeding',   conv:28  },
+    { term:'"outdoor gear store"',      spend:980,  convVal:1200,  size:12, quadrant:'bleeding',   conv:9   },
+    { term:'"camping supplies"',        spend:420,  convVal:890,   size:7,  quadrant:'bleeding',   conv:7   },
+    { term:'"rain gear"',               spend:180,  convVal:4200,  size:5,  quadrant:'hidden-gem', conv:47  },
+    { term:'"fleece jacket"',           spend:650,  convVal:7100,  size:10, quadrant:'scale',      conv:81  },
+    { term:'"outdoor clothing"',        spend:290,  convVal:980,   size:6,  quadrant:'ignore',     conv:4   },
+    { term:'"hiking backpack"',         spend:120,  convVal:340,   size:4,  quadrant:'ignore',     conv:3   },
+    { term:'"ski gloves"',              spend:560,  convVal:5800,  size:9,  quadrant:'scale',      conv:64  },
   ],
   termsLeft: [
     { term:'"outdoor research"',  meta:'127 conv \u00b7 2.1k COS', value:'$1,920,399' },
@@ -917,14 +917,14 @@ var OV_S4_SEO = {
     { label:'New Keywords Ranking', value:'47',    suffix:'keywords', delta:null }
   ],
   scatterDots: [
-    { term:'"outdoor research jacket"', spend:1840, convVal:9200, size:16, quadrant:'scale'      },
-    { term:'"best waterproof jacket"',  spend:620,  convVal:7400, size:9,  quadrant:'hidden-gem' },
-    { term:'"fleece pullover women"',   spend:290,  convVal:5100, size:6,  quadrant:'hidden-gem' },
-    { term:'"hiking boots waterproof"', spend:980,  convVal:2100, size:13, quadrant:'bleeding'   },
-    { term:'"outdoor gear"',            spend:1200, convVal:1400, size:15, quadrant:'bleeding'   },
-    { term:'"camping gear store"',      spend:180,  convVal:3800, size:5,  quadrant:'hidden-gem' },
-    { term:'"rain jacket"',             spend:740,  convVal:6200, size:11, quadrant:'scale'      },
-    { term:'"winter gloves"',           spend:120,  convVal:280,  size:4,  quadrant:'ignore'     },
+    { term:'"outdoor research jacket"', spend:1840, convVal:9200, size:16, quadrant:'scale',      conv:112 },
+    { term:'"best waterproof jacket"',  spend:620,  convVal:7400, size:9,  quadrant:'hidden-gem', conv:88  },
+    { term:'"fleece pullover women"',   spend:290,  convVal:5100, size:6,  quadrant:'hidden-gem', conv:61  },
+    { term:'"hiking boots waterproof"', spend:980,  convVal:2100, size:13, quadrant:'bleeding',   conv:24  },
+    { term:'"outdoor gear"',            spend:1200, convVal:1400, size:15, quadrant:'bleeding',   conv:15  },
+    { term:'"camping gear store"',      spend:180,  convVal:3800, size:5,  quadrant:'hidden-gem', conv:44  },
+    { term:'"rain jacket"',             spend:740,  convVal:6200, size:11, quadrant:'scale',      conv:74  },
+    { term:'"winter gloves"',           spend:120,  convVal:280,  size:4,  quadrant:'ignore',     conv:3   },
   ],
   termsLeft: [
     { term:'"outdoor research jacket"', meta:'Pos 1 \u2192 Pos 1 \u00b7 +340 clicks', value:'+$9,200' },
@@ -942,8 +942,9 @@ var OV_S4_SEO = {
   ]
 };
 
-var _ovS4Channel  = 'SEM';
-var _ovS4TermTab  = 'left'; /* 'left' = top converting, 'right' = wasted spend */
+var _ovS4Channel      = 'SEM';
+var _ovS4TermTab      = 'left'; /* 'left' = top converting, 'right' = wasted spend */
+var _ovS4DotPositions = [];     /* cached dot positions for hit-testing */
 
 function renderS4Stats(channel) {
   var data = channel === 'SEM' ? OV_S4_SEM : OV_S4_SEO;
@@ -1032,9 +1033,10 @@ function renderS4Scatter(channel) {
   var isSEM = channel === 'SEM';
   var ctx   = canvas.getContext('2d');
 
-  var dpr = window.devicePixelRatio || 1;
-  var W = canvas.parentElement.offsetWidth || 400;
-  var H = 300;
+  var dpr  = window.devicePixelRatio || 1;
+  var wrap = document.getElementById('ov-scatter-wrap');
+  var W    = (wrap ? wrap.offsetWidth : canvas.parentElement.offsetWidth) || 400;
+  var H    = 300;
   canvas.width        = W * dpr;
   canvas.height       = H * dpr;
   canvas.style.width  = W + 'px';
@@ -1045,6 +1047,22 @@ function renderS4Scatter(channel) {
   var pad   = { top:24, right:20, bottom:44, left:52 };
   var plotW = W - pad.left - pad.right;
   var plotH = H - pad.top  - pad.bottom;
+
+  /* Log scale for x-axis (spend values span orders of magnitude) */
+  var spendVals = dots.map(function(d){ return d.spend; });
+  var convVals  = dots.map(function(d){ return d.convVal; });
+  var minSpend  = Math.min.apply(null, spendVals);
+  var maxSpend  = Math.max.apply(null, spendVals);
+  var maxConv   = Math.max.apply(null, convVals);
+  var logLo     = Math.log(Math.max(minSpend * 0.65, 1));
+  var logHi     = Math.log(maxSpend * 1.2);
+
+  function toX(v) {
+    return pad.left + ((Math.log(Math.max(v, 1)) - logLo) / (logHi - logLo)) * plotW;
+  }
+  function toY(v) {
+    return pad.top + plotH - (v / (maxConv * 1.08)) * plotH;
+  }
 
   /* Quadrant backgrounds */
   ctx.fillStyle = 'rgba(34,197,94,0.07)';
@@ -1059,10 +1077,10 @@ function renderS4Scatter(channel) {
   /* Quadrant labels */
   ctx.font      = '10px Inter, sans-serif';
   ctx.fillStyle = 'rgba(107,114,128,0.75)';
-  ctx.fillText('Hidden gems', pad.left + 6,            pad.top + 13);
-  ctx.fillText('Scale these', pad.left + plotW/2 + 6,  pad.top + 13);
-  ctx.fillText('Ignore',      pad.left + 6,            pad.top + plotH - 6);
-  ctx.fillText('Bleeding',    pad.left + plotW/2 + 6,  pad.top + plotH - 6);
+  ctx.fillText('Hidden gems', pad.left + 6,           pad.top + 13);
+  ctx.fillText('Scale these', pad.left + plotW/2 + 6, pad.top + 13);
+  ctx.fillText('Ignore',      pad.left + 6,           pad.top + plotH - 6);
+  ctx.fillText('Bleeding',    pad.left + plotW/2 + 6, pad.top + plotH - 6);
 
   /* Quadrant dividers */
   ctx.strokeStyle = 'rgba(226,229,237,0.9)';
@@ -1076,17 +1094,16 @@ function renderS4Scatter(channel) {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  var maxSpend = Math.max.apply(null, dots.map(function(d){ return d.spend;   }));
-  var maxConv  = Math.max.apply(null, dots.map(function(d){ return d.convVal; }));
-
-  function toX(v) { return pad.left + (v / maxSpend) * plotW; }
-  function toY(v) { return pad.top  + plotH - (v / maxConv) * plotH; }
-
-  /* Dots */
+  /* Draw dots, cache positions for hover hit-testing */
+  _ovS4DotPositions = [];
   dots.forEach(function(dot) {
     var x = toX(dot.spend);
     var y = toY(dot.convVal);
     var r = dot.size / 2;
+    /* Clamp within plot bounds */
+    x = Math.max(pad.left + r + 1, Math.min(pad.left + plotW - r - 1, x));
+    y = Math.max(pad.top  + r + 1, Math.min(pad.top  + plotH - r - 1, y));
+    _ovS4DotPositions.push({ x:x, y:y, r:r, dot:dot });
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fillStyle = dot.quadrant === 'bleeding'
@@ -1098,27 +1115,146 @@ function renderS4Scatter(channel) {
     ctx.stroke();
   });
 
-  /* Label top 3 dots by convVal */
-  var labeled = dots.slice().sort(function(a,b){ return b.convVal - a.convVal; }).slice(0, 3);
+  /* Label top 3 dots by convVal — flip to left side if too close to right edge */
+  var labeled = _ovS4DotPositions.slice()
+    .sort(function(a,b){ return b.dot.convVal - a.dot.convVal; })
+    .slice(0, 3);
   ctx.font      = '10px Inter, sans-serif';
   ctx.fillStyle = '#374151';
-  labeled.forEach(function(dot) {
-    var x   = toX(dot.spend);
-    var y   = toY(dot.convVal);
-    var lbl = dot.term.replace(/"/g, '');
-    if (lbl.length > 18) lbl = lbl.substring(0, 18) + '\u2026';
-    ctx.fillText(lbl, x + dot.size / 2 + 4, y + 3);
+  labeled.forEach(function(pos) {
+    var lbl   = pos.dot.term.replace(/"/g, '');
+    if (lbl.length > 22) lbl = lbl.substring(0, 22) + '\u2026';
+    var textW = ctx.measureText(lbl).width;
+    var tx    = pos.x + pos.r + 4;
+    if (tx + textW > W - pad.right - 2) tx = pos.x - pos.r - 4 - textW;
+    tx = Math.max(pad.left + 2, tx);
+    ctx.fillText(lbl, tx, pos.y + 3);
   });
 
-  /* Axis labels */
+  /* Axis labels on canvas */
   ctx.fillStyle = '#9ca3af';
   ctx.font      = '10px Inter, sans-serif';
-  ctx.fillText(isSEM ? 'Spend \u2192' : 'Organic Clicks \u2192', pad.left + plotW/2 - 24, H - 8);
+  ctx.fillText(isSEM ? 'Spend \u2192' : 'Organic Clicks \u2192', pad.left + plotW/2 - 26, H - 8);
   ctx.save();
-  ctx.translate(13, pad.top + plotH/2 + 30);
+  ctx.translate(13, pad.top + plotH/2 + 32);
   ctx.rotate(-Math.PI / 2);
   ctx.fillText(isSEM ? 'Conv. Value \u2191' : 'Organic Revenue \u2191', 0, 0);
   ctx.restore();
+
+  /* Wire up hover interactions */
+  setupScatterHover(canvas);
+}
+
+/* ── Scatter dot hover tooltip + pulse ring ── */
+function setupScatterHover(canvas) {
+  /* Remove stale listeners */
+  if (canvas._ovMM) canvas.removeEventListener('mousemove',  canvas._ovMM);
+  if (canvas._ovML) canvas.removeEventListener('mouseleave', canvas._ovML);
+
+  var tip   = document.getElementById('ov-scatter-htip');
+  var pulse = document.getElementById('ov-scatter-pulse');
+
+  function hitTest(e) {
+    var rect = canvas.getBoundingClientRect();
+    /* CSS dimensions (not physical pixels) */
+    var scaleX = parseFloat(canvas.style.width)  / rect.width;
+    var scaleY = parseFloat(canvas.style.height) / rect.height;
+    var mx = (e.clientX - rect.left)  * scaleX;
+    var my = (e.clientY - rect.top)   * scaleY;
+    for (var i = _ovS4DotPositions.length - 1; i >= 0; i--) {
+      var p = _ovS4DotPositions[i];
+      var dx = mx - p.x, dy = my - p.y;
+      if (dx*dx + dy*dy <= (p.r + 5) * (p.r + 5)) return p;
+    }
+    return null;
+  }
+
+  canvas._ovMM = function(e) {
+    var hit = hitTest(e);
+    if (hit) {
+      canvas.style.cursor = 'pointer';
+      /* Pulse ring */
+      if (pulse) {
+        var pSz = (hit.r + 7) * 2;
+        pulse.style.width   = pSz + 'px';
+        pulse.style.height  = pSz + 'px';
+        pulse.style.left    = hit.x + 'px';
+        pulse.style.top     = hit.y + 'px';
+        /* Restart animation */
+        pulse.style.animation = 'none';
+        pulse.offsetHeight; // force reflow
+        pulse.style.animation = '';
+        pulse.style.display = 'block';
+        pulse.style.borderColor = hit.dot.quadrant === 'bleeding'
+          ? 'rgba(239,68,68,0.5)' : 'rgba(52,110,217,0.45)';
+      }
+      /* Hover tooltip */
+      if (tip) {
+        var d      = hit.dot;
+        var isSEM  = _ovS4Channel === 'SEM';
+        var xLbl   = isSEM ? 'Spend' : 'Organic Clicks';
+        var xVal   = isSEM ? ('$' + d.spend.toLocaleString()) : d.spend.toLocaleString();
+        var yLbl   = isSEM ? 'Conv. Value' : 'Organic Revenue';
+        var yVal   = '$' + d.convVal.toLocaleString();
+        tip.innerHTML =
+          '<div style="font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:8px;font-style:italic;">' + d.term + '</div>' +
+          '<div style="display:grid;grid-template-columns:auto auto;gap:3px 16px;font-size:12px;">' +
+            '<span style="color:var(--color-text-subtitle);">' + xLbl + '</span>' +
+            '<span style="font-weight:600;color:var(--color-text-primary);text-align:right;">' + xVal + '</span>' +
+            '<span style="color:var(--color-text-subtitle);">' + yLbl + '</span>' +
+            '<span style="font-weight:600;color:var(--color-text-primary);text-align:right;">' + yVal + '</span>' +
+            '<span style="color:var(--color-text-subtitle);">Conversions</span>' +
+            '<span style="font-weight:600;color:var(--color-text-primary);text-align:right;">' + (d.conv || 0) + '</span>' +
+          '</div>';
+        var tx = e.clientX + 16;
+        var ty = e.clientY - 16;
+        if (tx + 210 > window.innerWidth)  tx = e.clientX - 220;
+        if (ty + 120 > window.innerHeight) ty = e.clientY - 130;
+        tip.style.left    = tx + 'px';
+        tip.style.top     = ty + 'px';
+        tip.style.display = 'block';
+      }
+    } else {
+      canvas.style.cursor = '';
+      if (tip)   tip.style.display   = 'none';
+      if (pulse) pulse.style.display = 'none';
+    }
+  };
+
+  canvas._ovML = function() {
+    canvas.style.cursor = '';
+    var t = document.getElementById('ov-scatter-htip');
+    var p = document.getElementById('ov-scatter-pulse');
+    if (t) t.style.display = 'none';
+    if (p) p.style.display = 'none';
+  };
+
+  canvas.addEventListener('mousemove',  canvas._ovMM);
+  canvas.addEventListener('mouseleave', canvas._ovML);
+}
+
+/* ── Axis info icon tooltips (position:fixed set on mouseenter) ── */
+function setupAxisInfoTooltips() {
+  ['ov-scatter-xinfo', 'ov-scatter-yinfo'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el || el._ovInfoWired) return;
+    el._ovInfoWired = true;
+    var tip = el.querySelector('.ov-axis-info-tip');
+    if (!tip) return;
+    el.addEventListener('mouseenter', function() {
+      var rect = el.getBoundingClientRect();
+      var tx   = rect.left;
+      var ty   = rect.bottom + 6;
+      if (tx + 340 > window.innerWidth)  tx = window.innerWidth - 346;
+      if (tx < 8) tx = 8;
+      tip.style.left    = tx + 'px';
+      tip.style.top     = ty + 'px';
+      tip.style.opacity = '1';
+    });
+    el.addEventListener('mouseleave', function() {
+      tip.style.opacity = '0';
+    });
+  });
 }
 
 function initSection4(channel) {
@@ -1133,6 +1269,7 @@ function initSection4(channel) {
   renderS4Stats(channel);
   renderS4TermLists(channel);
   renderS4Scatter(channel);
+  setupAxisInfoTooltips();
 }
 
 window.ovDrillSearchTerm = function(e) {

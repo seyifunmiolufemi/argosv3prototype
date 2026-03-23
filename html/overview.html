@@ -70,13 +70,21 @@
 .ov-s3-tile-cos { display:flex; align-items:center; gap:5px; }
 .ov-s3-cos-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 /* ── Section 4 ── */
-.ov-s4-columns { display:flex; gap:20px; align-items:flex-start; }
-.ov-s4-stats { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
-.ov-s4-stat-tile { padding:16px 20px; background:var(--color-bg-grey50); border-radius:8px; min-width:160px; }
+.ov-s4-columns { display:flex; gap:20px; align-items:stretch; }
+.ov-s4-stats { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+.ov-s4-stat-tile { padding:16px 20px; background:var(--color-bg-grey50); border-radius:8px; }
 .ov-s4-stat-label { font-size:12px; color:var(--color-text-subtitle); margin-bottom:4px; }
 .ov-s4-stat-value { font-size:24px; font-weight:700; color:var(--color-text-primary); }
 .ov-term-row { display:flex; align-items:center; padding:10px 0; border-bottom:1px solid var(--color-border); gap:10px; }
 .ov-term-row:last-child { border-bottom:none; }
+/* Axis info icons */
+.ov-axis-info-btn { background:none; border:none; padding:1px; cursor:default; display:inline-flex; align-items:center; color:var(--color-text-caption); line-height:0; }
+.ov-axis-info-tip { position:fixed; z-index:9999; background:white; border:1px solid var(--color-border); border-radius:4px; padding:8px 10px; font-size:12px; color:var(--color-text-primary); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 0.15s; font-family:'DM Sans',sans-serif; box-shadow:0 2px 8px rgba(0,0,0,0.08); top:0; left:0; }
+/* Scatter hover tooltip */
+.ov-scatter-htip { position:fixed; z-index:9998; background:white; border:1px solid var(--color-border); border-radius:8px; padding:10px 14px; font-family:'DM Sans',sans-serif; box-shadow:0 4px 16px rgba(0,0,0,0.1); pointer-events:none; display:none; min-width:180px; }
+/* Dot pulse ring */
+.ov-scatter-pulse { position:absolute; border-radius:50%; border:2px solid rgba(52,110,217,0.45); pointer-events:none; display:none; transform:translate(-50%,-50%); animation:ov-dot-pulse 0.9s ease-out infinite; }
+@keyframes ov-dot-pulse { 0%{transform:translate(-50%,-50%) scale(1);opacity:0.7} 100%{transform:translate(-50%,-50%) scale(2.6);opacity:0} }
 @media (max-width:960px) { .ov-s4-columns { flex-direction:column; } }
 @media (max-width:900px) { .ov-s2-columns { flex-direction:column; } }
 </style>
@@ -309,19 +317,38 @@
       <div class="ov-chart-card" style="flex:1;min-width:0;">
         <div class="ov-chart-label" style="margin-bottom:4px;" id="ov-s4-scatter-label">Spend vs Conversion Value</div>
         <div class="ov-chart-sublabel" style="margin-bottom:16px;">Each dot is one search term — size reflects spend volume</div>
-        <div style="position:relative;">
-          <canvas id="ov-scatter-canvas"></canvas>
+        <div style="position:relative;" id="ov-scatter-wrap">
+          <canvas id="ov-scatter-canvas" style="display:block;"></canvas>
+          <!-- X-axis info icon (positioned over canvas near axis label) -->
+          <span id="ov-scatter-xinfo" class="ov-axis-info-btn" style="position:absolute;bottom:6px;left:50%;transform:translateX(30px);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div class="ov-axis-info-tip">Total ad spend for this search term in the selected period</div>
+          </span>
+          <!-- Y-axis info icon (positioned near rotated axis label) -->
+          <span id="ov-scatter-yinfo" class="ov-axis-info-btn" style="position:absolute;top:50%;left:2px;transform:translateY(-30px);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div class="ov-axis-info-tip">Total conversion value (revenue) attributed to this search term</div>
+          </span>
+          <!-- Dot hover tooltip -->
+          <div id="ov-scatter-htip" class="ov-scatter-htip"></div>
+          <!-- Pulse ring (shown on dot hover) -->
+          <div id="ov-scatter-pulse" class="ov-scatter-pulse"></div>
         </div>
       </div>
 
       <!-- Tabbed term lists -->
       <div class="ov-chart-card" style="flex:1;min-width:0;display:flex;flex-direction:column;">
-        <div style="display:flex;gap:4px;margin-bottom:8px;">
+        <div class="ov-chart-card-header" style="margin-bottom:12px;">
+          <div>
+            <div class="ov-chart-label">Search Terms</div>
+            <div class="ov-chart-sublabel">Top performing and highest wasted spend queries</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;margin-bottom:12px;">
           <button id="ov-s4-tab-left" class="ov-s4-term-tab ov-s4-term-tab-active" onclick="ovS4SwitchTermTab('left')">Top Converting Terms</button>
           <button id="ov-s4-tab-right" class="ov-s4-term-tab" onclick="ovS4SwitchTermTab('right')">Highest Wasted Spend</button>
         </div>
-        <div class="ov-chart-sublabel" id="ov-s4-terms-sub" style="margin-bottom:12px;">Highest revenue search queries</div>
-        <div id="ov-s4-terms-panel"></div>
+        <div id="ov-s4-terms-panel" style="flex:1;overflow-y:auto;"></div>
       </div>
     </div>
   </div>
