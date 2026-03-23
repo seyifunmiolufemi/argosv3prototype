@@ -194,7 +194,7 @@
     <!-- Two column layout -->
     <div class="ov-s2-columns">
       <!-- Left: Trend Line -->
-      <div class="ov-chart-card" style="flex:1.2;">
+      <div class="ov-chart-card" style="flex:1; min-width:0;">
         <div class="ov-chart-card-header">
           <div>
             <div class="ov-chart-label">Performance Over Time</div>
@@ -208,15 +208,15 @@
           <span class="ov-legend-dot" style="background:#e07b6a;margin-left:16px;"></span>
           <span class="ov-legend-text">Cost</span>
         </div>
-        <div style="position:relative;">
-          <canvas id="ov-trend-chart" height="220"></canvas>
+        <div style="position:relative; height:260px;">
+          <canvas id="ov-trend-chart"></canvas>
         </div>
         <!-- Annotation markers on x-axis -->
         <div class="ov-annotations-row" id="ov-annotations-row"></div>
       </div>
 
       <!-- Right: Waterfall -->
-      <div class="ov-chart-card" style="flex:1;">
+      <div class="ov-chart-card" style="flex:1; min-width:0;">
         <div class="ov-chart-card-header">
           <div>
             <div class="ov-chart-label">Drivers of Change</div>

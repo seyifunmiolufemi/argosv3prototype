@@ -207,7 +207,7 @@ window.ovSetChannel = function(ch) {
     if (btn) btn.className = 'ov-channel-tab' + (t === ch.toLowerCase() ? ' ov-tab-active' : '');
   });
   ovRender();
-  updateSection2(ch);
+  setTimeout(function() { updateSection2(ch); }, 50);
 };
 
 /* ── Delta toggle ── */
@@ -334,7 +334,7 @@ function showOverviewPage() {
   ovBuildClientDd();
   ovBuildWebsiteDd();
   ovRender();
-  updateSection2(_ovChannel);
+  setTimeout(function() { updateSection2(_ovChannel); }, 50);
 }
 window.showOverviewPage = showOverviewPage;
 
@@ -487,7 +487,7 @@ function initTrendChart(channel) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
