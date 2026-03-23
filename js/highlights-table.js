@@ -35,6 +35,16 @@ var _hlShowSparklines = true;
 var _hlLevel = 'L2';
 var _hlSortCol = 'convVal';
 var _hlSortDir = 'desc';
+var _hlHighlightCols = ['convVal']; // relative-scale cols; COS is always threshold-colored
+
+function hlInterpColor(t) {
+  return 'rgb('+Math.round(230+(26-230)*t)+','+Math.round(249+(92-249)*t)+','+Math.round(238+(53-238)*t)+')';
+}
+function hlCellBg(val, minV, maxV, inverted) {
+  var t = maxV === minV ? 0.5 : (val - minV) / (maxV - minV);
+  if (inverted) t = 1 - t;
+  return 'background:'+hlInterpColor(t)+';color:'+(t >= 0.5 ? '#ffffff' : '#111827')+';';
+}
 
 function hlGetDataset() {
   if (_hlLevel === 'L1') return HL_DATA_L1;
@@ -105,24 +115,32 @@ function hlRender() {
     return _hlSortDir === 'desc' ? vb - va : va - vb;
   });
 
-  var maxCV = Math.max.apply(null, rows.map(function(r){return r.convVal;}));
-  var minCV = Math.min.apply(null, rows.map(function(r){return r.convVal;}));
+  var maxCV   = Math.max.apply(null, rows.map(function(r){return r.convVal;}));
+  var minCV   = Math.min.apply(null, rows.map(function(r){return r.convVal;}));
+  var maxCost = Math.max.apply(null, rows.map(function(r){return r.cost;}));
+  var minCost = Math.min.apply(null, rows.map(function(r){return r.cost;}));
+  var maxCR   = Math.max.apply(null, rows.map(function(r){return r.convRate;}));
+  var minCR   = Math.min.apply(null, rows.map(function(r){return r.convRate;}));
+  var maxAOV  = Math.max.apply(null, rows.map(function(r){return r.aov;}));
+  var minAOV  = Math.min.apply(null, rows.map(function(r){return r.aov;}));
+  var hl = _hlHighlightCols;
 
   var html = '';
   rows.forEach(function(row) {
-    var cosSt = hlCOSCellStyle(row.cos);
-    html += '<tr style="border-bottom:1px solid var(--color-border);">';
-    html += '<td style="padding:0 16px;font-size:13px;font-weight:500;color:var(--color-text-primary);height:42px;white-space:nowrap;">' + escHtml(row.name) + '</td>';
-    var cvT = maxCV === minCV ? 0.5 : (row.convVal - minCV) / (maxCV - minCV);
-    var cvBg = 'rgb(' + Math.round(230+(26-230)*cvT) + ',' + Math.round(249+(92-249)*cvT) + ',' + Math.round(238+(53-238)*cvT) + ')';
-    var cvTxt = cvT >= 0.5 ? '#ffffff' : '#111827';
-    html += '<td style="padding:0 16px;font-size:13px;font-weight:600;text-align:right;height:42px;background:' + cvBg + ';color:' + cvTxt + ';">$' + Math.round(row.convVal).toLocaleString() + '</td>';
-    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">$' + Math.round(row.cost).toLocaleString() + '</td>';
-    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">' + row.conv.toLocaleString() + '</td>';
-    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">' + row.convRate.toFixed(1) + '%</td>';
-    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:42px;">$' + row.aov.toFixed(2) + '</td>';
-    html += '<td style="padding:0 16px;font-size:13px;text-align:right;font-weight:600;height:42px;' + cosSt + '">' + row.cos.toFixed(2) + '%</td>';
-    html += '<td style="padding:0 8px;text-align:center;height:42px;">' + (_hlShowSparklines ? hlSparklineSvg(row.cos) : '<span style="color:var(--color-text-caption);">—</span>') + '</td>';
+    var cosSt  = hlCOSCellStyle(row.cos);
+    var cvSt   = hl.indexOf('convVal')  >= 0 ? hlCellBg(row.convVal,  minCV,   maxCV,   false) : '';
+    var cstSt  = hl.indexOf('cost')     >= 0 ? hlCellBg(row.cost,     minCost, maxCost, true)  : '';
+    var crSt   = hl.indexOf('convRate') >= 0 ? hlCellBg(row.convRate, minCR,   maxCR,   false) : '';
+    var aovSt  = hl.indexOf('aov')      >= 0 ? hlCellBg(row.aov,      minAOV,  maxAOV,  false) : '';
+    html += '<tr class="hl-row" style="border-bottom:1px solid var(--color-border);">';
+    html += '<td style="padding:0 16px;font-size:13px;font-weight:500;color:var(--color-text-primary);height:48px;white-space:nowrap;">' + escHtml(row.name) + '</td>';
+    html += '<td style="padding:0 16px;font-size:13px;font-weight:600;text-align:right;height:48px;' + cvSt  + '">$' + Math.round(row.convVal).toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px;font-size:13px;font-weight:500;text-align:right;height:48px;' + cstSt + '">$' + Math.round(row.cost).toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:48px;">' + row.conv.toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:48px;' + crSt  + '">' + row.convRate.toFixed(1) + '%</td>';
+    html += '<td style="padding:0 16px;font-size:13px;text-align:right;height:48px;' + aovSt + '">$' + row.aov.toFixed(2) + '</td>';
+    html += '<td style="padding:0 16px;font-size:13px;text-align:right;font-weight:600;height:48px;' + cosSt + '">' + row.cos.toFixed(2) + '%</td>';
+    html += '<td style="padding:0 8px;text-align:center;height:48px;">' + (_hlShowSparklines ? hlSparklineSvg(row.cos) : '<span style="color:var(--color-text-caption);">—</span>') + '</td>';
     html += '</tr>';
   });
 
@@ -138,8 +156,10 @@ function hlRender() {
 
   var lvlEl = document.getElementById('hl-level-label');
   if (lvlEl) lvlEl.textContent = _hlLevel;
+  var thLvl = document.getElementById('hl-th-level');
+  if (thLvl) thLvl.textContent = _hlLevel;
 
-  var cntEl = document.getElementById('hl-count-label');
+  var cntEl = document.getElementById('hl-footer-text');
   if (cntEl) cntEl.textContent = 'Showing ' + rows.length + ' of ' + data.length + ' results';
 }
 
@@ -155,7 +175,7 @@ window.hlSortByCol = function(col) {
   hlRender();
 };
 
-window.hlSetSort = function(val) {
+window.hlSetSort = function(val, label) {
   var map = {
     'impact':       { col:'convVal', dir:'desc' },
     'convval-desc': { col:'convVal', dir:'desc' },
@@ -168,6 +188,17 @@ window.hlSetSort = function(val) {
   };
   var e = map[val];
   if (e) { _hlSortCol = e.col; _hlSortDir = e.dir; }
+  var lbl = document.getElementById('hl-sort-label');
+  if (lbl && label) lbl.textContent = label;
+  var panel = document.getElementById('hl-sort-panel');
+  if (panel) panel.style.display = 'none';
+  hlRender();
+};
+
+window.hlSetLevel = function(level) {
+  _hlLevel = level;
+  var panel = document.getElementById('hl-level-panel');
+  if (panel) panel.style.display = 'none';
   hlRender();
 };
 
@@ -186,17 +217,26 @@ window.hlApplyFilters = function() {
   if (inp) _hlCOSTarget = parseInt(inp.value) || 29;
   var spk = document.getElementById('hl-chk-sparklines');
   if (spk) _hlShowSparklines = spk.checked;
+  _hlHighlightCols = [];
+  ['convVal','cost','convRate','aov'].forEach(function(k) {
+    var el = document.getElementById('hl-chk-' + k);
+    if (el && el.checked) _hlHighlightCols.push(k);
+  });
   hlCloseDrawer();
   hlRender();
   showToast('Filters applied');
 };
 
 window.hlClearFilters = function() {
-  _hlCOSTarget = 29; _hlShowSparklines = true;
+  _hlCOSTarget = 29; _hlShowSparklines = true; _hlHighlightCols = ['convVal'];
   var inp = document.getElementById('hl-cos-target-input');
   if (inp) inp.value = 29;
   var spk = document.getElementById('hl-chk-sparklines');
   if (spk) spk.checked = true;
+  ['convVal','cost','convRate','aov'].forEach(function(k) {
+    var el = document.getElementById('hl-chk-' + k);
+    if (el) el.checked = k === 'convVal';
+  });
   hlRender();
   showToast('Filters cleared');
 };

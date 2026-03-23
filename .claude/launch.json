@@ -10,7 +10,7 @@
     {
       "name": "Argos Dev Server",
       "runtimeExecutable": "ruby",
-      "runtimeArgs": ["-run", "-e", "httpd", "/Users/Apple/Downloads/argosv3", "-p", "8080"],
+      "runtimeArgs": ["-run", "-e", "httpd", "/Users/Apple/argosv3_serve", "-p", "8080"],
       "port": 8080
     }
   ]

@@ -1,3 +1,6 @@
+<style>
+#hl-tbody tr.hl-row:hover { background: #f9fafb; }
+</style>
 <div id="highlights-page" style="display:none;">
   <!-- Header row -->
   <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px;">
@@ -27,7 +30,14 @@
   <!-- Table toolbar -->
   <div class="hl-toolbar">
     <input id="hl-search" class="hl-toolbar-search" type="text" placeholder="Search pages by URL or assigned keywords…" oninput="hlRender()">
-    <button class="hl-sort-dd" onclick="hlCycleLevel()">Product Type <span id="hl-level-label" style="font-weight:600;">L2</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div style="position:relative; display:inline-block;">
+      <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-level-panel');p.style.display=p.style.display==='block'?'none':'block'">Product Type: <span id="hl-level-label" style="font-weight:600;">L2</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div id="hl-level-panel" style="display:none; position:absolute; top:calc(100% + 4px); left:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:200; min-width:200px; padding:4px 0;">
+        <div class="pm-dd-item" onclick="hlSetLevel('L1')">Product Type L1 <span style="color:var(--color-text-caption);font-size:11px;">4 rows</span></div>
+        <div class="pm-dd-item" onclick="hlSetLevel('L2')">Product Type L2 <span style="color:var(--color-text-caption);font-size:11px;">8 rows</span></div>
+        <div class="pm-dd-item" onclick="hlSetLevel('L3')">Product Type L3 <span style="color:var(--color-text-caption);font-size:11px;">12 rows</span></div>
+      </div>
+    </div>
     <div style="position:relative; display:inline-block;">
       <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-sort-panel');p.style.display=p.style.display==='block'?'none':'block'">Sort by: <span id="hl-sort-label">Impact</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
       <div id="hl-sort-panel" style="display:none; position:absolute; top:calc(100% + 4px); right:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:100; min-width:200px; padding:4px 0;">
@@ -73,6 +83,30 @@
       <button onclick="hlCloseDrawer()" style="border:none; background:none; cursor:pointer; padding:4px; color:var(--color-text-subtitle);"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div style="flex:1; overflow-y:auto; padding:16px 20px;">
+        <div class="ov-drawer-section" style="margin-bottom:12px;">
+        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>Highlight Settings</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="ov-drawer-section-body open" style="display:block;">
+          <p style="font-size:12px; color:var(--color-text-caption); margin:0 0 12px;">Select columns to apply relative colour scales.</p>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
+              <input type="checkbox" id="hl-chk-convVal" checked style="accent-color:var(--color-blue);">
+              <span>Conv. Val.</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">higher = darker green</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
+              <input type="checkbox" id="hl-chk-cost" style="accent-color:var(--color-blue);">
+              <span>Cost</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">lower = darker green</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
+              <input type="checkbox" id="hl-chk-convRate" style="accent-color:var(--color-blue);">
+              <span>Conv. Rate</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">higher = darker green</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
+              <input type="checkbox" id="hl-chk-aov" style="accent-color:var(--color-blue);">
+              <span>AOV</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">higher = darker green</span>
+            </label>
+          </div>
+        </div>
+      </div>
       <div class="ov-drawer-section" style="margin-bottom:12px;">
         <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>COS Target</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
         <div class="ov-drawer-section-body open" style="display:block;">
