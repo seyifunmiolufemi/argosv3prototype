@@ -1,5 +1,27 @@
 /* ─── OVERVIEW PAGE ─── */
 
+/* ── Dynamic script loader (defined first so preload can fire immediately) ── */
+function ovLoadScript(src, cb) {
+  var existing = document.querySelector('script[src="' + src + '"]');
+  if (existing) {
+    /* Already injected — if fully loaded fire cb now, else queue on its onload */
+    if (existing._ovLoaded) { cb(); return; }
+    var prev = existing.onload || function(){};
+    existing.onload = function() { prev(); cb(); };
+    return;
+  }
+  var s = document.createElement('script');
+  s.src = src;
+  s._ovLoaded = false;
+  s.onload = function() { s._ovLoaded = true; cb(); };
+  s.onerror = function() { console.error('ovLoadScript failed: ' + src); };
+  document.head.appendChild(s);
+}
+
+/* Preload Chart.js and ECharts immediately when this file is parsed */
+ovLoadScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js', function(){});
+ovLoadScript('https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js', function(){});
+
 /* ── State ── */
 var _ovChannel    = 'SEM';
 var _ovClient     = 'Outdoor Research';
@@ -186,10 +208,23 @@ window.ovSetComp = function(v) {
   ovCloseAllDd();
 };
 
+/* Highlight range [start, end] in fractional month indices (Jan=0 … Dec=11).
+   null = no highlight. Default = Last 30 Days → November. */
+var _ovHighlightRange = [9.5, 10.5];
+
+var OV_DATE_HIGHLIGHT = {
+  'Last 7 Days':  [10.5, 11.0],
+  'Last 30 Days': [9.5,  10.5],
+  'Last 90 Days': [7.5,  10.5],
+  'Custom':       null
+};
+
 window.ovSetDate = function(v) {
   _ovDate = v;
   document.getElementById('ov-date-label').textContent = v;
+  _ovHighlightRange = OV_DATE_HIGHLIGHT[v] !== undefined ? OV_DATE_HIGHLIGHT[v] : [9.5, 10.5];
   ovCloseAllDd();
+  if (_ovTrendChartInstance) _ovTrendChartInstance.update();
 };
 
 /* ── Channel tabs ── */
@@ -368,17 +403,19 @@ var OV_ANNOTATIONS = [
 
 var OV_SELECTED_MONTH = 10;
 
+/* For negative bars: base = bottom of the bar (cumulative end after drop),
+   value = positive absolute delta. ECharts stacks base→base+value correctly. */
 var OV_WATERFALL_SEM = {
   categories: ['Prev Period','Impressions','Clicks','Conv. Rate','AOV','Curr Period'],
-  bases:      [0,           445000,       463200,  475600,      500400, 0],
-  values:     [445000,      18200,        12400,   24800,       -13080, 487320],
+  bases:      [0,           445000,       463200,  475600,      487320, 0],
+  values:     [445000,      18200,        12400,   24800,       13080,  487320],
   types:      ['total',     'positive',   'positive','positive','negative','total']
 };
 
 var OV_WATERFALL_SEO = {
   categories: ['Prev Period','Impressions','Clicks','CTR','Rev/Session','Curr Period'],
-  bases:      [0,            312000,       326600,  336400, 344600,     0],
-  values:     [312000,       14600,        9800,    8200,   -1710,      342890],
+  bases:      [0,            312000,       326600,  336400, 342890,     0],
+  values:     [312000,       14600,        9800,    8200,   1710,       342890],
   types:      ['total',      'positive',   'positive','positive','negative','total']
 };
 
@@ -390,11 +427,12 @@ var _ovWaterfallInstance   = null;
 var _ovHighlightPlugin = {
   id: 'ovHighlight',
   beforeDraw: function(chart) {
+    if (!_ovHighlightRange) return;
     var xScale = chart.scales.x;
     var yScale = chart.scales.y;
     if (!xScale || !yScale) return;
-    var x1  = xScale.getPixelForValue(OV_SELECTED_MONTH - 0.5);
-    var x2  = xScale.getPixelForValue(OV_SELECTED_MONTH + 0.5);
+    var x1  = xScale.getPixelForValue(_ovHighlightRange[0]);
+    var x2  = xScale.getPixelForValue(_ovHighlightRange[1]);
     var ctx = chart.ctx;
     ctx.save();
     ctx.fillStyle = 'rgba(52,110,217,0.08)';
@@ -570,9 +608,9 @@ function initWaterfallChart(channel) {
         var v   = d.values[idx];
         var t   = d.types[idx];
         var abs = Math.abs(v).toLocaleString();
-        if (t === 'total')  return '<b>' + d.categories[idx] + '</b>: $' + abs;
-        if (v >= 0)         return '<b>' + d.categories[idx] + '</b>: +$' + abs;
-        return                     '<b>' + d.categories[idx] + '</b>: -$' + abs;
+        if (t === 'total')    return '<b>' + d.categories[idx] + '</b>: $' + abs;
+        if (t === 'negative') return '<b>' + d.categories[idx] + '</b>: -$' + abs;
+        return                       '<b>' + d.categories[idx] + '</b>: +$' + abs;
       }
     },
     grid: { left: 16, right: 16, top: 8, bottom: 24, containLabel: true },
@@ -622,31 +660,17 @@ function initWaterfallChart(channel) {
     ]
   });
 
-  /* Footnote */
-  var note = document.getElementById('ov-waterfall-footnote');
-  if (note) {
-    note.textContent = channel === 'SEO'
-      ? 'Impressions and Clicks both grew this period. Revenue per Session declined slightly.'
-      : 'Conv. Rate had the largest positive impact this period. AOV declined slightly relative to previous period.';
-  }
-}
-
-/* ── Dynamic script loader ── */
-function ovLoadScript(src, cb) {
-  if (document.querySelector('script[src="' + src + '"]')) { cb(); return; }
-  var s = document.createElement('script');
-  s.src = src;
-  s.onload = cb;
-  s.onerror = function() { console.error('Failed to load: ' + src); };
-  document.head.appendChild(s);
 }
 
 /* ── updateSection2 ── */
 function updateSection2(channel) {
   ovLoadScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js', function() {
     ovLoadScript('https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js', function() {
-      initTrendChart(channel);
-      initWaterfallChart(channel);
+      /* setTimeout(0) lets the browser reflow after display:block before we read dimensions */
+      setTimeout(function() {
+        initTrendChart(channel);
+        initWaterfallChart(channel);
+      }, 0);
     });
   });
 }
