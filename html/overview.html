@@ -183,9 +183,50 @@
     </div>
   </div>
 
-  <!-- ── Section 2 placeholder ── -->
-  <div id="ov-section2" class="ov-section-placeholder">
-    <p style="margin:0;">Section 2 — Channel Health (Trend Line + Waterfall) — Coming in Session 2</p>
+  <!-- ── Section 2: Channel Health ── -->
+  <div id="ov-section2" class="ov-section" style="margin-bottom:32px;">
+    <!-- Section heading -->
+    <div class="ov-section-header">
+      <h2 class="ov-section-title">Channel Health</h2>
+      <p class="ov-section-subtitle">How this channel is trending and what drove the change</p>
+    </div>
+
+    <!-- Two column layout -->
+    <div class="ov-s2-columns">
+      <!-- Left: Trend Line -->
+      <div class="ov-chart-card" style="flex:1.2;">
+        <div class="ov-chart-card-header">
+          <div>
+            <div class="ov-chart-label">Performance Over Time</div>
+            <div class="ov-chart-sublabel">12-month view — selected period highlighted</div>
+          </div>
+        </div>
+        <!-- Legend -->
+        <div class="ov-trend-legend">
+          <span class="ov-legend-dot" style="background:#185FA5;"></span>
+          <span class="ov-legend-text" id="ov-trend-legend-revenue">Revenue</span>
+          <span class="ov-legend-dot" style="background:#e07b6a;margin-left:16px;"></span>
+          <span class="ov-legend-text">Cost</span>
+        </div>
+        <div style="position:relative;">
+          <canvas id="ov-trend-chart" height="220"></canvas>
+        </div>
+        <!-- Annotation markers on x-axis -->
+        <div class="ov-annotations-row" id="ov-annotations-row"></div>
+      </div>
+
+      <!-- Right: Waterfall -->
+      <div class="ov-chart-card" style="flex:1;">
+        <div class="ov-chart-card-header">
+          <div>
+            <div class="ov-chart-label">Drivers of Change</div>
+            <div class="ov-chart-sublabel">What caused the change from previous period</div>
+          </div>
+        </div>
+        <div id="ov-waterfall-chart" style="width:100%;height:260px;"></div>
+        <p class="ov-chart-footnote" id="ov-waterfall-footnote"></p>
+      </div>
+    </div>
   </div>
 
   <!-- ── Section 3 placeholder ── -->
@@ -198,7 +239,9 @@
     <p style="margin:0;">Section 4 — Search Intelligence — Coming in Session 3</p>
   </div>
 
-  <!-- Chart.js CDN (for future sections) -->
+  <!-- Chart.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <!-- ECharts CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
 
 </div><!-- /overview-page -->

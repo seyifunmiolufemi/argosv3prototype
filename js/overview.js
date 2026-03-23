@@ -207,6 +207,7 @@ window.ovSetChannel = function(ch) {
     if (btn) btn.className = 'ov-channel-tab' + (t === ch.toLowerCase() ? ' ov-tab-active' : '');
   });
   ovRender();
+  updateSection2(ch);
 };
 
 /* ── Delta toggle ── */
@@ -333,5 +334,305 @@ function showOverviewPage() {
   ovBuildClientDd();
   ovBuildWebsiteDd();
   ovRender();
+  updateSection2(_ovChannel);
 }
 window.showOverviewPage = showOverviewPage;
+
+/* ═══════════════════════════════════════════════
+   SECTION 2 — CHANNEL HEALTH (Trend + Waterfall)
+═══════════════════════════════════════════════ */
+
+/* ── Section 2 data ── */
+var OV_TREND_LABELS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+var OV_TREND_SEM = {
+  revenue: [320000,298000,341000,367000,412000,389000,356000,378000,421000,445000,487320,463000],
+  cost:    [74000, 71000, 78000, 82000, 89000, 86000, 80000, 83000, 91000, 94000, 98450, 95000]
+};
+
+var OV_TREND_SEO = {
+  revenue: [198000,187000,204000,221000,248000,239000,218000,229000,261000,298000,342890,318000],
+  cost:    [0,0,0,0,0,0,0,0,0,0,0,0]
+};
+
+var OV_SPECIAL_CAUSES = [
+  { month: 7, dataset: 'revenue', label: 'Unusual revenue spike' },
+  { month: 9, dataset: 'cost',    label: 'Disproportionate cost jump' }
+];
+
+var OV_ANNOTATIONS = [
+  { month: 5, label: 'Summer sale campaign launched' },
+  { month: 8, label: 'New Shopping campaign rolled out' },
+  { month: 10, label: 'Black Friday campaign launched' }
+];
+
+var OV_SELECTED_MONTH = 10;
+
+var OV_WATERFALL_SEM = {
+  categories: ['Prev Period','Impressions','Clicks','Conv. Rate','AOV','Curr Period'],
+  bases:      [0,           445000,       463200,  475600,      500400, 0],
+  values:     [445000,      18200,        12400,   24800,       -13080, 487320],
+  types:      ['total',     'positive',   'positive','positive','negative','total']
+};
+
+var OV_WATERFALL_SEO = {
+  categories: ['Prev Period','Impressions','Clicks','CTR','Rev/Session','Curr Period'],
+  bases:      [0,            312000,       326600,  336400, 344600,     0],
+  values:     [312000,       14600,        9800,    8200,   -1710,      342890],
+  types:      ['total',      'positive',   'positive','positive','negative','total']
+};
+
+/* ── Section 2 chart instances ── */
+var _ovTrendChartInstance  = null;
+var _ovWaterfallInstance   = null;
+
+/* ── Custom Chart.js plugin: selected-period highlight ── */
+var _ovHighlightPlugin = {
+  id: 'ovHighlight',
+  beforeDraw: function(chart) {
+    var xScale = chart.scales.x;
+    var yScale = chart.scales.y;
+    if (!xScale || !yScale) return;
+    var x1  = xScale.getPixelForValue(OV_SELECTED_MONTH - 0.5);
+    var x2  = xScale.getPixelForValue(OV_SELECTED_MONTH + 0.5);
+    var ctx = chart.ctx;
+    ctx.save();
+    ctx.fillStyle = 'rgba(52,110,217,0.08)';
+    ctx.fillRect(x1, yScale.top, x2 - x1, yScale.bottom - yScale.top);
+    ctx.restore();
+  }
+};
+
+/* ── initTrendChart ── */
+function initTrendChart(channel) {
+  var canvas = document.getElementById('ov-trend-chart');
+  if (!canvas) return;
+
+  if (_ovTrendChartInstance) {
+    _ovTrendChartInstance.destroy();
+    _ovTrendChartInstance = null;
+  }
+
+  var isSEO     = channel === 'SEO';
+  var trendData = isSEO ? OV_TREND_SEO : OV_TREND_SEM;
+
+  /* Build special-cause marker arrays (nulls except at marked months) */
+  var scRevenue = OV_TREND_LABELS.map(function() { return null; });
+  var scCost    = OV_TREND_LABELS.map(function() { return null; });
+  if (!isSEO) {
+    OV_SPECIAL_CAUSES.forEach(function(sc) {
+      if (sc.dataset === 'revenue') scRevenue[sc.month] = trendData.revenue[sc.month];
+      if (sc.dataset === 'cost')    scCost[sc.month]    = trendData.cost[sc.month];
+    });
+  }
+
+  /* Update HTML legend label */
+  var legendEl = document.getElementById('ov-trend-legend-revenue');
+  if (legendEl) legendEl.textContent = isSEO ? 'Organic Revenue' : 'Revenue';
+
+  _ovTrendChartInstance = new Chart(canvas, {
+    type: 'line',
+    plugins: [_ovHighlightPlugin],
+    data: {
+      labels: OV_TREND_LABELS,
+      datasets: [
+        {
+          label: isSEO ? 'Organic Revenue' : 'Revenue',
+          data: trendData.revenue,
+          borderColor: '#185FA5',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 0,
+          borderWidth: 2,
+          order: 2
+        },
+        {
+          label: 'Cost',
+          data: trendData.cost,
+          borderColor: '#e07b6a',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 0,
+          borderWidth: 2,
+          hidden: isSEO,
+          order: 2
+        },
+        {
+          label: '_sc_revenue',
+          data: scRevenue,
+          borderColor: 'transparent',
+          backgroundColor: 'transparent',
+          pointRadius: 6,
+          pointHoverRadius: 7,
+          pointBackgroundColor: '#f59e0b',
+          pointBorderColor: 'white',
+          pointBorderWidth: 2,
+          showLine: false,
+          order: 1
+        },
+        {
+          label: '_sc_cost',
+          data: scCost,
+          borderColor: 'transparent',
+          backgroundColor: 'transparent',
+          pointRadius: 6,
+          pointHoverRadius: 7,
+          pointBackgroundColor: '#f59e0b',
+          pointBorderColor: 'white',
+          pointBorderWidth: 2,
+          showLine: false,
+          order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              /* Hide marker datasets and null points from tooltip */
+              if (ctx.dataset.label === '_sc_revenue' || ctx.dataset.label === '_sc_cost') return null;
+              var v = ctx.parsed.y;
+              if (v === null || v === undefined) return null;
+              return ctx.dataset.label + ': $' + v.toLocaleString();
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 11 }, color: '#9ca3af' }
+        },
+        y: {
+          beginAtZero: false,
+          grid: { color: '#f0f0f0' },
+          ticks: {
+            font: { size: 11 },
+            color: '#9ca3af',
+            callback: function(v) { return '$' + Math.round(v / 1000) + 'k'; }
+          }
+        }
+      }
+    }
+  });
+
+  setTimeout(renderAnnotationPins, 100);
+}
+
+/* ── renderAnnotationPins ── */
+function renderAnnotationPins() {
+  var chart = _ovTrendChartInstance;
+  var row   = document.getElementById('ov-annotations-row');
+  if (!chart || !row) return;
+  row.innerHTML = '';
+  OV_ANNOTATIONS.forEach(function(ann) {
+    var xPx = chart.scales.x.getPixelForValue(ann.month);
+    var pin  = document.createElement('div');
+    pin.className  = 'ov-annotation-pin';
+    pin.style.left = xPx + 'px';
+    pin.innerHTML  =
+      '<div class="ov-annotation-pin-dot"></div>' +
+      '<div class="ov-annotation-pin-line"></div>' +
+      '<div class="ov-annotation-tooltip">' + ann.label + '</div>';
+    row.appendChild(pin);
+  });
+}
+
+/* ── initWaterfallChart ── */
+function initWaterfallChart(channel) {
+  var el = document.getElementById('ov-waterfall-chart');
+  if (!el) return;
+
+  if (_ovWaterfallInstance) {
+    _ovWaterfallInstance.dispose();
+    _ovWaterfallInstance = null;
+  }
+
+  var d = channel === 'SEO' ? OV_WATERFALL_SEO : OV_WATERFALL_SEM;
+
+  _ovWaterfallInstance = echarts.init(el);
+  _ovWaterfallInstance.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: function(params) {
+        var vp = null;
+        for (var i = 0; i < params.length; i++) {
+          if (params[i].seriesIndex === 1) { vp = params[i]; break; }
+        }
+        if (!vp) return '';
+        var idx = vp.dataIndex;
+        var v   = d.values[idx];
+        var t   = d.types[idx];
+        var abs = Math.abs(v).toLocaleString();
+        if (t === 'total')  return '<b>' + d.categories[idx] + '</b>: $' + abs;
+        if (v >= 0)         return '<b>' + d.categories[idx] + '</b>: +$' + abs;
+        return                     '<b>' + d.categories[idx] + '</b>: -$' + abs;
+      }
+    },
+    grid: { left: 16, right: 16, top: 8, bottom: 24, containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: d.categories,
+      axisTick:  { show: false },
+      axisLine:  { show: false },
+      axisLabel: { fontSize: 11, color: '#9ca3af' }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine:  { show: false },
+      axisTick:  { show: false },
+      splitLine: { lineStyle: { color: '#f0f0f0' } },
+      axisLabel: {
+        fontSize: 11,
+        color: '#9ca3af',
+        formatter: function(v) { return '$' + Math.round(v / 1000) + 'k'; }
+      }
+    },
+    series: [
+      {
+        type: 'bar',
+        stack: 'waterfall',
+        itemStyle: { color: 'transparent' },
+        emphasis: { disabled: true },
+        data: d.bases,
+        tooltip: { show: false }
+      },
+      {
+        type: 'bar',
+        stack: 'waterfall',
+        barWidth: '55%',
+        label: { show: false },
+        itemStyle: {
+          color: function(params) {
+            var t = d.types[params.dataIndex];
+            if (t === 'total')    return '#9ca3af';
+            if (t === 'positive') return '#22c55e';
+            return '#ef4444';
+          },
+          borderRadius: [2, 2, 0, 0]
+        },
+        data: d.values
+      }
+    ]
+  });
+
+  /* Footnote */
+  var note = document.getElementById('ov-waterfall-footnote');
+  if (note) {
+    note.textContent = channel === 'SEO'
+      ? 'Impressions and Clicks both grew this period. Revenue per Session declined slightly.'
+      : 'Conv. Rate had the largest positive impact this period. AOV declined slightly relative to previous period.';
+  }
+}
+
+/* ── updateSection2 ── */
+function updateSection2(channel) {
+  initTrendChart(channel);
+  initWaterfallChart(channel);
+}

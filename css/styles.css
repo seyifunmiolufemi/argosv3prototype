@@ -1946,3 +1946,24 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
 .ov-toggle input:checked + .ov-toggle-slider:before { transform:translateX(14px); }
 .ov-section-placeholder { background:var(--color-bg-grey50); border:1px dashed var(--color-border); border-radius:8px; padding:24px; color:var(--color-text-caption); font-size:13px; margin-bottom:24px; }
 .ov-dd-panel { display:none; position:fixed; z-index:9999; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:4px 0; max-height:280px; overflow-y:auto; }
+
+/* ─── OVERVIEW SECTION 2 ─── */
+.ov-s2-columns { display:flex; gap:20px; align-items:flex-start; }
+.ov-chart-card { background:white; border:1px solid var(--color-border); border-radius:12px; padding:20px 24px; }
+.ov-chart-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.ov-chart-label { font-size:14px; font-weight:600; color:var(--color-text-primary); }
+.ov-chart-sublabel { font-size:12px; color:var(--color-text-caption); margin-top:2px; }
+.ov-trend-legend { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
+.ov-legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.ov-legend-text { font-size:12px; color:var(--color-text-subtitle); }
+.ov-annotations-row { display:flex; gap:0; margin-top:8px; position:relative; height:24px; }
+.ov-annotation-pin { position:absolute; display:flex; flex-direction:column; align-items:center; cursor:pointer; transform:translateX(-50%); }
+.ov-annotation-pin-line { width:1px; height:8px; background:var(--color-text-caption); }
+.ov-annotation-pin-dot { width:6px; height:6px; border-radius:50%; background:var(--color-text-accent); border:1.5px solid white; box-shadow:0 0 0 1.5px var(--color-text-accent); }
+.ov-annotation-tooltip { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); background:#1a1a1a; color:white; font-size:11px; padding:4px 8px; border-radius:4px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:100; }
+.ov-annotation-pin:hover .ov-annotation-tooltip { opacity:1; }
+.ov-chart-footnote { font-size:12px; color:var(--color-text-caption); font-style:italic; margin-top:8px; line-height:1.5; }
+.ov-section-header { margin-bottom:16px; }
+.ov-section-title { font-size:18px; font-weight:600; color:var(--color-text-primary); margin-bottom:2px; }
+.ov-section-subtitle { font-size:13px; color:var(--color-text-subtitle); }
+@media (max-width:900px) { .ov-s2-columns { flex-direction:column; } }
