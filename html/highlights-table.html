@@ -72,64 +72,68 @@
   </div>
   <div style="margin-top:10px; font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;" id="hl-footer-text">Showing 8 of 8 results</div>
 
-  <!-- Filter Drawer -->
-  <div id="hl-filter-drawer">
-    <div style="height:4px; background:var(--color-blue); flex-shrink:0;"></div>
-    <div style="padding:20px; border-bottom:1px solid var(--color-border); flex-shrink:0; display:flex; align-items:center; justify-content:space-between;">
-      <div>
-        <div style="font-size:16px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif;">Filters</div>
-        <div style="font-size:13px; color:var(--color-text-subtitle); margin-top:2px;">Customise your highlights view</div>
+  <!-- Filter Modal -->
+  <div id="hl-filter-modal" onclick="hlCloseFilters()" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div onclick="event.stopPropagation()" style="background:white; border-radius:12px; width:520px; max-width:calc(100vw - 32px); max-height:85vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.15); font-family:'DM Sans',sans-serif;">
+      <!-- Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px;">
+        <span style="font-size:18px; font-weight:700; color:#111827; font-family:'Instrument Sans',sans-serif;">Filters</span>
+        <button onclick="hlCloseFilters()" style="background:none; border:none; cursor:pointer; padding:4px; color:#6b7280; display:flex; align-items:center;"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
-      <button onclick="hlCloseDrawer()" style="border:none; background:none; cursor:pointer; padding:4px; color:var(--color-text-subtitle);"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    </div>
-    <div style="flex:1; overflow-y:auto; padding:16px 20px;">
-        <div class="ov-drawer-section" style="margin-bottom:12px;">
-        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>Highlight Settings</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
-        <div class="ov-drawer-section-body open" style="display:block;">
-          <p style="font-size:12px; color:var(--color-text-caption); margin:0 0 12px;">Select columns to apply relative colour scales.</p>
-          <div style="display:flex; flex-direction:column; gap:10px;">
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
-              <input type="checkbox" id="hl-chk-convVal" checked style="accent-color:var(--color-blue);">
-              <span>Conv. Val.</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">higher = darker green</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
-              <input type="checkbox" id="hl-chk-cost" style="accent-color:var(--color-blue);">
-              <span>Cost</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">lower = darker green</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
-              <input type="checkbox" id="hl-chk-convRate" style="accent-color:var(--color-blue);">
-              <span>Conv. Rate</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">higher = darker green</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;">
-              <input type="checkbox" id="hl-chk-aov" style="accent-color:var(--color-blue);">
-              <span>AOV</span><span style="font-size:11px;color:var(--color-text-caption);margin-left:2px;">higher = darker green</span>
-            </label>
+      <!-- Body -->
+      <div style="flex:1; overflow-y:auto; padding:0 24px 20px;">
+        <!-- Highlight Settings -->
+        <div style="padding-bottom:20px; border-bottom:1px solid #e5e7eb; margin-bottom:20px;">
+          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:16px;">Highlight Settings</div>
+          <div style="font-size:13px; color:#6b7280; margin-bottom:6px;">Highlight by</div>
+          <div style="position:relative; display:inline-block; margin-bottom:12px; min-width:220px;">
+            <button id="hl-cols-dd-btn" onclick="hlToggleColDropdown()" style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; background:white; text-align:left; display:flex; align-items:center; justify-content:space-between; cursor:pointer; font-size:13px; font-family:'DM Sans',sans-serif; color:#374151; gap:8px;">
+              <span id="hl-cols-dd-label">2 columns selected</span>
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div id="hl-cols-dropdown" style="display:none; position:absolute; top:calc(100% + 4px); left:0; background:white; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); z-index:100; min-width:220px; padding:4px 0;">
+              <label class="pm-dd-item" style="cursor:pointer; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="hl-dd-chk-convVal" onchange="hlToggleColFromDd('convVal')" checked style="accent-color:#346ed9;"> Conv. Val.</label>
+              <label class="pm-dd-item" style="cursor:pointer; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="hl-dd-chk-cost" onchange="hlToggleColFromDd('cost')" style="accent-color:#346ed9;"> Cost</label>
+              <label class="pm-dd-item" style="cursor:pointer; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="hl-dd-chk-convRate" onchange="hlToggleColFromDd('convRate')" style="accent-color:#346ed9;"> Conv. Rate</label>
+              <label class="pm-dd-item" style="cursor:pointer; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="hl-dd-chk-aov" onchange="hlToggleColFromDd('aov')" style="accent-color:#346ed9;"> AOV</label>
+              <label class="pm-dd-item" style="cursor:pointer; display:flex; align-items:center; gap:8px;"><input type="checkbox" id="hl-dd-chk-cos" onchange="hlToggleColFromDd('cos')" checked style="accent-color:#346ed9;"> COS</label>
+            </div>
+          </div>
+          <div id="hl-chips-container" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;"></div>
+          <div id="hl-color-ranges"></div>
+        </div>
+        <!-- COS Settings -->
+        <div style="padding-bottom:20px; border-bottom:1px solid #e5e7eb; margin-bottom:20px;">
+          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:4px;">COS Settings</div>
+          <div style="font-size:13px; color:#6b7280; margin-bottom:16px;">Segments above this threshold are flagged red.</div>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:13px; color:#374151; white-space:nowrap;">COS Target (%)</span>
+              <input type="number" id="hl-cos-target-input" value="31" min="1" max="100" oninput="hlUpdateCOSBadges()" style="width:64px; padding:6px 8px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; color:#111827; outline:none;">
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <span id="hl-cos-badge-green" style="padding:4px 10px; background:rgba(52,199,89,0.15); color:#166534; border-radius:20px; font-size:12px; font-weight:500; white-space:nowrap;">≤29%</span>
+              <span id="hl-cos-badge-amber" style="padding:4px 10px; background:rgba(255,196,0,0.2); color:#92400e; border-radius:20px; font-size:12px; font-weight:500; white-space:nowrap;">30–32%</span>
+              <span id="hl-cos-badge-red" style="padding:4px 10px; background:rgba(239,68,68,0.15); color:#991b1b; border-radius:20px; font-size:12px; font-weight:500; white-space:nowrap;">≥33%</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="ov-drawer-section" style="margin-bottom:12px;">
-        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>COS Target</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
-        <div class="ov-drawer-section-body open" style="display:block;">
-          <p style="font-size:12px; color:var(--color-text-caption); margin:0 0 10px;">COS ≤ (target−2)% = green · ≤ (target+1)% = amber · else red</p>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <label style="font-size:13px; font-family:'DM Sans',sans-serif;">Target %</label>
-            <input type="number" id="hl-cos-target-input" value="29" min="1" max="100" style="width:70px; padding:6px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif;">
-          </div>
+        <!-- Display Options -->
+        <div>
+          <div style="font-size:15px; font-weight:700; color:#111827; margin-bottom:16px;">Display Options</div>
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:#111827; font-weight:500;">
+            <input type="checkbox" id="hl-chk-sparklines" style="width:16px; height:16px; accent-color:#346ed9; cursor:pointer;">
+            Show 90-day COS column
+          </label>
         </div>
       </div>
-      <div class="ov-drawer-section">
-        <div class="ov-drawer-section-hdr" onclick="ovToggleDrawerSection(this)"><span>Display Options</span><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></div>
-        <div class="ov-drawer-section-body open" style="display:block;">
-          <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer;"><input type="checkbox" id="hl-chk-sparklines" checked style="accent-color:var(--color-blue);"> Show 90-Day COS sparklines</label>
-        </div>
+      <!-- Footer -->
+      <div style="padding:16px 24px; border-top:1px solid #e5e7eb; display:flex; align-items:center; justify-content:space-between;">
+        <button onclick="hlClearFilters()" style="background:none; border:none; font-size:14px; color:#6b7280; cursor:pointer; font-family:'DM Sans',sans-serif; padding:0;">Clear all</button>
+        <button onclick="hlApplyFilters()" style="padding:10px 24px; background:#346ed9; color:white; border:none; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;">Apply filters</button>
       </div>
-    </div>
-    <div style="padding:16px 20px; border-top:1px solid var(--color-border); display:flex; gap:10px; align-items:center; flex-shrink:0;">
-      <button onclick="hlApplyFilters()" class="btn-primary-sm">Apply Filters</button>
-      <button onclick="hlClearFilters()" class="btn-outline">Clear All</button>
     </div>
   </div>
-  <div id="hl-drawer-overlay" style="display:none; position:fixed; inset:0; z-index:800;" onclick="hlCloseDrawer()"></div>
 </div><!-- /highlights-page -->
 
     </div><!-- /page-content -->

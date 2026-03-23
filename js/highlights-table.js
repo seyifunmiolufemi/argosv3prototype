@@ -30,12 +30,14 @@ var HL_DATA_L3 = [
   { name:'Trekking Pants',   convVal:4310, cost:1260, conv:97,  convRate:3.5, aov:44.40,  cos:29.50 }
 ];
 
-var _hlCOSTarget = 29;
-var _hlShowSparklines = true;
+var _hlCOSTarget = 31;
+var _hlShowSparklines = false;
 var _hlLevel = 'L2';
 var _hlSortCol = 'convVal';
 var _hlSortDir = 'desc';
-var _hlHighlightCols = ['convVal']; // relative-scale cols; COS is always threshold-colored
+var _hlHighlightCols = ['convVal', 'cos']; // relative-scale cols; COS is always threshold-colored
+var _hlColorRanges = {};
+var HL_COL_DEFS = [{key:'convVal',label:'Conv. Val.',prefix:'$',inverted:false},{key:'cost',label:'Cost',prefix:'$',inverted:true},{key:'convRate',label:'Conv. Rate',suffix:'%',inverted:false},{key:'aov',label:'AOV',prefix:'$',inverted:false}];
 
 function hlInterpColor(t) {
   return 'rgb('+Math.round(230+(26-230)*t)+','+Math.round(249+(92-249)*t)+','+Math.round(238+(53-238)*t)+')';
@@ -44,6 +46,12 @@ function hlCellBg(val, minV, maxV, inverted) {
   var t = maxV === minV ? 0.5 : (val - minV) / (maxV - minV);
   if (inverted) t = 1 - t;
   return 'background:'+hlInterpColor(t)+';color:'+(t >= 0.5 ? '#ffffff' : '#111827')+';';
+}
+
+function hlCellBgWithRange(val, key, minV, maxV, inverted) {
+  var r = _hlColorRanges[key];
+  if (r) { if (r.min !== undefined && !isNaN(r.min)) minV = r.min; if (r.max !== undefined && !isNaN(r.max)) maxV = r.max; }
+  return hlCellBg(val, minV, maxV, inverted);
 }
 
 function hlGetDataset() {
@@ -127,11 +135,11 @@ function hlRender() {
 
   var html = '';
   rows.forEach(function(row) {
-    var cosSt  = hlCOSCellStyle(row.cos);
-    var cvSt   = hl.indexOf('convVal')  >= 0 ? hlCellBg(row.convVal,  minCV,   maxCV,   false) : '';
-    var cstSt  = hl.indexOf('cost')     >= 0 ? hlCellBg(row.cost,     minCost, maxCost, true)  : '';
-    var crSt   = hl.indexOf('convRate') >= 0 ? hlCellBg(row.convRate, minCR,   maxCR,   false) : '';
-    var aovSt  = hl.indexOf('aov')      >= 0 ? hlCellBg(row.aov,      minAOV,  maxAOV,  false) : '';
+    var cosSt  = hl.indexOf('cos') >= 0 ? hlCOSCellStyle(row.cos) : '';
+    var cvSt   = hl.indexOf('convVal')  >= 0 ? hlCellBgWithRange(row.convVal,  'convVal',  minCV,   maxCV,   false) : '';
+    var cstSt  = hl.indexOf('cost')     >= 0 ? hlCellBgWithRange(row.cost,     'cost',     minCost, maxCost, true)  : '';
+    var crSt   = hl.indexOf('convRate') >= 0 ? hlCellBgWithRange(row.convRate, 'convRate', minCR,   maxCR,   false) : '';
+    var aovSt  = hl.indexOf('aov')      >= 0 ? hlCellBgWithRange(row.aov,      'aov',      minAOV,  maxAOV,  false) : '';
     html += '<tr class="hl-row" style="border-bottom:1px solid var(--color-border);">';
     html += '<td style="padding:0 16px;font-size:13px;font-weight:500;color:var(--color-text-primary);height:48px;white-space:nowrap;">' + escHtml(row.name) + '</td>';
     html += '<td style="padding:0 16px;font-size:13px;font-weight:600;text-align:right;height:48px;' + cvSt  + '">$' + Math.round(row.convVal).toLocaleString() + '</td>';
@@ -202,41 +210,146 @@ window.hlSetLevel = function(level) {
   hlRender();
 };
 
-window.hlOpenDrawer = function() {
-  document.getElementById('hl-filter-drawer').classList.add('open');
-  document.getElementById('hl-drawer-overlay').style.display = 'block';
+/* ── FILTER MODAL ── */
+
+function hlRefreshChips() {
+  var all = [{key:'convVal',label:'Conv. Val.'},{key:'cost',label:'Cost'},{key:'convRate',label:'Conv. Rate'},{key:'aov',label:'AOV'},{key:'cos',label:'COS'}];
+  var c = document.getElementById('hl-chips-container');
+  if (!c) return;
+  var h = '';
+  all.forEach(function(col) {
+    if (_hlHighlightCols.indexOf(col.key) >= 0) {
+      h += '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px 3px 12px;background:#eff6ff;color:#1d4ed8;border-radius:20px;font-size:13px;font-family:\'DM Sans\',sans-serif;">'+col.label+
+        '<button onclick="hlRemoveChip(\''+col.key+'\')" style="background:none;border:none;cursor:pointer;padding:0 0 0 2px;line-height:1;color:#6b7280;font-size:16px;display:flex;align-items:center;">×</button></span>';
+    }
+  });
+  c.innerHTML = h;
+}
+
+function hlRefreshColorRanges() {
+  var container = document.getElementById('hl-color-ranges');
+  if (!container) return;
+  var data = hlGetDataset();
+  var selected = HL_COL_DEFS.filter(function(c){ return _hlHighlightCols.indexOf(c.key) >= 0; });
+  if (selected.length === 0) { container.style.display = 'none'; return; }
+  container.style.display = 'block';
+  var h = '<div style="font-size:13px;color:#6b7280;margin-bottom:10px;">Color scale range</div>';
+  selected.forEach(function(c) {
+    var minV = Math.min.apply(null, data.map(function(r){return r[c.key];}));
+    var maxV = Math.max.apply(null, data.map(function(r){return r[c.key];}));
+    var r = _hlColorRanges[c.key];
+    if (r) { if (r.min !== undefined) minV = r.min; if (r.max !== undefined) maxV = r.max; }
+    var grad = c.inverted ? 'linear-gradient(to right,#1a5c35,#e6f9ee)' : 'linear-gradient(to right,#e6f9ee,#1a5c35)';
+    h += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">' +
+      '<span style="font-size:13px;color:#374151;min-width:80px;">'+c.label+'</span>' +
+      '<div style="display:flex;align-items:center;gap:2px;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;background:white;">' +
+        (c.prefix ? '<span style="font-size:12px;color:#6b7280;margin-right:2px;">'+c.prefix+'</span>' : '') +
+        '<input id="hl-range-min-'+c.key+'" type="number" value="'+Math.round(minV)+'" style="width:56px;border:none;background:transparent;font-size:13px;font-family:\'DM Sans\',sans-serif;outline:none;color:#111827;">' +
+      '</div>' +
+      '<div style="flex:1;height:10px;border-radius:5px;background:'+grad+';"></div>' +
+      '<div style="display:flex;align-items:center;gap:2px;border:1px solid #e5e7eb;border-radius:6px;padding:5px 8px;background:white;">' +
+        (c.prefix ? '<span style="font-size:12px;color:#6b7280;margin-right:2px;">'+c.prefix+'</span>' : '') +
+        '<input id="hl-range-max-'+c.key+'" type="number" value="'+Math.round(maxV)+'" style="width:56px;border:none;background:transparent;font-size:13px;font-family:\'DM Sans\',sans-serif;outline:none;color:#111827;">' +
+      '</div>' +
+    '</div>';
+  });
+  container.innerHTML = h;
+}
+
+function hlRefreshColDdLabel() {
+  var el = document.getElementById('hl-cols-dd-label');
+  var n = _hlHighlightCols.length;
+  if (el) el.textContent = n + ' column' + (n !== 1 ? 's' : '') + ' selected';
+}
+
+window.hlUpdateCOSBadges = function() {
+  var inp = document.getElementById('hl-cos-target-input');
+  var t = parseInt((inp && inp.value) || _hlCOSTarget);
+  var g = document.getElementById('hl-cos-badge-green');
+  var a = document.getElementById('hl-cos-badge-amber');
+  var r = document.getElementById('hl-cos-badge-red');
+  if (g) g.textContent = '≤'+(t-2)+'%';
+  if (a) a.textContent = (t-1)+'–'+(t+1)+'%';
+  if (r) r.textContent = '≥'+(t+2)+'%';
 };
 
-window.hlCloseDrawer = function() {
-  document.getElementById('hl-filter-drawer').classList.remove('open');
-  document.getElementById('hl-drawer-overlay').style.display = 'none';
+function hlRefreshFilterModal() {
+  var all = ['convVal','cost','convRate','aov','cos'];
+  all.forEach(function(k) {
+    var el = document.getElementById('hl-dd-chk-'+k);
+    if (el) el.checked = _hlHighlightCols.indexOf(k) >= 0;
+  });
+  hlRefreshChips();
+  hlRefreshColorRanges();
+  hlRefreshColDdLabel();
+  var inp = document.getElementById('hl-cos-target-input');
+  if (inp) inp.value = _hlCOSTarget;
+  hlUpdateCOSBadges();
+  var spk = document.getElementById('hl-chk-sparklines');
+  if (spk) spk.checked = _hlShowSparklines;
+}
+
+window.hlOpenDrawer = window.hlOpenFilters = function() {
+  hlRefreshFilterModal();
+  var m = document.getElementById('hl-filter-modal');
+  if (m) m.style.display = 'flex';
+};
+
+window.hlCloseDrawer = window.hlCloseFilters = function() {
+  var m = document.getElementById('hl-filter-modal');
+  if (m) m.style.display = 'none';
+  var dd = document.getElementById('hl-cols-dropdown');
+  if (dd) dd.style.display = 'none';
+};
+
+window.hlToggleColDropdown = function() {
+  var dd = document.getElementById('hl-cols-dropdown');
+  if (dd) dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+};
+
+window.hlToggleColFromDd = function(key) {
+  var idx = _hlHighlightCols.indexOf(key);
+  if (idx >= 0) { _hlHighlightCols.splice(idx, 1); }
+  else { _hlHighlightCols.push(key); }
+  hlRefreshChips();
+  hlRefreshColorRanges();
+  hlRefreshColDdLabel();
+};
+
+window.hlRemoveChip = function(key) {
+  var idx = _hlHighlightCols.indexOf(key);
+  if (idx >= 0) _hlHighlightCols.splice(idx, 1);
+  var chk = document.getElementById('hl-dd-chk-'+key);
+  if (chk) chk.checked = false;
+  hlRefreshChips();
+  hlRefreshColorRanges();
+  hlRefreshColDdLabel();
 };
 
 window.hlApplyFilters = function() {
   var inp = document.getElementById('hl-cos-target-input');
-  if (inp) _hlCOSTarget = parseInt(inp.value) || 29;
+  if (inp) _hlCOSTarget = parseInt(inp.value) || 31;
   var spk = document.getElementById('hl-chk-sparklines');
   if (spk) _hlShowSparklines = spk.checked;
-  _hlHighlightCols = [];
-  ['convVal','cost','convRate','aov'].forEach(function(k) {
-    var el = document.getElementById('hl-chk-' + k);
-    if (el && el.checked) _hlHighlightCols.push(k);
+  HL_COL_DEFS.forEach(function(c) {
+    var minEl = document.getElementById('hl-range-min-'+c.key);
+    var maxEl = document.getElementById('hl-range-max-'+c.key);
+    if (minEl || maxEl) {
+      if (!_hlColorRanges[c.key]) _hlColorRanges[c.key] = {};
+      if (minEl) _hlColorRanges[c.key].min = parseFloat(minEl.value);
+      if (maxEl) _hlColorRanges[c.key].max = parseFloat(maxEl.value);
+    }
   });
-  hlCloseDrawer();
+  hlCloseFilters();
   hlRender();
   showToast('Filters applied');
 };
 
 window.hlClearFilters = function() {
-  _hlCOSTarget = 29; _hlShowSparklines = true; _hlHighlightCols = ['convVal'];
-  var inp = document.getElementById('hl-cos-target-input');
-  if (inp) inp.value = 29;
-  var spk = document.getElementById('hl-chk-sparklines');
-  if (spk) spk.checked = true;
-  ['convVal','cost','convRate','aov'].forEach(function(k) {
-    var el = document.getElementById('hl-chk-' + k);
-    if (el) el.checked = k === 'convVal';
-  });
+  _hlCOSTarget = 31; _hlShowSparklines = false;
+  _hlHighlightCols = ['convVal','cos']; _hlColorRanges = {};
+  hlRefreshFilterModal();
+  hlCloseFilters();
   hlRender();
   showToast('Filters cleared');
 };
