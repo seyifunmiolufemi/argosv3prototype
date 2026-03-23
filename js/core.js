@@ -1,39 +1,28 @@
 // ── Embedded avatar ──
 var SHILO = "data:image/png;base64,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";
 
-var CLIENTS = [
-  {name:"Advanced Pump",website:"advancedpump.com"},
-  {name:"All Volleyball, Inc.",website:"allvolleyball.com"},
-  {name:"Biddy Murphy",website:"biddymurphy.com"},
-  {name:"Blue Moth Hearing",website:"bluemothhearing.com"},
-  {name:"Bollman Hat Company",website:"bollmanhat.com"},
-  {name:"BRobinson, LLC",website:"brobinson.com"},
-  {name:"Buy Rite Beauty Supply",website:"buyrite.com"},
-  {name:"Chantelle Lingerie, Inc.",website:"chantelle.com"},
-  {name:"Creative Artisan",website:"creativeartisan.com"},
-  {name:"Danielhouse Studios, Inc.",website:"danielhousestudios.com"},
-  {name:"Dungarees",website:"dungarees.com"},
-  {name:"eOutdoors",website:"eoutdoors.com"},
-  {name:"Fauxliage",website:"fauxliage.com"},
-  {name:"Grovemade",website:"grovemade.com"},
-  {name:"Link Imaging",website:"linkimaging.com"},
-  {name:"Microscope",website:"microscope.com"},
-  {name:"MojoMotoSport",website:"mojomotosport.com"},
-  {name:"MonkeySports",website:"monkeysports.com"},
-  {name:"My Binding",website:"mybinding.com"},
-  {name:"Network Innovations",website:"networkinnovations.com"},
-  {name:"Nomadic Vintage Rugs",website:"nomadicvintagerugs.com"},
-  {name:"Orchard and Vineyard Supply",website:"orchardandvineyard.com"},
-  {name:"Outdoor Research",website:"outdoorresearch.com"},
-  {name:"People's Choice Beef Jerky",website:"peopleschoice.com"},
-  {name:"Poolaroo",website:"poolaroo.com"},
-  {name:"Prepac Manufacturing Ltd.",website:"prepac.com"},
-  {name:"Royal Swimming Pools",website:"royalswimmingpools.com"},
-  {name:"ScaffoldMart",website:"scaffoldmart.com"},
-  {name:"Simply Authentic LLC",website:"simplyauthentic.com"},
-  {name:"Sunflora, Inc.",website:"sunflora.com"},
-  {name:"Weaver",website:"weaver.com"},
-  {name:"Windsor Plywood",website:"windsorplywood.com"},
+var ARGOS_CLIENTS = [
+  { name: 'Link Imaging', websites: ['123Inkjets.com','4Inkjets.com','InkCartridges.com','LDProducts.com','QuickShipToner.com'] },
+  { name: 'Biddy Murphy', websites: ['BiddyMurphy.com'] },
+  { name: "People's Choice Beef Jerky", websites: ['PeoplesChoiceBeefJerky.com'] },
+  { name: 'Simply Authentic LLC', websites: ['SimplySeattle.com'] },
+  { name: 'MojoMotoSport.com', websites: ['BurtsPowersports.com','MojoMotoSport.com'] },
+  { name: 'Danielhouse Studios Inc', websites: ['DanielHouseClub.com'] },
+  { name: 'ScaffoldMart', websites: ['ScaffoldMart.com'] },
+  { name: 'BRobinson, LLC', websites: ['Revo.com'] },
+  { name: 'Microscope.com', websites: ['Microscope.com'] },
+  { name: 'Grovemade', websites: ['Grovemade.com'] },
+  { name: 'Dungarees', websites: ['Dungarees.com'] },
+  { name: 'Outdoor Research', websites: ['OutdoorResearch.com'] },
+  { name: 'Chantelle Lingerie Inc', websites: ['ChantelleUS.com'] },
+  { name: 'Weaver', websites: ['WeaverEquine.com','WeaverLeather.com','WeaverLivestock.com'] },
+  { name: 'MonkeySports', websites: ['BaseballMonkey.com','GoalieMonkey.com','HockeyMonkey.com','HockeyMonkey.ca','LacrosseMonkey.com','LocalMonkey.com'] },
+  { name: 'Orchard and Vineyard Supply', websites: ['OrchardValleySupply.com'] },
+  { name: 'Sunflora Inc', websites: ['Sunmed.com'] },
+  { name: 'Royal Swimming Pools', websites: ['RoyalSwimmingPools.com'] },
+  { name: 'My Binding', websites: ['MyBinding.com'] },
+  { name: 'eOutdoors', websites: ['IslandBeachGear.com','TackleDirect.com'] },
+  { name: 'Nomadic Vintage Rugs', websites: ['NomadicVintageRugs.com'] }
 ];
 
 var ISSUES = [
@@ -1117,20 +1106,26 @@ var ISSUES = [
     var m = $('client-menu');
     if (!m) return;
     m.innerHTML = '<div class="dd-item dd-active" data-filter="client" data-val="">All Clients</div>' +
-      CLIENTS.map(function (c) {
+      ARGOS_CLIENTS.map(function(c) {
         return '<div class="dd-item" data-filter="client" data-val="' + c.name + '">' + c.name + '</div>';
       }).join('');
   }
   function buildWebsiteMenu(clientName) {
     var m = $('website-menu');
+    var wLabel = $('website-label');
     if (!m) return;
-    var sites = clientName
-      ? CLIENTS.filter(function (c) { return c.name === clientName; }).map(function (c) { return c.website; })
-      : CLIENTS.map(function (c) { return c.website; });
+    var sites;
+    if (clientName) {
+      var client = ARGOS_CLIENTS.find(function(c) { return c.name === clientName; });
+      sites = client ? client.websites : [];
+    } else {
+      sites = ARGOS_CLIENTS.reduce(function(acc, c) { return acc.concat(c.websites); }, []);
+    }
     m.innerHTML = '<div class="dd-item dd-active" data-filter="website" data-val="">All Websites</div>' +
-      sites.map(function (s) {
+      sites.map(function(s) {
         return '<div class="dd-item" data-filter="website" data-val="' + s + '">' + s + '</div>';
       }).join('');
+    if (wLabel && clientName && sites.length > 0) wLabel.textContent = 'Website: ' + sites[0];
   }
 
   /* ── dropdown open/close ── */
@@ -1369,7 +1364,9 @@ var ISSUES = [
 
   /* ── init ── */
   buildClientMenu();
-  buildWebsiteMenu('');
+  buildWebsiteMenu('Outdoor Research');
+  F.client = 'Outdoor Research';
+  var _cl = $('client-label'); if (_cl) _cl.textContent = 'Client: Outdoor Research';
   renderTable();
   initSidebar();
   initEvents();
