@@ -1948,7 +1948,7 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
 .ov-dd-panel { display:none; position:fixed; z-index:9999; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:4px 0; max-height:280px; overflow-y:auto; }
 
 /* ─── OVERVIEW SECTION 2 ─── */
-.ov-s2-columns { display:flex; gap:20px; align-items:flex-start; }
+.ov-s2-columns { display:flex; gap:20px; align-items:stretch; }
 .ov-chart-card { background:white; border:1px solid var(--color-border); border-radius:12px; padding:20px 24px; }
 .ov-chart-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
 .ov-chart-label { font-size:14px; font-weight:600; color:var(--color-text-primary); }

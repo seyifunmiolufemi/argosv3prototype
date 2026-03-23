@@ -207,7 +207,7 @@ window.ovSetChannel = function(ch) {
     if (btn) btn.className = 'ov-channel-tab' + (t === ch.toLowerCase() ? ' ov-tab-active' : '');
   });
   ovRender();
-  setTimeout(function() { updateSection2(ch); }, 50);
+  updateSection2(ch);
 };
 
 /* ── Delta toggle ── */
@@ -334,7 +334,7 @@ function showOverviewPage() {
   ovBuildClientDd();
   ovBuildWebsiteDd();
   ovRender();
-  setTimeout(function() { updateSection2(_ovChannel); }, 50);
+  updateSection2(_ovChannel);
 }
 window.showOverviewPage = showOverviewPage;
 
@@ -631,8 +631,22 @@ function initWaterfallChart(channel) {
   }
 }
 
+/* ── Dynamic script loader ── */
+function ovLoadScript(src, cb) {
+  if (document.querySelector('script[src="' + src + '"]')) { cb(); return; }
+  var s = document.createElement('script');
+  s.src = src;
+  s.onload = cb;
+  s.onerror = function() { console.error('Failed to load: ' + src); };
+  document.head.appendChild(s);
+}
+
 /* ── updateSection2 ── */
 function updateSection2(channel) {
-  initTrendChart(channel);
-  initWaterfallChart(channel);
+  ovLoadScript('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js', function() {
+    ovLoadScript('https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js', function() {
+      initTrendChart(channel);
+      initWaterfallChart(channel);
+    });
+  });
 }
