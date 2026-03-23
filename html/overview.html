@@ -198,7 +198,12 @@
         <div class="ov-chart-card-header">
           <div>
             <div class="ov-chart-label">Performance Over Time</div>
-            <div class="ov-chart-sublabel">12-month view — selected period highlighted</div>
+            <div class="ov-chart-sublabel" id="ov-trend-sublabel">12-month view — selected period highlighted</div>
+          </div>
+          <div style="display:flex; gap:3px;">
+            <button id="ov-tdf-12M" class="ov-trend-filter-btn ov-trend-filter-active" onclick="ovSetTrendFilter('12M')">12M</button>
+            <button id="ov-tdf-6M"  class="ov-trend-filter-btn" onclick="ovSetTrendFilter('6M')">6M</button>
+            <button id="ov-tdf-3M"  class="ov-trend-filter-btn" onclick="ovSetTrendFilter('3M')">3M</button>
           </div>
         </div>
         <!-- Legend -->
@@ -208,7 +213,7 @@
           <span class="ov-legend-dot" style="background:#e07b6a;margin-left:16px;"></span>
           <span class="ov-legend-text">Cost</span>
         </div>
-        <div style="position:relative; height:260px;">
+        <div style="position:relative; height:320px;">
           <canvas id="ov-trend-chart"></canvas>
         </div>
         <!-- Annotation markers on x-axis -->
@@ -223,7 +228,7 @@
             <div class="ov-chart-sublabel">What caused the change from previous period</div>
           </div>
         </div>
-        <div id="ov-waterfall-chart" style="width:100%;height:260px;"></div>
+        <div id="ov-waterfall-chart" style="width:100%;height:380px;"></div>
       </div>
     </div>
   </div>
@@ -239,5 +244,13 @@
   </div>
 
   <!-- Chart.js and ECharts are loaded dynamically by overview.js -->
+
+  <!-- ── Annotation detail modal ── -->
+  <div id="ov-annotation-modal" onclick="if(event.target===this)ovCloseAnnotationModal()" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:12px;padding:28px 32px;max-width:500px;width:calc(100% - 48px);position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.18);font-family:'DM Sans',sans-serif;">
+      <button onclick="ovCloseAnnotationModal()" style="position:absolute;top:14px;right:16px;border:none;background:none;font-size:22px;cursor:pointer;color:#9ca3af;line-height:1;">&times;</button>
+      <div id="ov-annotation-modal-body"></div>
+    </div>
+  </div>
 
 </div><!-- /overview-page -->

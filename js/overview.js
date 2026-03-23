@@ -224,7 +224,21 @@ window.ovSetDate = function(v) {
   document.getElementById('ov-date-label').textContent = v;
   _ovHighlightRange = OV_DATE_HIGHLIGHT[v] !== undefined ? OV_DATE_HIGHLIGHT[v] : [9.5, 10.5];
   ovCloseAllDd();
-  if (_ovTrendChartInstance) _ovTrendChartInstance.update();
+  if (_ovTrendChartInstance) initTrendChart(_ovChannel);
+};
+
+/* ── Trend date filter ── */
+window.ovSetTrendFilter = function(f) {
+  var filterMap = { '12M': 0, '6M': 6, '3M': 9 };
+  _ovTrendDateFilter = f;
+  _ovTrendStartIdx   = filterMap[f] !== undefined ? filterMap[f] : 0;
+  ['12M','6M','3M'].forEach(function(k) {
+    var btn = document.getElementById('ov-tdf-' + k);
+    if (btn) btn.className = 'ov-trend-filter-btn' + (k === f ? ' ov-trend-filter-active' : '');
+  });
+  var sublabel = document.getElementById('ov-trend-sublabel');
+  if (sublabel) sublabel.textContent = f.replace('M','') + '-month view — selected period highlighted';
+  if (_ovTrendChartInstance) initTrendChart(_ovChannel);
 };
 
 /* ── Channel tabs ── */
@@ -396,9 +410,15 @@ var OV_SPECIAL_CAUSES = [
 ];
 
 var OV_ANNOTATIONS = [
-  { month: 5, label: 'Summer sale campaign launched' },
-  { month: 8, label: 'New Shopping campaign rolled out' },
-  { month: 10, label: 'Black Friday campaign launched' }
+  { month: 5, label: 'Summer sale campaign launched',
+    detail: 'A summer promotional campaign was activated targeting high-intent outdoor shoppers across Shopping and Search networks. Bid adjustments and audience layering applied to maximise peak-season demand.',
+    impact: 'Revenue +8.4% in the 30-day window. ROAS improved from 3.2× to 4.1× during the campaign.' },
+  { month: 8, label: 'New Shopping campaign rolled out',
+    detail: 'Shopping campaigns restructured with refined product groupings, optimised Smart Bidding strategy, and updated feed attributes to improve product match quality.',
+    impact: 'Impression share increased +14% MoM. Average CPC reduced by $0.22 across all Shopping ad groups.' },
+  { month: 10, label: 'Black Friday campaign launched',
+    detail: 'Full-funnel Black Friday and Cyber Monday campaign with elevated budget allocation, audience targeting, and promotional ad copy across all active channels.',
+    impact: 'Peak revenue day reached $48,320. ROAS hit 5.8× during the event window.' }
 ];
 
 var OV_SELECTED_MONTH = 10;
@@ -423,6 +443,10 @@ var OV_WATERFALL_SEO = {
 var _ovTrendChartInstance  = null;
 var _ovWaterfallInstance   = null;
 
+/* ── Trend date filter state ── */
+var _ovTrendDateFilter = '12M';
+var _ovTrendStartIdx   = 0;
+
 /* ── Custom Chart.js plugin: selected-period highlight ── */
 var _ovHighlightPlugin = {
   id: 'ovHighlight',
@@ -431,8 +455,13 @@ var _ovHighlightPlugin = {
     var xScale = chart.scales.x;
     var yScale = chart.scales.y;
     if (!xScale || !yScale) return;
-    var x1  = xScale.getPixelForValue(_ovHighlightRange[0]);
-    var x2  = xScale.getPixelForValue(_ovHighlightRange[1]);
+    /* Offset range by start index so highlight stays on the right month when filtered */
+    var s = _ovTrendStartIdx || 0;
+    var x1  = xScale.getPixelForValue(_ovHighlightRange[0] - s);
+    var x2  = xScale.getPixelForValue(_ovHighlightRange[1] - s);
+    if (x2 <= xScale.left || x1 >= xScale.right) return; /* outside view */
+    x1 = Math.max(x1, xScale.left);
+    x2 = Math.min(x2, xScale.right);
     var ctx = chart.ctx;
     ctx.save();
     ctx.fillStyle = 'rgba(52,110,217,0.08)';
@@ -453,14 +482,23 @@ function initTrendChart(channel) {
 
   var isSEO     = channel === 'SEO';
   var trendData = isSEO ? OV_TREND_SEO : OV_TREND_SEM;
+  var s         = _ovTrendStartIdx || 0;
 
-  /* Build special-cause marker arrays (nulls except at marked months) */
-  var scRevenue = OV_TREND_LABELS.map(function() { return null; });
-  var scCost    = OV_TREND_LABELS.map(function() { return null; });
+  /* Slice data to the visible window */
+  var labels   = OV_TREND_LABELS.slice(s);
+  var revData  = trendData.revenue.slice(s);
+  var costData = trendData.cost.slice(s);
+
+  /* Build special-cause marker arrays aligned to sliced labels */
+  var scRevenue = labels.map(function() { return null; });
+  var scCost    = labels.map(function() { return null; });
   if (!isSEO) {
     OV_SPECIAL_CAUSES.forEach(function(sc) {
-      if (sc.dataset === 'revenue') scRevenue[sc.month] = trendData.revenue[sc.month];
-      if (sc.dataset === 'cost')    scCost[sc.month]    = trendData.cost[sc.month];
+      var adj = sc.month - s;
+      if (adj >= 0 && adj < labels.length) {
+        if (sc.dataset === 'revenue') scRevenue[adj] = trendData.revenue[sc.month];
+        if (sc.dataset === 'cost')    scCost[adj]    = trendData.cost[sc.month];
+      }
     });
   }
 
@@ -472,11 +510,11 @@ function initTrendChart(channel) {
     type: 'line',
     plugins: [_ovHighlightPlugin],
     data: {
-      labels: OV_TREND_LABELS,
+      labels: labels,
       datasets: [
         {
           label: isSEO ? 'Organic Revenue' : 'Revenue',
-          data: trendData.revenue,
+          data: revData,
           borderColor: '#185FA5',
           backgroundColor: 'transparent',
           tension: 0.4,
@@ -486,7 +524,7 @@ function initTrendChart(channel) {
         },
         {
           label: 'Cost',
-          data: trendData.cost,
+          data: costData,
           borderColor: '#e07b6a',
           backgroundColor: 'transparent',
           tension: 0.4,
@@ -501,7 +539,7 @@ function initTrendChart(channel) {
           borderColor: 'transparent',
           backgroundColor: 'transparent',
           pointRadius: 6,
-          pointHoverRadius: 7,
+          pointHoverRadius: 8,
           pointBackgroundColor: '#f59e0b',
           pointBorderColor: 'white',
           pointBorderWidth: 2,
@@ -514,7 +552,7 @@ function initTrendChart(channel) {
           borderColor: 'transparent',
           backgroundColor: 'transparent',
           pointRadius: 6,
-          pointHoverRadius: 7,
+          pointHoverRadius: 8,
           pointBackgroundColor: '#f59e0b',
           pointBorderColor: 'white',
           pointBorderWidth: 2,
@@ -532,11 +570,21 @@ function initTrendChart(channel) {
         tooltip: {
           callbacks: {
             label: function(ctx) {
-              /* Hide marker datasets and null points from tooltip */
-              if (ctx.dataset.label === '_sc_revenue' || ctx.dataset.label === '_sc_cost') return null;
-              var v = ctx.parsed.y;
+              var v   = ctx.parsed.y;
+              var lbl = ctx.dataset.label;
               if (v === null || v === undefined) return null;
-              return ctx.dataset.label + ': $' + v.toLocaleString();
+              /* Special-cause markers: show the cause label */
+              if (lbl === '_sc_revenue' || lbl === '_sc_cost') {
+                var ds  = lbl === '_sc_revenue' ? 'revenue' : 'cost';
+                var mth = ctx.dataIndex + (_ovTrendStartIdx || 0);
+                for (var i = 0; i < OV_SPECIAL_CAUSES.length; i++) {
+                  if (OV_SPECIAL_CAUSES[i].month === mth && OV_SPECIAL_CAUSES[i].dataset === ds) {
+                    return '⚠ ' + OV_SPECIAL_CAUSES[i].label;
+                  }
+                }
+                return null;
+              }
+              return lbl + ': $' + v.toLocaleString();
             }
           }
         }
@@ -564,12 +612,16 @@ function initTrendChart(channel) {
 
 /* ── renderAnnotationPins ── */
 function renderAnnotationPins() {
-  var chart = _ovTrendChartInstance;
-  var row   = document.getElementById('ov-annotations-row');
+  var chart  = _ovTrendChartInstance;
+  var row    = document.getElementById('ov-annotations-row');
   if (!chart || !row) return;
   row.innerHTML = '';
-  OV_ANNOTATIONS.forEach(function(ann) {
-    var xPx = chart.scales.x.getPixelForValue(ann.month);
+  var s      = _ovTrendStartIdx || 0;
+  var visLen = OV_TREND_LABELS.length - s;
+  OV_ANNOTATIONS.forEach(function(ann, annIdx) {
+    var adj = ann.month - s;
+    if (adj < 0 || adj >= visLen) return; /* hidden by date filter */
+    var xPx = chart.scales.x.getPixelForValue(adj);
     var pin  = document.createElement('div');
     pin.className  = 'ov-annotation-pin';
     pin.style.left = xPx + 'px';
@@ -577,6 +629,8 @@ function renderAnnotationPins() {
       '<div class="ov-annotation-pin-dot"></div>' +
       '<div class="ov-annotation-pin-line"></div>' +
       '<div class="ov-annotation-tooltip">' + ann.label + '</div>';
+    /* Click → open detail modal */
+    pin.onclick = (function(i) { return function(e) { e.stopPropagation(); ovShowAnnotationModal(i); }; })(annIdx);
     row.appendChild(pin);
   });
 }
@@ -592,6 +646,14 @@ function initWaterfallChart(channel) {
   }
 
   var d = channel === 'SEO' ? OV_WATERFALL_SEO : OV_WATERFALL_SEM;
+
+  /* Build dashed connector markLines between consecutive bars.
+     Connector y = top of current bar for positive/total, bottom for negative. */
+  var connectors = [];
+  for (var ci = 0; ci < d.categories.length - 1; ci++) {
+    var connY = d.types[ci] === 'negative' ? d.bases[ci] : d.bases[ci] + d.values[ci];
+    connectors.push([{ xAxis: ci, yAxis: connY }, { xAxis: ci + 1, yAxis: connY }]);
+  }
 
   _ovWaterfallInstance = echarts.init(el);
   _ovWaterfallInstance.setOption({
@@ -609,20 +671,21 @@ function initWaterfallChart(channel) {
         var t   = d.types[idx];
         var abs = Math.abs(v).toLocaleString();
         if (t === 'total')    return '<b>' + d.categories[idx] + '</b>: $' + abs;
-        if (t === 'negative') return '<b>' + d.categories[idx] + '</b>: -$' + abs;
+        if (t === 'negative') return '<b>' + d.categories[idx] + '</b>: \u2212$' + abs;
         return                       '<b>' + d.categories[idx] + '</b>: +$' + abs;
       }
     },
-    grid: { left: 16, right: 16, top: 8, bottom: 24, containLabel: true },
+    grid: { left: 16, right: 16, top: 32, bottom: 24, containLabel: true },
     xAxis: {
       type: 'category',
       data: d.categories,
       axisTick:  { show: false },
       axisLine:  { show: false },
-      axisLabel: { fontSize: 11, color: '#9ca3af' }
+      axisLabel: { fontSize: 11, color: '#9ca3af', interval: 0 }
     },
     yAxis: {
       type: 'value',
+      min: 0,
       axisLine:  { show: false },
       axisTick:  { show: false },
       splitLine: { lineStyle: { color: '#f0f0f0' } },
@@ -634,18 +697,34 @@ function initWaterfallChart(channel) {
     },
     series: [
       {
+        /* Transparent placeholder — positions each bar at its correct baseline */
         type: 'bar',
         stack: 'waterfall',
-        itemStyle: { color: 'transparent' },
+        silent: true,
+        itemStyle: { color: 'transparent', borderColor: 'transparent' },
         emphasis: { disabled: true },
         data: d.bases,
         tooltip: { show: false }
       },
       {
+        /* Visible colored bars */
         type: 'bar',
         stack: 'waterfall',
-        barWidth: '55%',
-        label: { show: false },
+        barWidth: '50%',
+        label: {
+          show: true,
+          position: 'top',
+          fontSize: 11,
+          color: '#6b7280',
+          formatter: function(params) {
+            var i = params.dataIndex;
+            var t = d.types[i];
+            var v = d.values[i];
+            if (t === 'total')    return '$'  + Math.round(v / 1000) + 'k';
+            if (t === 'negative') return '\u2212$' + Math.round(v / 1000) + 'k';
+            return '+$' + Math.round(v / 1000) + 'k';
+          }
+        },
         itemStyle: {
           color: function(params) {
             var t = d.types[params.dataIndex];
@@ -653,7 +732,15 @@ function initWaterfallChart(channel) {
             if (t === 'positive') return '#22c55e';
             return '#ef4444';
           },
-          borderRadius: [2, 2, 0, 0]
+          borderRadius: function(params) {
+            return d.types[params.dataIndex] === 'negative' ? [0, 0, 3, 3] : [3, 3, 0, 0];
+          }
+        },
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: { type: 'dashed', color: '#d1d5db', width: 1 },
+          data: connectors
         },
         data: d.values
       }
@@ -661,6 +748,44 @@ function initWaterfallChart(channel) {
   });
 
 }
+
+/* ── Annotation modal ── */
+var _ovMonthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+window.ovShowAnnotationModal = function(annIdx) {
+  var ann   = OV_ANNOTATIONS[annIdx];
+  var body  = document.getElementById('ov-annotation-modal-body');
+  var modal = document.getElementById('ov-annotation-modal');
+  if (!ann || !body || !modal) return;
+  body.innerHTML =
+    '<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--color-text-caption);margin-bottom:10px;">' + _ovMonthNames[ann.month] + '</div>' +
+    '<h3 style="font-size:17px;font-weight:700;color:var(--color-text-primary);margin:0 0 16px;font-family:\'Instrument Sans\',sans-serif;padding-right:24px;">' + ann.label + '</h3>' +
+    '<div style="display:flex;gap:0;margin-bottom:16px;padding:12px 16px;background:var(--color-bg-grey50);border-radius:8px;">' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:11px;color:var(--color-text-caption);margin-bottom:3px;">Client</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--color-text-primary);">' + _ovClient + '</div>' +
+      '</div>' +
+      '<div style="width:1px;background:var(--color-border);margin:0 16px;"></div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:11px;color:var(--color-text-caption);margin-bottom:3px;">Website</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--color-text-primary);">' + _ovWebsite + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="margin-bottom:14px;">' +
+      '<div style="font-size:12px;font-weight:600;color:var(--color-text-primary);margin-bottom:6px;">What happened</div>' +
+      '<p style="font-size:13px;color:var(--color-text-subtitle);line-height:1.65;margin:0;">' + ann.detail + '</p>' +
+    '</div>' +
+    '<div style="padding:12px 16px;background:#f0f7ff;border-radius:8px;border-left:3px solid var(--color-blue);">' +
+      '<div style="font-size:12px;font-weight:600;color:var(--color-blue);margin-bottom:4px;">Impact</div>' +
+      '<p style="font-size:13px;color:var(--color-text-subtitle);line-height:1.55;margin:0;">' + ann.impact + '</p>' +
+    '</div>';
+  modal.style.display = 'flex';
+};
+
+window.ovCloseAnnotationModal = function() {
+  var modal = document.getElementById('ov-annotation-modal');
+  if (modal) modal.style.display = 'none';
+};
 
 /* ── updateSection2 ── */
 function updateSection2(channel) {
