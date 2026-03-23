@@ -1913,3 +1913,36 @@ input:checked+.toggle-slider:before{transform:translateX(16px);}
 .hl-sort-dd:hover { background:var(--color-bg-grey50); }
 .ov-term-row { display:flex; justify-content:space-between; align-items:flex-start; padding:9px 0; border-bottom:1px solid var(--color-border); }
 
+
+/* ─── OVERVIEW PAGE SESSION 1 ADDITIONS ─── */
+.ov-section-label { font-size:11px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--color-text-caption); margin-bottom:16px; }
+.ov-dd-btn { padding:6px 10px; background:white; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.ov-dd-btn:hover { background:var(--color-bg-grey50); }
+.ov-channel-tab { padding:5px 12px; border:none; background:transparent; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; transition:background 0.15s,color 0.15s; }
+.ov-channel-tab.ov-tab-active { background:var(--color-blue); color:white; }
+.ov-metric-tab { padding:3px 10px; border:none; border-radius:20px; font-size:12px; cursor:pointer; background:var(--color-bg-grey50); color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; }
+.ov-metric-tab.ov-metric-active { background:var(--color-blue); color:white; }
+.ov-kpi-tile { padding:16px; background:var(--color-bg-grey50); border-radius:8px; }
+.ov-kpi-tile-label { font-size:12px; color:var(--color-text-subtitle); margin-bottom:6px; }
+.ov-kpi-tile-value { font-size:24px; font-weight:700; color:var(--color-text-primary); line-height:1.2; }
+.ov-insight-tab { padding:6px 14px; border-radius:20px; font-size:13px; font-weight:500; cursor:pointer; border:none; background:var(--color-bg-grey50); color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; }
+.ov-insight-card { margin-bottom:12px; padding:14px 16px; border-radius:8px; background:white; border:1px solid var(--color-border); }
+.ov-insight-severity { font-size:11px; font-weight:600; text-transform:uppercase; margin-bottom:4px; }
+.ov-insight-headline { font-size:14px; font-weight:500; color:var(--color-text-primary); margin-bottom:4px; }
+.ov-insight-context { font-size:13px; color:var(--color-text-subtitle); line-height:1.5; }
+.ov-bidir-row { display:flex; align-items:center; margin-bottom:10px; }
+.ov-bidir-label { width:110px; font-size:12px; color:var(--color-text-primary); flex-shrink:0; }
+.ov-bidir-halves { display:flex; flex:1; align-items:center; height:32px; }
+.ov-bidir-left { flex:1; display:flex; align-items:center; justify-content:flex-end; overflow:hidden; }
+.ov-bidir-zero { width:1px; background:var(--color-border); align-self:stretch; flex-shrink:0; }
+.ov-bidir-right { flex:1; display:flex; align-items:center; overflow:hidden; }
+.ov-bidir-pct-pos { font-size:11px; color:var(--color-blue); margin-left:4px; white-space:nowrap; }
+.ov-bidir-pct-neg { font-size:11px; color:#ef4444; margin-right:4px; white-space:nowrap; }
+.ov-toggle { position:relative; display:inline-block; width:32px; height:18px; flex-shrink:0; }
+.ov-toggle input { opacity:0; width:0; height:0; }
+.ov-toggle-slider { position:absolute; cursor:pointer; inset:0; background:#d1d5db; border-radius:18px; transition:0.2s; }
+.ov-toggle-slider:before { content:''; position:absolute; width:12px; height:12px; left:3px; top:3px; background:white; border-radius:50%; transition:0.2s; }
+.ov-toggle input:checked + .ov-toggle-slider { background:var(--color-blue); }
+.ov-toggle input:checked + .ov-toggle-slider:before { transform:translateX(14px); }
+.ov-section-placeholder { background:var(--color-bg-grey50); border:1px dashed var(--color-border); border-radius:8px; padding:24px; color:var(--color-text-caption); font-size:13px; margin-bottom:24px; }
+.ov-dd-panel { display:none; position:fixed; z-index:9999; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:4px 0; max-height:280px; overflow-y:auto; }
