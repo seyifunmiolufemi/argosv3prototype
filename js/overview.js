@@ -1233,25 +1233,38 @@ function setupScatterHover(canvas) {
   canvas.addEventListener('mouseleave', canvas._ovML);
 }
 
-/* ── Axis info icon tooltips (position:fixed set on mouseenter) ── */
+/* ── Axis info icon tooltips (position:fixed, wired fresh each init) ── */
 function setupAxisInfoTooltips() {
-  ['ov-scatter-xinfo', 'ov-scatter-yinfo'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (!el || el._ovInfoWired) return;
-    el._ovInfoWired = true;
-    var tip = el.querySelector('.ov-axis-info-tip');
-    if (!tip) return;
-    el.addEventListener('mouseenter', function() {
-      var rect = el.getBoundingClientRect();
+  [
+    { id:'ov-scatter-xinfo', msg:'Total ad spend for this search term in the selected period' },
+    { id:'ov-scatter-yinfo', msg:'Total conversion value (revenue) attributed to this search term' }
+  ].forEach(function(cfg) {
+    var el = document.getElementById(cfg.id);
+    if (!el) return;
+    /* Clone to strip any previously attached listeners */
+    var clone = el.cloneNode(true);
+    el.parentNode.replaceChild(clone, el);
+    /* Ensure tooltip div is present and has correct text */
+    var tip = clone.querySelector('.ov-axis-info-tip');
+    if (!tip) {
+      tip = document.createElement('div');
+      tip.className = 'ov-axis-info-tip';
+      clone.appendChild(tip);
+    }
+    tip.textContent = cfg.msg;
+    /* Wire hover — position:fixed tooltip follows the icon */
+    clone.addEventListener('mouseenter', function() {
+      var rect = clone.getBoundingClientRect();
       var tx   = rect.left;
       var ty   = rect.bottom + 6;
-      if (tx + 340 > window.innerWidth)  tx = window.innerWidth - 346;
+      /* Clamp to viewport */
+      if (tx + 380 > window.innerWidth) tx = window.innerWidth - 386;
       if (tx < 8) tx = 8;
       tip.style.left    = tx + 'px';
       tip.style.top     = ty + 'px';
       tip.style.opacity = '1';
     });
-    el.addEventListener('mouseleave', function() {
+    clone.addEventListener('mouseleave', function() {
       tip.style.opacity = '0';
     });
   });
@@ -1273,14 +1286,7 @@ function initSection4(channel) {
 }
 
 window.ovDrillSearchTerm = function(e) {
+  /* Search Term Grader not yet built — prevent navigation */
   e.preventDefault();
-  document.querySelectorAll('.sb-kid').forEach(function(k){ k.classList.remove('sb-kid-active'); });
-  var stItem = document.querySelector('[data-nav="search-term"]');
-  if (stItem) stItem.classList.add('sb-kid-active');
-  if (typeof window.hideFeedDetailPages === 'function') window.hideFeedDetailPages();
-  document.querySelectorAll('#page-content > div').forEach(function(p){ p.style.display='none'; });
-  var stPage = document.getElementById('search-term-page');
-  if (stPage) { stPage.style.display = 'block'; return; }
-  var graderPage = document.getElementById('search-term-grader-page');
-  if (graderPage) graderPage.style.display = 'block';
+  if (typeof showToast === 'function') showToast('Search Term report coming soon');
 };
