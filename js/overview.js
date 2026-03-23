@@ -1044,7 +1044,7 @@ function renderS4Scatter(channel) {
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, W, H);
 
-  var pad   = { top:24, right:20, bottom:44, left:52 };
+  var pad   = { top:16, right:16, bottom:16, left:16 };
   var plotW = W - pad.left - pad.right;
   var plotH = H - pad.top  - pad.bottom;
 
@@ -1130,16 +1130,6 @@ function renderS4Scatter(channel) {
     tx = Math.max(pad.left + 2, tx);
     ctx.fillText(lbl, tx, pos.y + 3);
   });
-
-  /* Axis labels on canvas */
-  ctx.fillStyle = '#9ca3af';
-  ctx.font      = '10px Inter, sans-serif';
-  ctx.fillText(isSEM ? 'Spend \u2192' : 'Organic Clicks \u2192', pad.left + plotW/2 - 26, H - 8);
-  ctx.save();
-  ctx.translate(13, pad.top + plotH/2 + 32);
-  ctx.rotate(-Math.PI / 2);
-  ctx.fillText(isSEM ? 'Conv. Value \u2191' : 'Organic Revenue \u2191', 0, 0);
-  ctx.restore();
 
   /* Wire up hover interactions */
   setupScatterHover(canvas);
@@ -1282,7 +1272,6 @@ function initSection4(channel) {
   renderS4Stats(channel);
   renderS4TermLists(channel);
   renderS4Scatter(channel);
-  setupAxisInfoTooltips();
 }
 
 window.ovDrillSearchTerm = function(e) {
