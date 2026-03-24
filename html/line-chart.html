@@ -1,0 +1,164 @@
+<style>
+/* ── Line Chart page ── */
+#line-chart-page { display:none; padding:32px 32px 64px; box-sizing:border-box; }
+.lc-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px; }
+.lc-title { font-family:'Instrument Sans',sans-serif; font-size:24px; font-weight:600; color:var(--color-text-primary); margin:0; }
+.lc-subtitle { font-size:13px; color:var(--color-text-subtitle); margin:2px 0 0; }
+.lc-breadcrumb { font-size:12px; color:var(--color-text-caption); margin:6px 0 20px; }
+.lc-breadcrumb a { color:var(--color-blue); text-decoration:none; cursor:pointer; }
+.lc-header-right a { font-size:13px; color:var(--color-blue); text-decoration:none; cursor:pointer; }
+/* Controls bar */
+.lc-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+.lc-dd-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; background:var(--color-bg-white); border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.lc-dd-btn:hover { background:var(--color-bg-grey50); }
+.lc-dd-btn svg { flex-shrink:0; }
+.lc-dd-panel { display:none; position:fixed; z-index:9999; background:var(--color-bg-white); border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.10); padding:4px 0; min-width:180px; max-height:300px; overflow-y:auto; }
+.lc-dd-item { padding:8px 14px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:flex; align-items:center; gap:8px; }
+.lc-dd-item:hover { background:var(--color-bg-grey50); }
+.lc-dd-item.lc-selected { color:var(--color-blue); }
+.lc-dd-group-label { padding:8px 14px 4px; font-size:11px; font-weight:600; color:var(--color-text-caption); text-transform:uppercase; letter-spacing:0.05em; }
+.lc-dd-divider { height:1px; background:var(--color-border); margin:4px 0; }
+.lc-compare-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; background:transparent; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.lc-compare-btn.lc-compare-active { border-color:var(--color-blue); color:var(--color-blue); }
+/* Sub-row (date range custom / compare) */
+.lc-sub-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px; color:var(--color-text-caption); }
+.lc-sub-row input[type="date"] { padding:5px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:var(--color-bg-white); }
+/* Compare row */
+.lc-compare-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+/* Summary cards */
+.lc-summary-row { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.lc-stat-card { flex:1; min-width:120px; background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:8px; padding:12px 14px; }
+.lc-stat-name { font-size:12px; color:var(--color-text-caption); margin-bottom:4px; }
+.lc-stat-val { font-size:20px; font-weight:700; color:var(--color-text-primary); line-height:1.1; }
+.lc-stat-delta { font-size:12px; margin-top:4px; }
+.lc-delta-pos { color:var(--color-text-success); }
+.lc-delta-neg { color:var(--color-text-warning); }
+/* Chart card */
+.lc-chart-card { background:var(--color-bg-white); border:1px solid var(--color-border); border-radius:8px; padding:20px; margin-bottom:16px; }
+.lc-chart-wrap { position:relative; height:340px; }
+.lc-empty { display:flex; align-items:center; justify-content:center; height:340px; color:var(--color-text-caption); font-size:14px; }
+/* Data table */
+.lc-table-section { background:var(--color-bg-white); border:1px solid var(--color-border); border-radius:8px; overflow:hidden; }
+.lc-table-toggle { display:flex; align-items:center; gap:8px; padding:14px 18px; cursor:pointer; font-size:13px; font-weight:500; color:var(--color-text-primary); user-select:none; }
+.lc-table-toggle:hover { background:var(--color-bg-grey50); }
+.lc-table-toggle svg { transition:transform 0.2s; }
+.lc-table-toggle.open svg { transform:rotate(180deg); }
+.lc-table-body { display:none; padding:0 18px 16px; }
+.lc-table-header-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0 10px; }
+.lc-export-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:var(--color-blue); color:white; border:none; border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; cursor:pointer; }
+.lc-data-table { width:100%; border-collapse:collapse; font-size:13px; }
+.lc-data-table th { text-align:left; padding:8px 10px; border-bottom:2px solid var(--color-border); color:var(--color-text-caption); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; white-space:nowrap; }
+.lc-data-table th:hover { color:var(--color-text-primary); }
+.lc-data-table td { padding:8px 10px; border-bottom:1px solid var(--color-border); color:var(--color-text-primary); }
+.lc-data-table tr:last-child td { border-bottom:none; }
+</style>
+
+<div id="line-chart-page">
+  <!-- Header -->
+  <div class="lc-header">
+    <div>
+      <h1 class="lc-title">Line Chart</h1>
+      <p class="lc-subtitle">Visualise any metric over time across channels and accounts</p>
+    </div>
+    <div class="lc-header-right">
+      <a data-nav="forecasting">View forecast →</a>
+    </div>
+  </div>
+  <div class="lc-breadcrumb"><a data-nav="sem-overview">Reports</a> › Line Chart</div>
+
+  <!-- Controls bar -->
+  <div class="lc-controls" id="lc-controls">
+    <button class="lc-dd-btn" id="lc-client-btn">
+      <span id="lc-client-label">Outdoor Research</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-client-panel"></div>
+
+    <button class="lc-dd-btn" id="lc-website-btn">
+      <span id="lc-website-label">OutdoorResearch.com</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-website-panel"></div>
+
+    <button class="lc-dd-btn" id="lc-metric-btn">
+      <span id="lc-metric-label">2 Metrics</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-metric-panel"></div>
+
+    <button class="lc-dd-btn" id="lc-gran-btn">
+      <span id="lc-gran-label">Weekly</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-gran-panel"></div>
+
+    <button class="lc-dd-btn" id="lc-date-btn">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M4 1v2M8 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span id="lc-date-label">Last 12 Months</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-date-panel"></div>
+
+    <button class="lc-compare-btn" id="lc-compare-btn">Compare</button>
+  </div>
+
+  <!-- Custom date sub-row -->
+  <div class="lc-sub-row" id="lc-custom-date-row" style="display:none;">
+    <span>From</span>
+    <input type="date" id="lc-from-date" />
+    <span>To</span>
+    <input type="date" id="lc-to-date" />
+  </div>
+
+  <!-- Compare row -->
+  <div class="lc-compare-row" id="lc-compare-row" style="display:none;">
+    <span style="color:var(--color-text-caption);font-size:13px;">Comparing against:</span>
+    <button class="lc-dd-btn" id="lc-cmp-client-btn">
+      <span id="lc-cmp-client-label">Biddy Murphy</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-cmp-client-panel"></div>
+    <button class="lc-dd-btn" id="lc-cmp-website-btn">
+      <span id="lc-cmp-website-label">BiddyMurphy.com</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lc-dd-panel" id="lc-cmp-website-panel"></div>
+    <div id="lc-cmp-date-range-row" style="display:flex;align-items:center;gap:8px;">
+      <button class="lc-dd-btn" id="lc-cmp-date-btn">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M4 1v2M8 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span id="lc-cmp-date-label">Previous Period</span>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="lc-dd-panel" id="lc-cmp-date-panel"></div>
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="lc-summary-row" id="lc-summary-row"></div>
+
+  <!-- Chart card -->
+  <div class="lc-chart-card">
+    <div class="lc-chart-wrap" id="lc-chart-wrap">
+      <div class="lc-empty" id="lc-empty">Select at least one metric to display the chart</div>
+      <canvas id="lc-canvas" style="display:none;"></canvas>
+    </div>
+  </div>
+
+  <!-- Data table -->
+  <div class="lc-table-section" id="lc-table-section">
+    <div class="lc-table-toggle" id="lc-table-toggle">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Show data table
+    </div>
+    <div class="lc-table-body" id="lc-table-body">
+      <div class="lc-table-header-row">
+        <span style="font-size:13px;color:var(--color-text-caption);">Raw data for selected period</span>
+        <button class="lc-export-btn" id="lc-export-btn">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M3.5 5.5L6 8l2.5-2.5M1.5 9.5v1h9v-1" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export CSV
+        </button>
+      </div>
+      <div style="overflow-x:auto;"><table class="lc-data-table" id="lc-data-table"></table></div>
+    </div>
+  </div>
+</div>
