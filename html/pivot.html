@@ -206,13 +206,30 @@
   <div style="border:1px solid var(--color-border); border-radius:8px; padding:20px 24px; margin-top:24px;">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
       <span style="font-size:15px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif;">Pivot Chart</span>
-      <button class="pv-dd-btn" id="pivot-chart-metric-btn">
-        <span id="pivot-chart-metric-label">Revenue</span>
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button class="pv-dd-btn" id="pivot-chart-groupby-btn" style="font-size:12px; gap:4px;">
+          <span style="color:var(--color-text-caption); font-size:11px;">Group by</span>
+          <span id="pivot-chart-groupby-label">Channel</span>
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div style="width:1px; height:16px; background:var(--color-border);"></div>
+        <button id="pivot-chart-type-bar" title="Bar chart" style="padding:5px; border:none; background:none; cursor:pointer; border-radius:4px; display:flex; align-items:center;">
+          <svg id="pv-bar-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#346ed9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="6" width="4" height="15" rx="1"/><rect x="17" y="2" width="4" height="19" rx="1"/></svg>
+        </button>
+        <button id="pivot-chart-type-line" title="Line chart" style="padding:5px; border:none; background:none; cursor:pointer; border-radius:4px; display:flex; align-items:center;">
+          <svg id="pv-line-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><circle cx="3" cy="17" r="1.5"/><circle cx="9" cy="11" r="1.5"/><circle cx="13" cy="15" r="1.5"/><circle cx="21" cy="7" r="1.5"/></svg>
+        </button>
+        <button class="pv-dd-btn" id="pivot-chart-metric-btn">
+          <span id="pivot-chart-metric-label">Revenue</span>
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
     </div>
     <div style="position:relative; height:280px;">
       <canvas id="pivot-chart-canvas"></canvas>
+      <div id="pivot-chart-empty" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; align-items:center; justify-content:center;">
+        <span style="font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;">Select at least one metric to display the chart</span>
+      </div>
     </div>
   </div>
 
@@ -225,3 +242,4 @@
 <div class="pv-dd-panel" id="pivot-metrics-panel" style="padding:6px 0;"></div>
 <div class="pv-dd-panel" id="pivot-date-panel"></div>
 <div class="pv-dd-panel" id="pivot-chart-metric-panel"></div>
+<div class="pv-dd-panel" id="pivot-chart-groupby-panel"></div>

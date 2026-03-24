@@ -4,15 +4,32 @@
   // ── Chart colour palette ──
   var CHART_COLORS = ['#346ed9','#22c55e','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899'];
 
-  // ── All available dimensions ──
-  var ALL_DIMS = [
-    'Campaigns', 'Ad Groups', 'Product Segments',
-    'Labels', 'Brand / No Brand', 'Channel', 'Tiers',
-    'Page Type', 'Page URL'
+  // ── Dual y-axis scale groups ──
+  // LEFT  = large-magnitude values (currency / counts)
+  // RIGHT = ratios, percentages, small-unit values
+  var LEFT_AXIS_IDS  = ['spend', 'revenue', 'orgRevenue', 'conversions', 'clicks', 'sessions', 'impressions'];
+  var RIGHT_AXIS_IDS = ['cos', 'roas', 'convRate', 'cpc', 'aov', 'bounceRate', 'ctr', 'cpa'];
+
+  // ── Dimension groups by channel ──
+  var DIM_GROUPS = [
+    { channel: 'sem', label: 'SEM Dimensions',
+      dims: ['Client','Website','Channel','Labels','Ad Type','Campaign','Brand/No Brand'] },
+    { channel: 'seo', label: 'SEO Dimensions',
+      dims: ['Page Type','Page URL','Brand / No Brand','Channel'] }
   ];
+  var SEM_DIMS = DIM_GROUPS[0].dims;
+  var SEO_DIMS = DIM_GROUPS[1].dims;
+
+  // Chart groupBy → data depth (0=top-level, 1=children, 2=grandchildren)
+  var GROUPBY_DEPTH = {
+    'Client': 0, 'Website': 0, 'Channel': 0, 'Labels': 0,
+    'Ad Type': 0, 'Campaign': 1, 'Brand/No Brand': 0,
+    'Page Type': 0, 'Page URL': 1
+  };
 
   // ── All metric columns ──
   var ALL_COLS = [
+    // SEM metrics
     { id: 'spend',       label: 'Spend',          fmt: 'currency', agg: 'sum',  cosColor: false },
     { id: 'revenue',     label: 'Revenue',        fmt: 'currency', agg: 'sum',  cosColor: false },
     { id: 'cos',         label: 'COS',            fmt: 'pct',      agg: 'wavg', cosColor: true  },
@@ -21,143 +38,136 @@
     { id: 'convRate',    label: 'Conv. Rate',     fmt: 'pct',      agg: 'wavg', cosColor: false },
     { id: 'clicks',      label: 'Clicks',         fmt: 'int',      agg: 'sum',  cosColor: false },
     { id: 'cpc',         label: 'CPC',            fmt: 'currency', agg: 'wavg', cosColor: false },
+    { id: 'impressions', label: 'Impressions',    fmt: 'int',      agg: 'sum',  cosColor: false },
+    { id: 'ctr',         label: 'CTR',            fmt: 'pct',      agg: 'wavg', cosColor: false },
+    { id: 'cpa',         label: 'CPA',            fmt: 'currency', agg: 'wavg', cosColor: false },
+    // SEO metrics
     { id: 'orgRevenue',  label: 'Org. Revenue',   fmt: 'currency', agg: 'sum',  cosColor: false },
     { id: 'sessions',    label: 'Org. Sessions',  fmt: 'int',      agg: 'sum',  cosColor: false },
     { id: 'aov',         label: 'AOV',            fmt: 'currency', agg: 'wavg', cosColor: false },
     { id: 'bounceRate',  label: 'Bounce Rate',    fmt: 'pct',      agg: 'wavg', cosColor: false }
   ];
 
-  // ── SEM campaign hierarchy (Outdoor Research) ──
+  // ── Channel metric lists ──
+  var SEM_COL_IDS  = ['spend','revenue','cos','roas','conversions','convRate','clicks','cpc','impressions','ctr','cpa'];
+  var SEO_COL_IDS  = ['orgRevenue','sessions','convRate','aov','bounceRate'];
+  var SEM_DEFAULTS = ['spend','revenue','cos','roas','conversions','convRate','clicks','cpc'];
+  var SEO_DEFAULTS = ['orgRevenue','sessions','convRate','aov','bounceRate'];
+
+  // ── SEO page hierarchy (Outdoor Research) ──
+  var OR_SEO_PAGES = [
+    { name: 'Product Pages', orgRevenue: 142400, sessions: 56800, convRate: 0.028, aov: 89, bounceRate: 0.41,
+      children: [
+        { name: 'Jackets',       orgRevenue: 51264, sessions: 20448, convRate: 0.031, aov: 94, bounceRate: 0.38 },
+        { name: 'Footwear',      orgRevenue: 42720, sessions: 17040, convRate: 0.027, aov: 88, bounceRate: 0.42 },
+        { name: 'Fleece',        orgRevenue: 34176, sessions: 13632, convRate: 0.026, aov: 87, bounceRate: 0.43 },
+        { name: 'Sleeping Bags', orgRevenue: 14240, sessions:  5680, convRate: 0.022, aov: 91, bounceRate: 0.47 }
+      ]
+    },
+    { name: 'Category Pages', orgRevenue: 68200, sessions: 32400, convRate: 0.019, aov: 95, bounceRate: 0.52,
+      children: [
+        { name: 'Apparel',  orgRevenue: 27280, sessions: 12960, convRate: 0.020, aov: 97, bounceRate: 0.50 },
+        { name: 'Footwear', orgRevenue: 20460, sessions:  9720, convRate: 0.018, aov: 94, bounceRate: 0.54 },
+        { name: 'Gear',     orgRevenue: 20460, sessions:  9720, convRate: 0.018, aov: 93, bounceRate: 0.53 }
+      ]
+    },
+    { name: 'Blog & Guides', orgRevenue: 24800, sessions: 16200, convRate: 0.011, aov: 82, bounceRate: 0.67,
+      children: [
+        { name: 'Gear Guides',     orgRevenue: 14880, sessions: 9720, convRate: 0.012, aov: 84, bounceRate: 0.64 },
+        { name: 'How-To Articles', orgRevenue:  9920, sessions: 6480, convRate: 0.009, aov: 78, bounceRate: 0.71 }
+      ]
+    },
+    { name: 'Brand Pages', orgRevenue: 18200, sessions: 4760, convRate: 0.041, aov: 112, bounceRate: 0.32 },
+    { name: 'Other',       orgRevenue: 11682, sessions: 1800, convRate: 0.015, aov:  86, bounceRate: 0.58 }
+  ];
+
+  // ── SEM campaign hierarchy (Outdoor Research) — Channel → Campaign ──
   var OR_CAMPAIGNS = [
     {
-      name: 'Brand Campaigns',
-      spend: 12400, revenue: 89200, cos: 0.139, roas: 7.2, conversions: 487, convRate: 0.041, clicks: 11840, cpc: 1.05,
+      name: 'Google Ads',
+      spend: 69000, revenue: 342000, cos: 0.202, roas: 4.96, conversions: 1875, convRate: 0.031, clicks: 61490, cpc: 1.12,
+      impressions: 3074500, ctr: 0.020, cpa: 36.80,
       children: [
-        {
-          name: 'Jackets — Brand',
-          spend: 3100, revenue: 22300, cos: 0.139, roas: 7.2, conversions: 122, convRate: 0.041, clicks: 2960, cpc: 1.05,
-          children: [
-            { name: 'Hardshell Jackets',   spend: 1240, revenue: 8920,  cos: 0.139, roas: 7.2, conversions: 49, convRate: 0.041, clicks: 1184, cpc: 1.05 },
-            { name: 'Softshell Jackets',   spend: 1085, revenue: 7805,  cos: 0.139, roas: 7.2, conversions: 43, convRate: 0.041, clicks: 1035, cpc: 1.05 },
-            { name: 'Rain Jackets',        spend:  775, revenue: 5575,  cos: 0.139, roas: 7.2, conversions: 30, convRate: 0.041, clicks:  741, cpc: 1.05 }
-          ]
-        },
-        {
-          name: 'Footwear — Brand',
-          spend: 2480, revenue: 17840, cos: 0.139, roas: 7.2, conversions: 98, convRate: 0.041, clicks: 2368, cpc: 1.05,
-          children: [
-            { name: 'Trail Running Shoes',   spend: 992, revenue: 7136, cos: 0.139, roas: 7.2, conversions: 39, convRate: 0.041, clicks:  947, cpc: 1.05 },
-            { name: 'Hiking Boots',          spend: 868, revenue: 6244, cos: 0.139, roas: 7.2, conversions: 34, convRate: 0.041, clicks:  828, cpc: 1.05 },
-            { name: 'Sandals & Water Shoes', spend: 620, revenue: 4460, cos: 0.139, roas: 7.2, conversions: 25, convRate: 0.041, clicks:  593, cpc: 1.05 }
-          ]
-        },
-        {
-          name: 'Fleece — Brand',
-          spend: 4030, revenue: 28990, cos: 0.139, roas: 7.2, conversions: 158, convRate: 0.041, clicks: 3840, cpc: 1.05,
-          children: [
-            { name: 'Full-Zip Fleece', spend: 1612, revenue: 11596, cos: 0.139, roas: 7.2, conversions: 63, convRate: 0.041, clicks: 1536, cpc: 1.05 },
-            { name: 'Pullover Fleece', spend: 1411, revenue: 10147, cos: 0.139, roas: 7.2, conversions: 55, convRate: 0.041, clicks: 1344, cpc: 1.05 },
-            { name: 'Fleece Vests',    spend: 1007, revenue:  7247, cos: 0.139, roas: 7.2, conversions: 40, convRate: 0.041, clicks:  960, cpc: 1.05 }
-          ]
-        },
-        {
-          name: 'Accessories — Brand',
-          spend: 2790, revenue: 20070, cos: 0.139, roas: 7.2, conversions: 109, convRate: 0.041, clicks: 2672, cpc: 1.05,
-          children: [
-            { name: 'Gloves & Mittens',       spend: 1116, revenue: 8028, cos: 0.139, roas: 7.2, conversions: 44, convRate: 0.041, clicks: 1069, cpc: 1.05 },
-            { name: 'Hats & Beanies',         spend:  837, revenue: 6021, cos: 0.139, roas: 7.2, conversions: 33, convRate: 0.041, clicks:  802, cpc: 1.05 },
-            { name: 'Gaiters & Neck Warmers', spend:  837, revenue: 6021, cos: 0.139, roas: 7.2, conversions: 32, convRate: 0.041, clicks:  801, cpc: 1.05 }
-          ]
-        }
+        { name: '[SB] Tier A: Nonbrand USA / Core (AC) - US',
+          spend: 18600, revenue: 82000, cos: 0.227, roas: 4.41, conversions: 480, convRate: 0.028, clicks: 17150, cpc: 1.08, impressions: 857500, ctr: 0.020, cpa: 38.75 },
+        { name: '[SB] Tier B: Nonbrand CA / Core (AC) - CA',
+          spend: 8100,  revenue: 37400, cos: 0.217, roas: 4.62, conversions: 210, convRate: 0.026, clicks:  7500, cpc: 1.08, impressions: 375000, ctr: 0.020, cpa: 38.57 },
+        { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - US',
+          spend: 6200,  revenue: 44600, cos: 0.139, roas: 7.19, conversions: 240, convRate: 0.040, clicks:  5900, cpc: 1.05, impressions: 295000, ctr: 0.020, cpa: 25.83 },
+        { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - CA',
+          spend: 2400,  revenue: 17200, cos: 0.140, roas: 7.17, conversions:  93, convRate: 0.040, clicks:  2290, cpc: 1.05, impressions: 114500, ctr: 0.020, cpa: 25.81 },
+        { name: '[SB] Tier C: Brand Adjacent / Brand + Category (AC) - US',
+          spend: 14800, revenue: 84200, cos: 0.176, roas: 5.69, conversions: 452, convRate: 0.033, clicks: 13700, cpc: 1.08, impressions: 685000, ctr: 0.020, cpa: 32.74 },
+        { name: '[SB] Tier C: Brand Adjacent / Brand + Category (AC) - CA',
+          spend: 6100,  revenue: 34400, cos: 0.177, roas: 5.64, conversions: 185, convRate: 0.033, clicks:  5640, cpc: 1.08, impressions: 282000, ctr: 0.020, cpa: 32.97 },
+        { name: '[SB] Tier C: PMax (Brand Adjacent) (AC) - US',
+          spend: 8400,  revenue: 28600, cos: 0.294, roas: 3.40, conversions: 268, convRate: 0.037, clicks:  7250, cpc: 1.16, impressions: 362500, ctr: 0.020, cpa: 31.34 },
+        { name: '[SB] Tier C: PMax (Brand Adjacent) (AC) - CA',
+          spend: 2100,  revenue:  7100, cos: 0.296, roas: 3.38, conversions:  67, convRate: 0.037, clicks:  1810, cpc: 1.16, impressions:  90500, ctr: 0.020, cpa: 31.34 },
+        { name: '[SB] Tactical: Broad Match (Prospecting) / Brand + Category (AC) - US',
+          spend: 2300,  revenue:  6500, cos: 0.354, roas: 2.83, conversions:  58, convRate: 0.024, clicks:  2400, cpc: 0.96, impressions: 120000, ctr: 0.020, cpa: 39.66 }
       ]
     },
     {
-      name: 'Non-Brand',
-      spend: 54200, revenue: 198400, cos: 0.273, roas: 3.7, conversions: 1043, convRate: 0.023, clicks: 45300, cpc: 1.20,
+      name: 'Microsoft Ads',
+      spend: 29450, revenue: 145320, cos: 0.203, roas: 4.94, conversions: 679, convRate: 0.031, clicks: 27600, cpc: 1.07,
+      impressions: 1380000, ctr: 0.020, cpa: 43.37,
       children: [
-        {
-          name: 'Jackets — Non-Brand',
-          spend: 18200, revenue: 66600, cos: 0.273, roas: 3.7, conversions: 350, convRate: 0.023, clicks: 15200, cpc: 1.20,
-          children: [
-            { name: 'Hardshell Jackets', spend: 7280, revenue: 26640, cos: 0.273, roas: 3.7, conversions: 140, convRate: 0.023, clicks: 6080, cpc: 1.20 },
-            { name: 'Rain Jackets',      spend: 5460, revenue: 19980, cos: 0.273, roas: 3.7, conversions: 105, convRate: 0.023, clicks: 4560, cpc: 1.20 },
-            { name: 'Softshell Jackets', spend: 3640, revenue: 13320, cos: 0.273, roas: 3.7, conversions:  70, convRate: 0.023, clicks: 3040, cpc: 1.20 },
-            { name: 'Down Jackets',      spend: 1820, revenue:  6660, cos: 0.273, roas: 3.7, conversions:  35, convRate: 0.023, clicks: 1520, cpc: 1.20 }
-          ]
-        },
-        {
-          name: 'Footwear — Non-Brand',
-          spend: 14900, revenue: 54500, cos: 0.273, roas: 3.7, conversions: 286, convRate: 0.023, clicks: 12450, cpc: 1.20,
-          children: [
-            { name: 'Trail Running Shoes', spend: 5960, revenue: 21800, cos: 0.273, roas: 3.7, conversions: 114, convRate: 0.023, clicks: 4980, cpc: 1.20 },
-            { name: 'Hiking Boots',        spend: 4470, revenue: 16350, cos: 0.273, roas: 3.7, conversions:  86, convRate: 0.023, clicks: 3735, cpc: 1.20 },
-            { name: 'Approach Shoes',      spend: 2980, revenue: 10900, cos: 0.273, roas: 3.7, conversions:  57, convRate: 0.023, clicks: 2490, cpc: 1.20 },
-            { name: 'Waterproof Boots',    spend: 1490, revenue:  5450, cos: 0.273, roas: 3.7, conversions:  29, convRate: 0.023, clicks: 1245, cpc: 1.20 }
-          ]
-        },
-        {
-          name: 'Sleeping Bags — Non-Brand',
-          spend: 12100, revenue: 44300, cos: 0.273, roas: 3.7, conversions: 233, convRate: 0.023, clicks: 10150, cpc: 1.20,
-          children: [
-            { name: 'Down Sleeping Bags',       spend: 4840, revenue: 17720, cos: 0.273, roas: 3.7, conversions:  93, convRate: 0.023, clicks: 4060, cpc: 1.20 },
-            { name: 'Synthetic Sleeping Bags',  spend: 4840, revenue: 17720, cos: 0.273, roas: 3.7, conversions:  93, convRate: 0.023, clicks: 4060, cpc: 1.20 },
-            { name: 'Sleeping Bag Liners',      spend: 2420, revenue:  8860, cos: 0.273, roas: 3.7, conversions:  47, convRate: 0.023, clicks: 2030, cpc: 1.20 }
-          ]
-        },
-        {
-          name: 'Accessories — Non-Brand',
-          spend: 9000, revenue: 33000, cos: 0.273, roas: 3.7, conversions: 174, convRate: 0.023, clicks: 7500, cpc: 1.20,
-          children: [
-            { name: 'Trekking Poles', spend: 3600, revenue: 13200, cos: 0.273, roas: 3.7, conversions: 70, convRate: 0.023, clicks: 3000, cpc: 1.20 },
-            { name: 'Headlamps',      spend: 2700, revenue:  9900, cos: 0.273, roas: 3.7, conversions: 52, convRate: 0.023, clicks: 2250, cpc: 1.20 },
-            { name: 'Gaiters',        spend: 2700, revenue:  9900, cos: 0.273, roas: 3.7, conversions: 52, convRate: 0.023, clicks: 2250, cpc: 1.20 }
-          ]
-        }
-      ]
-    },
-    {
-      name: 'Shopping',
-      spend: 31850, revenue: 199720, cos: 0.159, roas: 6.3, conversions: 1024, convRate: 0.038, clicks: 26900, cpc: 1.18,
-      children: [
-        {
-          name: 'Jackets — Shopping',
-          spend: 10200, revenue: 64100, cos: 0.159, roas: 6.3, conversions: 328, convRate: 0.038, clicks: 8620, cpc: 1.18,
-          children: [
-            { name: 'Hardshell Jackets', spend: 4080, revenue: 25640, cos: 0.159, roas: 6.3, conversions: 131, convRate: 0.038, clicks: 3448, cpc: 1.18 },
-            { name: 'Down Jackets',      spend: 3060, revenue: 19230, cos: 0.159, roas: 6.3, conversions:  98, convRate: 0.038, clicks: 2586, cpc: 1.18 },
-            { name: 'Rain Jackets',      spend: 3060, revenue: 19230, cos: 0.159, roas: 6.3, conversions:  99, convRate: 0.038, clicks: 2586, cpc: 1.18 }
-          ]
-        },
-        {
-          name: 'Footwear — Shopping',
-          spend: 8800, revenue: 55200, cos: 0.159, roas: 6.3, conversions: 282, convRate: 0.038, clicks: 7440, cpc: 1.18,
-          children: [
-            { name: 'Trail Running Shoes', spend: 3520, revenue: 22080, cos: 0.159, roas: 6.3, conversions: 113, convRate: 0.038, clicks: 2976, cpc: 1.18 },
-            { name: 'Hiking Boots',        spend: 3520, revenue: 22080, cos: 0.159, roas: 6.3, conversions: 113, convRate: 0.038, clicks: 2976, cpc: 1.18 },
-            { name: 'Waterproof Footwear', spend: 1760, revenue: 11040, cos: 0.159, roas: 6.3, conversions:  56, convRate: 0.038, clicks: 1488, cpc: 1.18 }
-          ]
-        },
-        {
-          name: 'Fleece — Shopping',
-          spend: 7400, revenue: 46460, cos: 0.159, roas: 6.3, conversions: 237, convRate: 0.038, clicks: 6250, cpc: 1.18,
-          children: [
-            { name: 'Full-Zip Fleece', spend: 2960, revenue: 18584, cos: 0.159, roas: 6.3, conversions:  95, convRate: 0.038, clicks: 2500, cpc: 1.18 },
-            { name: 'Fleece Jackets',  spend: 2960, revenue: 18584, cos: 0.159, roas: 6.3, conversions:  95, convRate: 0.038, clicks: 2500, cpc: 1.18 },
-            { name: 'Fleece Vests',    spend: 1480, revenue:  9292, cos: 0.159, roas: 6.3, conversions:  47, convRate: 0.038, clicks: 1250, cpc: 1.18 }
-          ]
-        },
-        {
-          name: 'Sleeping Bags — Shopping',
-          spend: 5450, revenue: 33960, cos: 0.159, roas: 6.3, conversions: 177, convRate: 0.038, clicks: 4590, cpc: 1.18,
-          children: [
-            { name: 'Down Sleeping Bags',       spend: 2725, revenue: 17060, cos: 0.159, roas: 6.3, conversions: 89, convRate: 0.038, clicks: 2295, cpc: 1.18 },
-            { name: 'Synthetic Sleeping Bags',  spend: 2180, revenue: 13648, cos: 0.159, roas: 6.3, conversions: 71, convRate: 0.038, clicks: 1836, cpc: 1.18 },
-            { name: 'Ultralight Sleeping Bags', spend:  545, revenue:  3252, cos: 0.159, roas: 6.3, conversions: 17, convRate: 0.038, clicks:  459, cpc: 1.18 }
-          ]
-        }
+        { name: '[SB] Tier A: Nonbrand USA / Core (AC) - US',
+          spend: 9800,  revenue: 42600, cos: 0.230, roas: 4.35, conversions: 248, convRate: 0.026, clicks:  9540, cpc: 1.03, impressions: 477000, ctr: 0.020, cpa: 39.52 },
+        { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - US',
+          spend: 3700,  revenue: 26800, cos: 0.138, roas: 7.24, conversions: 146, convRate: 0.041, clicks:  3520, cpc: 1.05, impressions: 176000, ctr: 0.020, cpa: 25.34 },
+        { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - CA',
+          spend: 1400,  revenue: 10100, cos: 0.139, roas: 7.21, conversions:  55, convRate: 0.041, clicks:  1330, cpc: 1.05, impressions:  66500, ctr: 0.020, cpa: 25.45 },
+        { name: '[SB] Tier C: Brand Adjacent / Brand + Category (AC) - US',
+          spend: 8100,  revenue: 42200, cos: 0.192, roas: 5.21, conversions: 216, convRate: 0.031, clicks:  7700, cpc: 1.05, impressions: 385000, ctr: 0.020, cpa: 37.50 },
+        { name: '[SB] Tier C: PMax (Brand Adjacent) (AC) - US',
+          spend: 6450,  revenue: 23620, cos: 0.273, roas: 3.66, conversions: 162, convRate: 0.036, clicks:  5510, cpc: 1.17, impressions: 275500, ctr: 0.020, cpa: 39.81 }
       ]
     }
   ];
+
+  // ── OR flat campaign list (all channels combined, for Campaign groupBy) ──
+  var OR_ALL_CAMPAIGNS = [
+    { name: '[SB] Tier A: Nonbrand USA / Core (AC) - US',                              spend: 18600, revenue:  82000, cos: 0.227, roas: 4.41, conversions: 480, convRate: 0.028, clicks: 17150, cpc: 1.08, impressions:  857500, ctr: 0.020, cpa: 38.75 },
+    { name: '[SB] Tier B: Nonbrand CA / Core (AC) - CA',                               spend:  8100, revenue:  37400, cos: 0.217, roas: 4.62, conversions: 210, convRate: 0.026, clicks:  7500, cpc: 1.08, impressions:  375000, ctr: 0.020, cpa: 38.57 },
+    { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - US',                          spend:  6200, revenue:  44600, cos: 0.139, roas: 7.19, conversions: 240, convRate: 0.040, clicks:  5900, cpc: 1.05, impressions:  295000, ctr: 0.020, cpa: 25.83 },
+    { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - CA',                          spend:  2400, revenue:  17200, cos: 0.140, roas: 7.17, conversions:  93, convRate: 0.040, clicks:  2290, cpc: 1.05, impressions:  114500, ctr: 0.020, cpa: 25.81 },
+    { name: '[SB] Tier C: Brand Adjacent / Brand + Category (AC) - US',                spend: 14800, revenue:  84200, cos: 0.176, roas: 5.69, conversions: 452, convRate: 0.033, clicks: 13700, cpc: 1.08, impressions:  685000, ctr: 0.020, cpa: 32.74 },
+    { name: '[SB] Tier C: Brand Adjacent / Brand + Category (AC) - CA',                spend:  6100, revenue:  34400, cos: 0.177, roas: 5.64, conversions: 185, convRate: 0.033, clicks:  5640, cpc: 1.08, impressions:  282000, ctr: 0.020, cpa: 32.97 },
+    { name: '[SB] Tier C: PMax (Brand Adjacent) (AC) - US',                            spend:  8400, revenue:  28600, cos: 0.294, roas: 3.40, conversions: 268, convRate: 0.037, clicks:  7250, cpc: 1.16, impressions:  362500, ctr: 0.020, cpa: 31.34 },
+    { name: '[SB] Tier C: PMax (Brand Adjacent) (AC) - CA',                            spend:  2100, revenue:   7100, cos: 0.296, roas: 3.38, conversions:  67, convRate: 0.037, clicks:  1810, cpc: 1.16, impressions:   90500, ctr: 0.020, cpa: 31.34 },
+    { name: '[SB] Tactical: Broad Match (Prospecting) / Brand + Category (AC) - US',  spend:  2300, revenue:   6500, cos: 0.354, roas: 2.83, conversions:  58, convRate: 0.024, clicks:  2400, cpc: 0.96, impressions:  120000, ctr: 0.020, cpa: 39.66 },
+    { name: '[SB] Tier A: Nonbrand USA / Core (AC) - US (MSFT)',                       spend:  9800, revenue:  42600, cos: 0.230, roas: 4.35, conversions: 248, convRate: 0.026, clicks:  9540, cpc: 1.03, impressions:  477000, ctr: 0.020, cpa: 39.52 },
+    { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - US (MSFT)',                   spend:  3700, revenue:  26800, cos: 0.138, roas: 7.24, conversions: 146, convRate: 0.041, clicks:  3520, cpc: 1.05, impressions:  176000, ctr: 0.020, cpa: 25.34 },
+    { name: '[SB] Tier Brand: Branded Ads / Brand (AC) - CA (MSFT)',                   spend:  1400, revenue:  10100, cos: 0.139, roas: 7.21, conversions:  55, convRate: 0.041, clicks:  1330, cpc: 1.05, impressions:   66500, ctr: 0.020, cpa: 25.45 },
+    { name: '[SB] Tier C: Brand Adjacent / Brand + Category (AC) - US (MSFT)',         spend:  8100, revenue:  42200, cos: 0.192, roas: 5.21, conversions: 216, convRate: 0.031, clicks:  7700, cpc: 1.05, impressions:  385000, ctr: 0.020, cpa: 37.50 },
+    { name: '[SB] Tier C: PMax (Brand Adjacent) (AC) - US (MSFT)',                     spend:  6450, revenue:  23620, cos: 0.273, roas: 3.66, conversions: 162, convRate: 0.036, clicks:  5510, cpc: 1.17, impressions:  275500, ctr: 0.020, cpa: 39.81 }
+  ];
+
+  // ── OR dimension-keyed data (each key = what to show when that dim is selected) ──
+  var OR_DIM_DATA = {
+    'Channel': OR_CAMPAIGNS,
+    'Labels': [
+      { name: 'Nonbrand USA (Tier A)',         spend: 28400, revenue: 124600, cos: 0.228, roas: 4.39, conversions:  728, convRate: 0.027, clicks: 26690, cpc: 1.06, impressions: 1334500, ctr: 0.020, cpa: 39.01 },
+      { name: 'Nonbrand CA (Tier B)',           spend:  8100, revenue:  37400, cos: 0.217, roas: 4.62, conversions:  210, convRate: 0.026, clicks:  7500, cpc: 1.08, impressions:  375000, ctr: 0.020, cpa: 38.57 },
+      { name: 'Branded Ads USA/CA (Tier Brand)',spend: 13700, revenue:  98700, cos: 0.139, roas: 7.20, conversions:  534, convRate: 0.040, clicks: 13040, cpc: 1.05, impressions:  652000, ctr: 0.020, cpa: 25.66 },
+      { name: 'Brand Adjacent USA/CA (Tier C)', spend: 45950, revenue: 220120, cos: 0.209, roas: 4.79, conversions: 1350, convRate: 0.033, clicks: 41610, cpc: 1.10, impressions: 2080000, ctr: 0.020, cpa: 34.04 },
+      { name: 'Tactical Spend USA',             spend:  2300, revenue:   6500, cos: 0.354, roas: 2.83, conversions:   58, convRate: 0.024, clicks:  2400, cpc: 0.96, impressions:  120000, ctr: 0.020, cpa: 39.66 }
+    ],
+    'Ad Type': [
+      { name: 'Shopping',    spend: 28400, revenue: 124600, cos: 0.228, roas: 4.39, conversions:  728, convRate: 0.027, clicks: 26690, cpc: 1.06, impressions: 1334500, ctr: 0.020, cpa: 39.01 },
+      { name: 'Text/Other',  spend: 53100, revenue: 303400, cos: 0.175, roas: 5.71, conversions: 1648, convRate: 0.034, clicks: 47940, cpc: 1.11, impressions: 2397000, ctr: 0.020, cpa: 32.22 },
+      { name: 'PMax',        spend: 16950, revenue:  59320, cos: 0.286, roas: 3.50, conversions:  497, convRate: 0.036, clicks: 14570, cpc: 1.16, impressions:  728500, ctr: 0.020, cpa: 34.11 }
+    ],
+    'Campaign': OR_ALL_CAMPAIGNS,
+    'Brand/No Brand': [
+      { name: 'Brand',     spend: 13700, revenue:  98700, cos: 0.139, roas: 7.20, conversions:  534, convRate: 0.040, clicks: 13040, cpc: 1.05, impressions:  652000, ctr: 0.020, cpa: 25.66 },
+      { name: 'Non-Brand', spend: 84750, revenue: 388620, cos: 0.218, roas: 4.59, conversions: 2020, convRate: 0.029, clicks: 71000, cpc: 1.19, impressions: 3552500, ctr: 0.020, cpa: 41.96 }
+    ],
+    'Client':  null,
+    'Website': null
+  };
 
   // ── Per-client aggregate metrics (keyed by client name) ──
   var CLIENT_METRICS = {
@@ -201,12 +211,18 @@
             : m[k] * factor;
         });
         var site = { name: w, spend: wm.spend, revenue: wm.revenue, cos: wm.cos || m.cos, roas: wm.roas || m.roas, conversions: wm.conversions, convRate: wm.convRate || m.convRate, clicks: wm.clicks, cpc: wm.cpc || m.cpc };
+        site.impressions = site.clicks ? Math.round(site.clicks / 0.02) : 0;
+        site.ctr = 0.02;
+        site.cpa = site.conversions ? site.spend / site.conversions : 0;
         if (wm.orgRevenue) { site.orgRevenue = wm.orgRevenue; site.sessions = wm.sessions; site.aov = wm.aov; site.bounceRate = wm.bounceRate; }
-        // Outdoor Research gets campaign drill-down
-        if (c.name === 'Outdoor Research') site.dimChildren = OR_CAMPAIGNS;
+        // Outdoor Research gets drill-down for both channels
+        if (c.name === 'Outdoor Research') { site.dimChildren = OR_CAMPAIGNS; site.dimData = OR_DIM_DATA; site.seoDimChildren = OR_SEO_PAGES; }
         return site;
       });
       var client = Object.assign({ name: c.name, websites: websites }, m);
+      client.impressions = m.clicks ? Math.round(m.clicks / 0.02) : 0;
+      client.ctr = 0.02;
+      client.cpa = m.conversions ? m.spend / m.conversions : 0;
       return client;
     });
   }
@@ -215,13 +231,17 @@
   var state = {
     selectedClient:  'Outdoor Research',
     selectedWebsite: 'OutdoorResearch.com',
-    dimensions: ['Campaigns'],
+    dimensions: [],
     visibleCols: ['spend', 'revenue', 'cos', 'roas', 'conversions', 'convRate', 'clicks', 'cpc'],
-    dateRange: 'Last 30 Days',
-    sortCol: null,
-    sortDir: 'desc',
-    expanded: {},
-    chartMetrics: ['revenue']
+    dateRange:      'Last 30 Days',
+    sortCol:        null,
+    sortDir:        'desc',
+    expanded:       {},
+    chartMetrics:   ['revenue'],
+    chartType:      'bar',
+    activeChannel:  'sem',
+    chartGroupBy:   'Channel',
+    dimConflict:    false
   };
 
   var CLIENTS_DATA = [];
@@ -310,28 +330,78 @@
     return CLIENTS_DATA.filter(function (c) { return c.name === state.selectedClient; });
   }
 
-  // ── Chart rows: drill down so there's always multiple data points ──
+  // ── Chart rows: channel-aware, respects chartGroupBy depth ──
   function getChartRows() {
-    // All clients → one point per client
     if (state.selectedClient === 'All Clients') return CLIENTS_DATA;
 
     var client = CLIENTS_DATA.filter(function (c) { return c.name === state.selectedClient; })[0];
     if (!client) return CLIENTS_DATA;
-
-    // Specific client, all websites → one point per website
     if (state.selectedWebsite === 'All Websites') return client.websites;
 
-    // Specific website → use campaign children if available, else all websites
     var site = client.websites.filter(function (w) { return w.name === state.selectedWebsite; })[0];
-    if (site && site.dimChildren && site.dimChildren.length) return site.dimChildren;
+    if (!site) return client.websites;
 
-    return client.websites;
+    // SEM with dimData: pick the chartGroupBy dimension's rows directly
+    if (state.activeChannel === 'sem' && site.dimData) {
+      var gb = state.chartGroupBy;
+      if (gb === 'Client') return CLIENTS_DATA;
+      if (gb === 'Website') return client.websites;
+      var gbRows = site.dimData[gb] || site.dimData['Channel'] || [];
+      return gbRows.length ? gbRows : client.websites;
+    }
+
+    var topLevel = getChannelDimChildren(site);
+    if (!topLevel || !topLevel.length) return client.websites;
+
+    var depth = GROUPBY_DEPTH[state.chartGroupBy] || 0;
+    if (depth === 0) return topLevel;
+
+    // Level 1: flatten children of top-level
+    var level1 = [];
+    topLevel.forEach(function (p) { if (p.children) level1 = level1.concat(p.children); });
+    if (!level1.length) return topLevel;
+    if (depth === 1) return level1;
+
+    // Level 2: flatten grandchildren
+    var level2 = [];
+    level1.forEach(function (p) { if (p.children) level2 = level2.concat(p.children); });
+    return level2.length ? level2 : level1;
   }
 
   // ── Filtered websites for a client ──
   function filteredWebsites(client) {
     if (state.selectedWebsite === 'All Websites') return client.websites;
     return client.websites.filter(function (w) { return w.name === state.selectedWebsite; });
+  }
+
+  // ── Channel-aware dim children for a site ──
+  function getChannelDimChildren(site) {
+    if (state.activeChannel === 'seo') return site.seoDimChildren || [];
+    // SEM: use dimension-keyed data when available
+    if (site.dimData) {
+      var dim = state.dimensions[0] || 'Channel';
+      // Client/Website dims fall back to the default channel view
+      return site.dimData[dim] || site.dimData['Channel'] || [];
+    }
+    return site.dimChildren || [];
+  }
+
+  // ── Default Group By: first dim selected, or first in active channel ──
+  function getDefaultGroupBy() {
+    if (state.dimensions.length) return state.dimensions[0];
+    return state.activeChannel === 'seo' ? SEO_DIMS[0] : SEM_DIMS[0];
+  }
+
+  // ── Switch active channel, reset cols + chart defaults ──
+  function switchChannel(newChannel) {
+    if (state.activeChannel === newChannel) return;
+    state.activeChannel = newChannel;
+    var defaults = newChannel === 'sem' ? SEM_DEFAULTS : SEO_DEFAULTS;
+    state.visibleCols   = defaults.slice();
+    state.chartMetrics  = [defaults[0]];
+    state.chartGroupBy  = getDefaultGroupBy();
+    state.expanded      = {};
+    state.sortCol       = null;
   }
 
   // ── Sort an array of rows ──
@@ -389,7 +459,8 @@
       websites.forEach(function (site, wi) {
         var k1 = k0 + 'w' + wi;
         var open1 = !!state.expanded[k1];
-        var hasDims = numDims > 0 && site.dimChildren && site.dimChildren.length;
+        var siteDimKids = getChannelDimChildren(site);
+        var hasDims = numDims > 0 && siteDimKids.length;
 
         html += '<tr class="pv-row pv-row-l1">';
         html += '<td class="pv-td pv-td-name"><div class="pv-name-cell">';
@@ -403,7 +474,7 @@
         if (!hasDims || !open1) return;
 
         // Level 2 — first selected dimension (e.g. Campaigns)
-        sortedRows(site.dimChildren).forEach(function (d1, d1i) {
+        sortedRows(siteDimKids).forEach(function (d1, d1i) {
           var k2 = k1 + 'd' + d1i;
           var open2 = !!state.expanded[k2];
           var hasL3 = numDims > 1 && d1.children && d1.children.length;
@@ -483,19 +554,49 @@
     }
   }
 
-  // ── Chart metric panel (checkboxes) ──
+  // ── Chart type toggle icon colours ──
+  function updateChartTypeToggle() {
+    var cs      = getComputedStyle(document.documentElement);
+    var blue    = cs.getPropertyValue('--color-blue').trim()         || '#346ed9';
+    var caption = cs.getPropertyValue('--color-text-caption').trim() || '#9ca3af';
+    var barIcon  = document.getElementById('pv-bar-icon');
+    var lineIcon = document.getElementById('pv-line-icon');
+    if (barIcon)  barIcon.setAttribute('stroke',  state.chartType === 'bar'  ? blue : caption);
+    if (lineIcon) lineIcon.setAttribute('stroke', state.chartType === 'line' ? blue : caption);
+  }
+
+  // ── Chart metric panel (checkboxes, channel-filtered) ──
   function buildChartMetricPanel() {
     var panel = document.getElementById('pivot-chart-metric-panel');
     if (!panel) return;
-    var activeCols = getActiveCols();
+    var channelIds = state.activeChannel === 'sem' ? SEM_COL_IDS : SEO_COL_IDS;
+    var cols = ALL_COLS.filter(function (c) { return channelIds.indexOf(c.id) !== -1; });
     var html = '';
-    activeCols.forEach(function (col) {
+    cols.forEach(function (col) {
       var checked = state.chartMetrics.indexOf(col.id) !== -1;
       html += '<label class="pv-check-opt">' +
         '<input type="checkbox" data-chart-metric="' + col.id + '"' + (checked ? ' checked' : '') + '>' +
         '<span>' + escHtml(col.label) + '</span></label>';
     });
     panel.innerHTML = html || '<div class="pv-dd-item" style="color:var(--color-text-subtitle);padding:8px 12px;">No metrics visible</div>';
+  }
+
+  // ── Chart group-by label ──
+  function updateChartGroupByLabel() {
+    var el = document.getElementById('pivot-chart-groupby-label');
+    if (el) el.textContent = state.chartGroupBy;
+  }
+
+  // ── Chart group-by panel (single-select) ──
+  function buildChartGroupByPanel() {
+    var panel = document.getElementById('pivot-chart-groupby-panel');
+    if (!panel) return;
+    var dims = state.activeChannel === 'sem' ? SEM_DIMS : SEO_DIMS;
+    var html = '';
+    dims.forEach(function (dim) {
+      html += '<div class="pv-dd-item' + (state.chartGroupBy === dim ? ' pv-selected' : '') + '" data-pick-groupby="' + escHtml(dim) + '">' + escHtml(dim) + '</div>';
+    });
+    panel.innerHTML = html;
   }
 
   // ── Load Chart.js dynamically (script tags in innerHTML partials are not executed) ──
@@ -510,77 +611,122 @@
 
   // ── Render chart ──
   function renderChart() {
-    var canvas = document.getElementById('pivot-chart-canvas');
+    var canvas  = document.getElementById('pivot-chart-canvas');
+    var emptyEl = document.getElementById('pivot-chart-empty');
     if (!canvas || typeof Chart === 'undefined') return;
 
-    var activeCols = getActiveCols();
-    if (!activeCols.length) {
-      if (pvChart) { pvChart.destroy(); pvChart = null; }
-      return;
-    }
+    // Sync type toggle icons
+    updateChartTypeToggle();
 
-    // Drop any charted metrics that are no longer visible
+    var activeCols = getActiveCols();
+
+    // Drop charted metrics that are no longer visible
     state.chartMetrics = state.chartMetrics.filter(function (id) {
       return state.visibleCols.indexOf(id) !== -1;
     });
-    if (!state.chartMetrics.length) state.chartMetrics = [activeCols[0].id];
+    if (!state.chartMetrics.length && activeCols.length) state.chartMetrics = [activeCols[0].id];
     updateChartMetricLabel();
 
-    var rows = getChartRows();
+    // ── Empty state: no metrics at all ──
+    if (!state.chartMetrics.length) {
+      if (pvChart) { pvChart.destroy(); pvChart = null; }
+      canvas.style.display = 'none';
+      if (emptyEl) emptyEl.style.display = 'flex';
+      return;
+    }
+    canvas.style.display = '';
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    var rows   = getChartRows();
     var labels = rows.map(function (r) { return r.name; });
 
-    var cs = getComputedStyle(document.documentElement);
-    var gridColor  = cs.getPropertyValue('--color-border').trim()       || '#e5e7eb';
-    var tickColor  = cs.getPropertyValue('--color-text-caption').trim() || '#9ca3af';
+    var cs          = getComputedStyle(document.documentElement);
+    var gridColor   = cs.getPropertyValue('--color-border').trim()        || '#e5e7eb';
+    var tickColor   = cs.getPropertyValue('--color-text-caption').trim()  || '#9ca3af';
+    var textPrimary = cs.getPropertyValue('--color-text-primary').trim()  || '#111827';
 
-    // One dataset per selected metric, each with its own hidden y-axis so scales stay correct
+    // ── Determine dual-axis need ──
+    var hasLeft  = state.chartMetrics.some(function (id) { return LEFT_AXIS_IDS.indexOf(id)  !== -1; });
+    var hasRight = state.chartMetrics.some(function (id) { return RIGHT_AXIS_IDS.indexOf(id) !== -1; });
+    var dual = hasLeft && hasRight;
+
+    var isBar = state.chartType === 'bar';
+
+    // ── Datasets ──
     var datasets = state.chartMetrics.map(function (id, i) {
-      var col   = ALL_COLS.filter(function (c) { return c.id === id; })[0];
-      var color = CHART_COLORS[i % CHART_COLORS.length];
-      return {
-        label:              col ? col.label : id,
-        data:               rows.map(function (r) { return r[id] || 0; }),
-        tension:            0.4,
-        borderColor:        color,
-        backgroundColor:    i === 0 ? hexToRgba(color, 0.07) : 'transparent',
-        pointBackgroundColor: '#ffffff',
-        pointBorderColor:   color,
-        pointBorderWidth:   2,
-        pointRadius:        4,
-        pointHoverRadius:   6,
-        fill:               i === 0,
-        yAxisID:            'y' + i
-      };
+      var col    = ALL_COLS.filter(function (c) { return c.id === id; })[0];
+      var color  = CHART_COLORS[i % CHART_COLORS.length];
+      var axisId = dual ? ((LEFT_AXIS_IDS.indexOf(id) !== -1) ? 'left' : 'right') : 'left';
+
+      if (isBar) {
+        return {
+          label:           col ? col.label : id,
+          data:            rows.map(function (r) { return r[id] || 0; }),
+          backgroundColor: hexToRgba(color, 0.75),
+          borderColor:     color,
+          borderWidth:     1,
+          borderRadius:    3,
+          yAxisID:         axisId
+        };
+      } else {
+        return {
+          label:                col ? col.label : id,
+          data:                 rows.map(function (r) { return r[id] || 0; }),
+          tension:              0,
+          borderColor:          color,
+          backgroundColor:      'transparent',
+          pointBackgroundColor: '#ffffff',
+          pointBorderColor:     color,
+          pointBorderWidth:     2,
+          pointRadius:          5,
+          pointHoverRadius:     7,
+          fill:                 false,
+          yAxisID:              axisId
+        };
+      }
     });
 
-    // Build scales object: first y-axis visible, rest hidden
+    // ── Build scales ──
+    function axisTicks(repId) {
+      var col = ALL_COLS.filter(function (c) { return c.id === repId; })[0];
+      return {
+        font:     { size: 12 },
+        color:    tickColor,
+        callback: (function (colDef) {
+          return function (v) { return colDef ? fmtVal(colDef, v) : v; };
+        }(col))
+      };
+    }
+
+    var leftRepId  = state.chartMetrics.filter(function (id) { return LEFT_AXIS_IDS.indexOf(id)  !== -1; })[0]
+                  || state.chartMetrics[0];
+    var rightRepId = state.chartMetrics.filter(function (id) { return RIGHT_AXIS_IDS.indexOf(id) !== -1; })[0];
+
     var scales = {
       x: {
         grid:  { color: gridColor },
         ticks: { font: { size: 12 }, color: tickColor, maxRotation: 35 }
+      },
+      left: {
+        display:  true,
+        position: 'left',
+        grid:     { color: gridColor },
+        ticks:    axisTicks(leftRepId)
       }
     };
-    state.chartMetrics.forEach(function (id, i) {
-      var col = ALL_COLS.filter(function (c) { return c.id === id; })[0];
-      scales['y' + i] = {
-        display:  i === 0,
-        position: 'left',
-        grid:     i === 0 ? { color: gridColor } : { drawOnChartArea: false },
-        ticks:    i === 0 ? {
-          font:     { size: 12 },
-          color:    tickColor,
-          callback: (function (colDef) {
-            return function (v) { return colDef ? fmtVal(colDef, v) : v; };
-          }(col))
-        } : {}
+    if (dual && rightRepId) {
+      scales.right = {
+        display:  true,
+        position: 'right',
+        grid:     { drawOnChartArea: false },
+        ticks:    axisTicks(rightRepId)
       };
-    });
+    }
 
-    // Always recreate so dynamic y-axes register correctly
     if (pvChart) { pvChart.destroy(); pvChart = null; }
 
     pvChart = new Chart(canvas.getContext('2d'), {
-      type: 'line',
+      type: isBar ? 'bar' : 'line',
       data: { labels: labels, datasets: datasets },
       options: {
         responsive:          true,
@@ -592,12 +738,19 @@
             labels:  { font: { size: 12 }, color: tickColor, boxWidth: 12, padding: 14 }
           },
           tooltip: {
+            backgroundColor: '#ffffff',
+            borderColor:     gridColor,
+            borderWidth:     1,
+            titleColor:      textPrimary,
+            bodyColor:       textPrimary,
+            padding:         8,
+            cornerRadius:    4,
             callbacks: {
               label: (function (metrics) {
                 return function (ctx) {
                   var id     = metrics[ctx.datasetIndex];
                   var colDef = id ? ALL_COLS.filter(function (c) { return c.id === id; })[0] : null;
-                  return (colDef ? colDef.label : ctx.dataset.label) + ': ' +
+                  return ' ' + (colDef ? colDef.label : ctx.dataset.label) + ': ' +
                          (colDef ? fmtVal(colDef, ctx.raw) : ctx.raw);
                 };
               }(state.chartMetrics.slice()))
@@ -609,10 +762,10 @@
     });
   }
 
-  function render() { renderHeader(); renderRows(); renderTotals(); renderChart(); }
+  function render() { renderHeader(); renderRows(); renderTotals(); renderChart(); updateChartGroupByLabel(); }
 
   // ── Panel helpers ──
-  var PANEL_IDS = ['pivot-client-panel','pivot-website-panel','pivot-dim-panel','pivot-metrics-panel','pivot-date-panel','pivot-chart-metric-panel'];
+  var PANEL_IDS = ['pivot-client-panel','pivot-website-panel','pivot-dim-panel','pivot-metrics-panel','pivot-date-panel','pivot-chart-metric-panel','pivot-chart-groupby-panel'];
 
   function closeAllPanels(except) {
     PANEL_IDS.forEach(function (id) {
@@ -632,7 +785,21 @@
     panel.style.display = 'block';
   }
 
-  function togglePanel(btnId, panelId, buildFn) {
+  // Position a panel above its button (avoids overlapping content below, e.g. the chart canvas)
+  function positionPanelAbove(btnId, panelId) {
+    var btn = document.getElementById(btnId);
+    var panel = document.getElementById(panelId);
+    if (!btn || !panel) return;
+    panel.style.visibility = 'hidden';
+    panel.style.display = 'block';
+    var panelH = panel.offsetHeight;
+    panel.style.visibility = '';
+    var r = btn.getBoundingClientRect();
+    panel.style.top  = (r.top - panelH - 4) + 'px';
+    panel.style.left = r.left + 'px';
+  }
+
+  function togglePanel(btnId, panelId, buildFn, posFn) {
     var panel = document.getElementById(panelId);
     if (panel && panel.style.display !== 'none') {
       panel.style.display = 'none';
@@ -640,7 +807,7 @@
     }
     closeAllPanels(panelId);
     buildFn();
-    positionPanel(btnId, panelId);
+    (posFn || positionPanel)(btnId, panelId);
   }
 
   // ── Client panel ──
@@ -667,26 +834,36 @@
     panel.innerHTML = html;
   }
 
-  // ── Dimensions panel ──
+  // ── Dimensions panel — grouped by channel ──
   function buildDimPanel() {
     var panel = document.getElementById('pivot-dim-panel');
     if (!panel) return;
     var html = '';
-    ALL_DIMS.forEach(function (dim) {
-      var checked = state.dimensions.indexOf(dim) !== -1;
-      html += '<label class="pv-check-opt">' +
-        '<input type="checkbox" data-dim="' + escHtml(dim) + '"' + (checked ? ' checked' : '') + '>' +
-        '<span>' + escHtml(dim) + '</span></label>';
+    DIM_GROUPS.forEach(function (grp, gi) {
+      var borderTop = gi > 0 ? 'border-top:1px solid var(--color-border); margin-top:4px;' : '';
+      html += '<div style="' + borderTop + 'padding:8px 12px 4px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-caption); user-select:none;">' + escHtml(grp.label) + '</div>';
+      grp.dims.forEach(function (dim) {
+        var checked = state.dimensions.indexOf(dim) !== -1 && state.activeChannel === grp.channel;
+        html += '<label class="pv-check-opt">' +
+          '<input type="checkbox" data-dim="' + escHtml(dim) + '" data-dim-channel="' + grp.channel + '"' + (checked ? ' checked' : '') + '>' +
+          '<span>' + escHtml(dim) + '</span></label>';
+      });
     });
+    if (state.dimConflict) {
+      html += '<div style="padding:6px 12px 8px; font-size:11.5px; color:var(--color-text-warning); border-top:1px solid var(--color-border); margin-top:4px;">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>' +
+        'Dimensions must be from the same channel</div>';
+    }
     panel.innerHTML = html;
   }
 
-  // ── Metrics panel ──
+  // ── Metrics panel — channel-filtered ──
   function buildMetricsPanel() {
     var panel = document.getElementById('pivot-metrics-panel');
     if (!panel) return;
+    var channelIds = state.activeChannel === 'sem' ? SEM_COL_IDS : SEO_COL_IDS;
     var html = '';
-    ALL_COLS.forEach(function (col) {
+    ALL_COLS.filter(function (c) { return channelIds.indexOf(c.id) !== -1; }).forEach(function (col) {
       var checked = state.visibleCols.indexOf(col.id) !== -1;
       html += '<label class="pv-check-opt">' +
         '<input type="checkbox" data-col="' + col.id + '"' + (checked ? ' checked' : '') + '>' +
@@ -735,8 +912,9 @@
       addLine(client.name, client, 0);
       filteredWebsites(client).forEach(function (site) {
         addLine(site.name, site, 1);
-        if (numDims > 0 && site.dimChildren) {
-          site.dimChildren.forEach(function (d1) {
+        var exportKids = getChannelDimChildren(site);
+        if (numDims > 0 && exportKids.length) {
+          exportKids.forEach(function (d1) {
             addLine(d1.name, d1, 2);
             if (numDims > 1 && d1.children) {
               d1.children.forEach(function (d2) {
@@ -813,9 +991,25 @@
         togglePanel('pivot-date-btn', 'pivot-date-panel', buildDatePanel);
         return;
       }
-      // Chart metric button
+      // Chart type toggles
+      if (e.target.closest('#pivot-chart-type-bar')) {
+        state.chartType = 'bar';
+        renderChart();
+        return;
+      }
+      if (e.target.closest('#pivot-chart-type-line')) {
+        state.chartType = 'line';
+        renderChart();
+        return;
+      }
+      // Chart group-by button
+      if (e.target.closest('#pivot-chart-groupby-btn')) {
+        togglePanel('pivot-chart-groupby-btn', 'pivot-chart-groupby-panel', buildChartGroupByPanel, positionPanelAbove);
+        return;
+      }
+      // Chart metric button — panel opens above to avoid covering the canvas
       if (e.target.closest('#pivot-chart-metric-btn')) {
-        togglePanel('pivot-chart-metric-btn', 'pivot-chart-metric-panel', buildChartMetricPanel);
+        togglePanel('pivot-chart-metric-btn', 'pivot-chart-metric-panel', buildChartMetricPanel, positionPanelAbove);
         return;
       }
       // Export button
@@ -866,9 +1060,19 @@
         return;
       }
 
+      // Group-by pick
+      var gbp = e.target.closest('[data-pick-groupby]');
+      if (gbp) {
+        state.chartGroupBy = gbp.getAttribute('data-pick-groupby');
+        document.getElementById('pivot-chart-groupby-panel').style.display = 'none';
+        updateChartGroupByLabel();
+        renderChart();
+        return;
+      }
+
       // Close panels on outside click
       var inPanel = PANEL_IDS.some(function (id) { return e.target.closest('#' + id); });
-      var inBtn = ['pivot-client-btn','pivot-website-btn','pivot-dim-btn','pivot-metrics-btn','pivot-date-btn','pivot-chart-metric-btn']
+      var inBtn = ['pivot-client-btn','pivot-website-btn','pivot-dim-btn','pivot-metrics-btn','pivot-date-btn','pivot-chart-metric-btn','pivot-chart-type-bar','pivot-chart-type-line','pivot-chart-groupby-btn']
         .some(function (id) { return e.target.closest('#' + id); });
       if (!inPanel && !inBtn) closeAllPanels();
     });
@@ -877,15 +1081,31 @@
     document.addEventListener('change', function (e) {
       var dimCb = e.target.closest('input[data-dim]');
       if (dimCb) {
-        var dim = dimCb.getAttribute('data-dim');
+        var dim    = dimCb.getAttribute('data-dim');
+        var dimCh  = dimCb.getAttribute('data-dim-channel');
         if (dimCb.checked) {
+          if (dimCh !== state.activeChannel && state.dimensions.length > 0) {
+            // Cross-channel conflict: switch channel and clear old dims
+            state.dimConflict = true;
+            switchChannel(dimCh);
+            state.dimensions = [];
+          } else if (dimCh !== state.activeChannel) {
+            switchChannel(dimCh);
+            state.dimConflict = false;
+          } else {
+            state.dimConflict = false;
+          }
           if (state.dimensions.indexOf(dim) === -1) state.dimensions.push(dim);
         } else {
           var idx = state.dimensions.indexOf(dim);
           if (idx !== -1) state.dimensions.splice(idx, 1);
+          state.dimConflict = false;
         }
+        state.chartGroupBy = getDefaultGroupBy();
         state.expanded = {};
         updateDimLabel();
+        updateChartGroupByLabel();
+        buildDimPanel(); // rebuild to show/hide conflict note and update checked state
         render();
         return;
       }
@@ -898,11 +1118,7 @@
         if (cmCb.checked) {
           if (cmi === -1) state.chartMetrics.push(cmId);
         } else {
-          if (state.chartMetrics.length > 1 && cmi !== -1) {
-            state.chartMetrics.splice(cmi, 1);
-          } else {
-            cmCb.checked = true; // keep at least one
-          }
+          if (cmi !== -1) state.chartMetrics.splice(cmi, 1);
         }
         updateChartMetricLabel();
         renderChart();
