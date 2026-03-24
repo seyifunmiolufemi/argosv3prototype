@@ -255,6 +255,7 @@ window.ovSetChannel = function(ch) {
     var btn = document.getElementById('ov-tab-' + t);
     if (btn) btn.className = 'ov-channel-tab' + (t === ch.toLowerCase() ? ' ov-tab-active' : '');
   });
+  ovSyncFloatTabs(ch);
   ovRender();
   updateSection2(ch);
   renderS3Tiles(ch);
@@ -388,6 +389,7 @@ function showOverviewPage() {
   updateSection2(_ovChannel);
   renderS3Tiles(_ovChannel);
   setTimeout(function() { initSection4(_ovChannel); }, 0);
+  setupFloatingChannelSwitcher();
 }
 window.showOverviewPage = showOverviewPage;
 
@@ -863,14 +865,50 @@ function renderS3Tiles(channel) {
 
 window.ovDrillHighlights = function(e) {
   e.preventDefault();
+  window.argosNav = window.argosNav || {};
+  window.argosNav.highlightsTab = (_ovChannel === 'SEO') ? 'seo' : 'sem';
+  // Mirror exactly what the sidebar click does
   document.querySelectorAll('.sb-kid').forEach(function(k){ k.classList.remove('sb-kid-active'); });
   var hlItem = document.querySelector('[data-nav="highlights-table"]');
   if (hlItem) hlItem.classList.add('sb-kid-active');
-  if (typeof window.hideFeedDetailPages === 'function') window.hideFeedDetailPages();
-  document.querySelectorAll('#page-content > div').forEach(function(p){ p.style.display='none'; });
-  var hlPage = document.getElementById('highlights-page');
-  if (hlPage) hlPage.style.display = 'block';
+  if (typeof hideFeedDetailPages === 'function') hideFeedDetailPages();
+  var fdp = document.getElementById('feed-data-page');
+  if (fdp) fdp.style.display = 'none';
+  if (typeof showHighlightsPage === 'function') showHighlightsPage();
 };
+
+/* ── Floating channel switcher ── */
+function ovSyncFloatTabs(ch) {
+  ['sem','seo','all'].forEach(function(t) {
+    var btn = document.getElementById('ov-float-tab-' + t);
+    if (btn) btn.className = 'ov-channel-tab' + (t === ch.toLowerCase() ? ' ov-tab-active' : '');
+  });
+}
+window.ovSyncFloatTabs = ovSyncFloatTabs;
+
+function setupFloatingChannelSwitcher() {
+  var float = document.getElementById('ov-float-channels');
+  var anchor = document.getElementById('ov-tab-sem');
+  if (!float || !anchor) return;
+  // Remove stale listener by cloning
+  var newFloat = float.cloneNode(true);
+  float.parentNode.replaceChild(newFloat, float);
+  float = newFloat;
+  // Re-attach onclick handlers (cloneNode strips them from inline-HTML children)
+  var btns = float.querySelectorAll('button');
+  var chMap = ['SEM','SEO','All'];
+  btns.forEach(function(btn, i) {
+    btn.onclick = (function(ch){ return function(){ ovSetChannel(ch); }; })(chMap[i]);
+  });
+  function onScroll() {
+    var rect = anchor.getBoundingClientRect();
+    var inView = rect.top < window.innerHeight && rect.bottom > 0;
+    float.style.display = inView ? 'none' : 'flex';
+  }
+  document.addEventListener('scroll', onScroll, true);
+  ovSyncFloatTabs(_ovChannel);
+  onScroll();
+}
 
 /* ═══════════════════════════════════════════════
    SECTION 4 — SEARCH INTELLIGENCE

@@ -353,4 +353,11 @@
     </div>
   </div>
 
+  <!-- Floating channel switcher (fixed bottom-centre, visible when controls bar out of view) -->
+  <div id="ov-float-channels" style="display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:8000; background:white; border:1px solid var(--color-border); border-radius:20px; padding:4px; box-shadow:0 4px 20px rgba(0,0,0,0.15); gap:2px; align-items:center;">
+    <button id="ov-float-tab-sem" class="ov-channel-tab ov-tab-active" onclick="ovSetChannel('SEM')">SEM</button>
+    <button id="ov-float-tab-seo" class="ov-channel-tab" onclick="ovSetChannel('SEO')">SEO</button>
+    <button id="ov-float-tab-all" class="ov-channel-tab" onclick="ovSetChannel('All')">All Channels</button>
+  </div>
+
 </div><!-- /overview-page -->

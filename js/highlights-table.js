@@ -30,15 +30,330 @@ var HL_DATA_L3 = [
   { name:'Trekking Pants',   convVal:4310, cost:1260, conv:97,  convRate:3.5, aov:44.40,  cos:29.50 }
 ];
 
+/* ─── SEO DATA ─── */
+var HL_SEO_SUMMARY = [
+  { type:'Product Detail Pages', key:'pdp',      orgRev:124532, sessions:48210, convRate:3.2, aov:187, bounceRate:42, delta:'+8.4%',  deltaPos:true  },
+  { type:'Category Pages',       key:'category', orgRev:89210,  sessions:31450, convRate:2.8, aov:164, bounceRate:38, delta:'+3.1%',  deltaPos:true  },
+  { type:'Blog Posts',           key:'blog',     orgRev:24180,  sessions:19870, convRate:1.2, aov:143, bounceRate:61, delta:'-2.3%',  deltaPos:false },
+  { type:'Landing Pages',        key:'landing',  orgRev:18940,  sessions:8320,  convRate:2.1, aov:201, bounceRate:35, delta:'+5.7%',  deltaPos:true  },
+  { type:'Others',               key:'others',   orgRev:8420,   sessions:4110,  convRate:0.9, aov:156, bounceRate:71, delta:'-1.1%',  deltaPos:false }
+];
+var HL_SEO_PAGES = {
+  pdp: [
+    { url:'/products/helium-rain-jacket',       title:'Helium Rain Jacket | Outdoor Research',       orgRev:28450, sessions:9820,  convRate:3.8, aov:215, delta:'+12.1%', deltaPos:true  },
+    { url:'/products/ferrosi-hooded-jacket',    title:'Ferrosi Hooded Jacket | Outdoor Research',    orgRev:22810, sessions:8140,  convRate:3.5, aov:198, delta:'+7.4%',  deltaPos:true  },
+    { url:'/products/interstellite-pants',      title:'Interstellite Pants | Outdoor Research',      orgRev:18320, sessions:7340,  convRate:3.2, aov:191, delta:'+5.2%',  deltaPos:true  },
+    { url:'/products/transcendent-down-hoodie', title:'Transcendent Down Hoodie | Outdoor Research', orgRev:16940, sessions:6210,  convRate:2.9, aov:204, delta:'+9.8%',  deltaPos:true  },
+    { url:'/products/adrenaline-rain-jacket',   title:'Adrenaline Rain Jacket | Outdoor Research',   orgRev:14200, sessions:5890,  convRate:2.6, aov:182, delta:'+3.1%',  deltaPos:true  },
+    { url:'/products/voodoo-balaclava',         title:'Voodoo Balaclava | Outdoor Research',         orgRev:8920,  sessions:4310,  convRate:2.1, aov:163, delta:'-1.4%',  deltaPos:false },
+    { url:'/products/lodestar-gloves',          title:'Lodestar Gloves | Outdoor Research',          orgRev:7640,  sessions:3820,  convRate:1.9, aov:155, delta:'+2.7%',  deltaPos:true  },
+    { url:'/products/vigor-grid-fleece',        title:'Vigor Grid Fleece | Outdoor Research',        orgRev:7248,  sessions:3680,  convRate:1.8, aov:161, delta:'-3.2%',  deltaPos:false }
+  ],
+  category: [
+    { url:'/categories/jackets-shells',   title:'Jackets & Shells | Outdoor Research', orgRev:31240, sessions:11820, convRate:3.4, aov:178, delta:'+6.2%', deltaPos:true  },
+    { url:'/categories/footwear',         title:'Footwear | Outdoor Research',         orgRev:24180, sessions:9140,  convRate:3.1, aov:171, delta:'+4.1%', deltaPos:true  },
+    { url:'/categories/fleece',           title:'Fleece | Outdoor Research',           orgRev:15340, sessions:5820,  convRate:2.7, aov:153, delta:'+1.8%', deltaPos:true  },
+    { url:'/categories/base-layers',      title:'Base Layers | Outdoor Research',      orgRev:10240, sessions:4190,  convRate:2.5, aov:148, delta:'-0.9%', deltaPos:false },
+    { url:'/categories/accessories',      title:'Accessories | Outdoor Research',      orgRev:8210,  sessions:3310,  convRate:2.0, aov:142, delta:'+2.3%', deltaPos:true  }
+  ],
+  blog: [
+    { url:'/blog/best-rain-jackets-2024',        title:'Best Rain Jackets of 2024 | OR',       orgRev:6840, sessions:5280, convRate:1.4, aov:138, delta:'+8.1%',  deltaPos:true  },
+    { url:'/blog/hiking-boot-guide',             title:'How to Choose Hiking Boots | OR',      orgRev:5920, sessions:4810, convRate:1.2, aov:131, delta:'+3.4%',  deltaPos:true  },
+    { url:'/blog/layering-system-guide',         title:'The Layering System Guide | OR',       orgRev:4810, sessions:3940, convRate:1.1, aov:145, delta:'-4.2%',  deltaPos:false },
+    { url:'/blog/waterproof-vs-water-resistant', title:'Waterproof vs Water Resistant | OR',   orgRev:3820, sessions:3210, convRate:1.0, aov:129, delta:'-1.8%',  deltaPos:false },
+    { url:'/blog/best-base-layers',              title:'Best Base Layers for Hiking | OR',     orgRev:2790, sessions:2630, convRate:0.9, aov:152, delta:'+5.7%',  deltaPos:true  }
+  ],
+  landing: [
+    { url:'/lp/fall-outerwear-sale',   title:'Fall Outerwear Sale | Outdoor Research',   orgRev:7240, sessions:2940, convRate:2.5, aov:208, delta:'+9.2%',  deltaPos:true  },
+    { url:'/lp/hiking-essentials',     title:'Hiking Essentials | Outdoor Research',     orgRev:5810, sessions:2310, convRate:2.3, aov:194, delta:'+4.8%',  deltaPos:true  },
+    { url:'/lp/waterproof-collection', title:'Waterproof Collection | Outdoor Research', orgRev:3840, sessions:1710, convRate:1.8, aov:201, delta:'+2.1%',  deltaPos:true  },
+    { url:'/lp/new-arrivals',          title:'New Arrivals | Outdoor Research',          orgRev:2050, sessions:1360, convRate:1.4, aov:193, delta:'-1.4%',  deltaPos:false }
+  ],
+  others: [
+    { url:'/search?q=rain+jacket', title:'Search: rain jacket | Outdoor Research', orgRev:2840, sessions:1620, convRate:1.1, aov:148, delta:'+2.4%',  deltaPos:true  },
+    { url:'/account/wishlist',     title:'Wishlist | Outdoor Research',            orgRev:1980, sessions:980,  convRate:0.8, aov:162, delta:'-3.1%',  deltaPos:false },
+    { url:'/pages/size-guide',     title:'Size Guide | Outdoor Research',          orgRev:1640, sessions:810,  convRate:0.7, aov:158, delta:'+1.2%',  deltaPos:true  },
+    { url:'/pages/returns',        title:'Returns & Exchanges | Outdoor Research', orgRev:1240, sessions:490,  convRate:0.6, aov:155, delta:'-0.8%',  deltaPos:false },
+    { url:'/pages/about',          title:'About Us | Outdoor Research',            orgRev:720,  sessions:210,  convRate:0.5, aov:144, delta:'+0.6%',  deltaPos:true  }
+  ]
+};
+
+/* ─── STATE ─── */
 var _hlCOSTarget = 31;
 var _hlShowSparklines = false;
 var _hlLevel = 'L2';
 var _hlSortCol = 'convVal';
 var _hlSortDir = 'desc';
-var _hlHighlightCols = ['convVal', 'cos']; // relative-scale cols; COS is always threshold-colored
+var _hlHighlightCols = ['convVal', 'cos'];
 var _hlColorRanges = {};
 var HL_COL_DEFS = [{key:'convVal',label:'Conv. Val.',prefix:'$',inverted:false},{key:'cost',label:'Cost',prefix:'$',inverted:true},{key:'convRate',label:'Conv. Rate',suffix:'%',inverted:false},{key:'aov',label:'AOV',prefix:'$',inverted:false}];
 
+/* NEW state */
+var _hlTab = 'sem';
+var _hlSeoPageType = 'all';
+var _hlHlClient = 'Outdoor Research';
+var _hlHlWebsite = 'OutdoorResearch.com';
+var _hlOpenDd = null;
+
+/* ─── TAB SWITCHING ─── */
+window.hlSetTab = function(tab) {
+  _hlTab = tab;
+  var semBtn = document.getElementById('hl-tab-sem');
+  var seoBtn = document.getElementById('hl-tab-seo');
+  var semSec = document.getElementById('hl-sem-section');
+  var seoSec = document.getElementById('hl-seo-section');
+  var heading = document.getElementById('hl-page-heading');
+  if (semBtn) semBtn.className = 'hl-tab' + (tab === 'sem' ? ' hl-tab-active' : '');
+  if (seoBtn) seoBtn.className = 'hl-tab' + (tab === 'seo' ? ' hl-tab-active' : '');
+  if (semSec) semSec.style.display = tab === 'sem' ? 'block' : 'none';
+  if (seoSec) seoSec.style.display = tab === 'seo' ? 'block' : 'none';
+  if (heading) heading.textContent = tab === 'seo' ? 'SEO Highlights Table' : 'SEM Highlights Table';
+  if (tab === 'seo') {
+    _hlSeoPageType = 'all';
+    hlRenderSEO();
+  } else {
+    hlRender();
+  }
+};
+
+/* ─── SEO PAGE TYPE ─── */
+window.hlSetSeoPageType = function(type) {
+  _hlSeoPageType = type;
+  // close dropdown
+  var panel = document.getElementById('hl-seo-pt-panel');
+  if (panel) panel.style.display = 'none';
+  _hlOpenDd = null;
+  // update label
+  var labels = { all:'All Page Types', pdp:'Product Detail Pages', category:'Category Pages', blog:'Blog Posts', landing:'Landing Pages', others:'Others' };
+  var lbl = document.getElementById('hl-seo-pt-label');
+  if (lbl) lbl.textContent = labels[type] || 'All Page Types';
+  // show/hide back button
+  var backRow = document.getElementById('hl-seo-back-row');
+  if (backRow) backRow.style.display = type === 'all' ? 'none' : 'block';
+  hlRenderSEO();
+};
+
+/* ─── SEO RENDER ─── */
+function hlSeoOrgRevCellStyle(orgRev, minRev, maxRev) {
+  var t = maxRev === minRev ? 0.5 : (orgRev - minRev) / (maxRev - minRev);
+  return 'background:' + hlInterpColor(t) + ';color:' + (t >= 0.5 ? '#ffffff' : '#111827') + ';';
+}
+
+window.hlRenderSEO = function() {
+  if (_hlSeoPageType === 'all') {
+    hlRenderSEOSummary();
+  } else {
+    hlRenderSEODrilled(_hlSeoPageType);
+  }
+};
+
+function hlRenderSEOSummary() {
+  var thead = document.getElementById('hl-seo-thead');
+  var tbody = document.getElementById('hl-seo-tbody');
+  var footer = document.getElementById('hl-seo-footer-text');
+  if (!thead || !tbody) return;
+
+  // search filter
+  var searchEl = document.getElementById('hl-seo-search');
+  var search = searchEl ? searchEl.value.toLowerCase() : '';
+  var rows = HL_SEO_SUMMARY.filter(function(r) {
+    return r.type.toLowerCase().indexOf(search) !== -1;
+  });
+
+  var maxRev = Math.max.apply(null, rows.map(function(r) { return r.orgRev; }));
+  var minRev = Math.min.apply(null, rows.map(function(r) { return r.orgRev; }));
+
+  thead.innerHTML = '<tr style="background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border);">' +
+    '<th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase; min-width:180px;">Page Type</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase; min-width:160px;">Organic Revenue</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">Organic Sessions</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">Conv. Rate</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">AOV</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">Bounce Rate</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">vs Prev Period</th>' +
+    '</tr>';
+
+  var html = '';
+  rows.forEach(function(row) {
+    var deltaColor = row.deltaPos ? 'var(--color-text-success)' : '#d72225';
+    var deltaArrow = row.deltaPos ? '↑' : '↓';
+    var revSt = hlSeoOrgRevCellStyle(row.orgRev, minRev, maxRev);
+    html += '<tr class="hl-row hl-seo-type-row" style="border-bottom:1px solid var(--color-border);" onclick="hlSetSeoPageType(\'' + row.key + '\')">';
+    html += '<td style="padding:0 16px; font-size:13px; font-weight:600; color:var(--color-blue); height:48px; cursor:pointer;">' +
+      '<span style="display:flex; align-items:center; gap:6px;">' + escHtml(row.type) +
+      '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M9 18l6-6-6-6"/></svg>' +
+      '</span></td>';
+    html += '<td style="padding:0 16px; font-size:13px; font-weight:600; text-align:right; height:48px;' + revSt + '">$' + Math.round(row.orgRev).toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">' + row.sessions.toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">' + row.convRate.toFixed(1) + '%</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">$' + row.aov + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">' + row.bounceRate + '%</td>';
+    html += '<td style="padding:0 16px; font-size:13px; font-weight:600; text-align:right; height:48px; color:' + deltaColor + ';">' + deltaArrow + ' ' + row.delta + '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+
+  if (footer) footer.textContent = 'Showing ' + rows.length + ' of ' + HL_SEO_SUMMARY.length + ' page types';
+}
+
+function hlRenderSEODrilled(pageTypeKey) {
+  var thead = document.getElementById('hl-seo-thead');
+  var tbody = document.getElementById('hl-seo-tbody');
+  var footer = document.getElementById('hl-seo-footer-text');
+  if (!thead || !tbody) return;
+
+  var pages = HL_SEO_PAGES[pageTypeKey] || [];
+  var searchEl = document.getElementById('hl-seo-search');
+  var search = searchEl ? searchEl.value.toLowerCase() : '';
+  var rows = pages.filter(function(r) {
+    return r.url.toLowerCase().indexOf(search) !== -1 || r.title.toLowerCase().indexOf(search) !== -1;
+  });
+
+  var maxRev = Math.max.apply(null, rows.map(function(r) { return r.orgRev; }));
+  var minRev = Math.min.apply(null, rows.map(function(r) { return r.orgRev; }));
+
+  thead.innerHTML = '<tr style="background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border);">' +
+    '<th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; text-transform:uppercase; min-width:240px;">Page URL</th>' +
+    '<th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; text-transform:uppercase; max-width:220px;">Page Title</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase; min-width:160px;">Organic Revenue</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">Organic Sessions</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">Conv. Rate</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">AOV</th>' +
+    '<th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:\'DM Sans\',sans-serif; white-space:nowrap; text-transform:uppercase;">vs Prev</th>' +
+    '</tr>';
+
+  var html = '';
+  rows.forEach(function(row) {
+    var deltaColor = row.deltaPos ? 'var(--color-text-success)' : '#d72225';
+    var deltaArrow = row.deltaPos ? '↑' : '↓';
+    var revSt = hlSeoOrgRevCellStyle(row.orgRev, minRev, maxRev);
+    html += '<tr class="hl-row" style="border-bottom:1px solid var(--color-border);">';
+    html += '<td style="padding:0 16px; font-size:12px; color:var(--color-blue); height:48px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px;">' + escHtml(row.url) + '</td>';
+    html += '<td style="padding:0 16px; font-size:12px; color:var(--color-text-subtitle); height:48px; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + escHtml(row.title) + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; font-weight:600; text-align:right; height:48px;' + revSt + '">$' + Math.round(row.orgRev).toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">' + row.sessions.toLocaleString() + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">' + row.convRate.toFixed(1) + '%</td>';
+    html += '<td style="padding:0 16px; font-size:13px; text-align:right; height:48px;">$' + row.aov + '</td>';
+    html += '<td style="padding:0 16px; font-size:13px; font-weight:600; text-align:right; height:48px; color:' + deltaColor + ';">' + deltaArrow + ' ' + row.delta + '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+
+  var labels = { pdp:'Product Detail Pages', category:'Category Pages', blog:'Blog Posts', landing:'Landing Pages', others:'Others' };
+  if (footer) footer.textContent = 'Showing ' + rows.length + ' pages in ' + (labels[pageTypeKey] || pageTypeKey);
+}
+
+/* ─── DROPDOWN HELPERS ─── */
+function hlToggleDd(key) {
+  var wrap = document.getElementById('hl-' + key + '-wrap');
+  var panel = document.getElementById('hl-' + key + '-panel');
+  if (!wrap || !panel) return;
+  var isOpen = panel.style.display === 'block';
+  hlCloseAllDd();
+  if (!isOpen) {
+    var rect = wrap.getBoundingClientRect();
+    panel.style.top = (rect.bottom + 4) + 'px';
+    panel.style.left = rect.left + 'px';
+    panel.style.minWidth = rect.width + 'px';
+    panel.style.display = 'block';
+    _hlOpenDd = key;
+  }
+}
+window.hlToggleDd = hlToggleDd;
+
+function hlCloseAllDd() {
+  ['client','website','date','comp','seo-pt'].forEach(function(k) {
+    var p = document.getElementById('hl-' + k + '-panel');
+    if (p) p.style.display = 'none';
+  });
+  _hlOpenDd = null;
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest) return;
+  var wraps = ['hl-client-wrap','hl-website-wrap','hl-date-wrap','hl-comp-wrap','hl-seo-pt-wrap'];
+  var inside = wraps.some(function(id) { return e.target.closest('#' + id); });
+  if (!inside) hlCloseAllDd();
+});
+
+function hlBuildClientDd() {
+  var panel = document.getElementById('hl-client-panel');
+  if (!panel || typeof ARGOS_CLIENTS === 'undefined') return;
+  panel.innerHTML = ARGOS_CLIENTS.map(function(c) {
+    return '<div class="pm-dd-item" onclick="hlSelectClient(\'' + c.name.replace(/'/g, "\\'") + '\')">' + c.name + '</div>';
+  }).join('');
+}
+
+function hlBuildWebsiteDd(sites) {
+  var panel = document.getElementById('hl-website-panel');
+  if (!panel) return;
+  var list = sites || (function() {
+    if (typeof ARGOS_CLIENTS === 'undefined') return [];
+    var c = ARGOS_CLIENTS.find(function(c) { return c.name === _hlHlClient; });
+    return c ? c.websites : [];
+  })();
+  panel.innerHTML = list.map(function(w) {
+    return '<div class="pm-dd-item" onclick="hlSelectWebsite(\'' + w.replace(/'/g, "\\'") + '\')">' + w + '</div>';
+  }).join('');
+}
+
+window.hlSelectClient = function(name) {
+  _hlHlClient = name;
+  var lbl = document.getElementById('hl-client-label');
+  if (lbl) lbl.textContent = name;
+  var panel = document.getElementById('hl-client-panel');
+  if (panel) panel.style.display = 'none';
+  _hlOpenDd = null;
+  var client = typeof ARGOS_CLIENTS !== 'undefined' ? ARGOS_CLIENTS.find(function(c) { return c.name === name; }) : null;
+  _hlHlWebsite = client ? client.websites[0] : '';
+  var wlbl = document.getElementById('hl-website-label');
+  if (wlbl) wlbl.textContent = _hlHlWebsite;
+  hlBuildWebsiteDd(client ? client.websites : []);
+  showToast('Client updated: ' + name);
+};
+
+window.hlSelectWebsite = function(w) {
+  _hlHlWebsite = w;
+  var lbl = document.getElementById('hl-website-label');
+  if (lbl) lbl.textContent = w;
+  var panel = document.getElementById('hl-website-panel');
+  if (panel) panel.style.display = 'none';
+  _hlOpenDd = null;
+};
+
+window.hlSelectDate = function(val) {
+  var lbl = document.getElementById('hl-date-label');
+  if (lbl) lbl.textContent = val;
+  var panel = document.getElementById('hl-date-panel');
+  if (panel) panel.style.display = 'none';
+  _hlOpenDd = null;
+};
+
+window.hlSelectComp = function(val) {
+  var lbl = document.getElementById('hl-comp-label');
+  if (lbl) lbl.textContent = val;
+  var panel = document.getElementById('hl-comp-panel');
+  if (panel) panel.style.display = 'none';
+  _hlOpenDd = null;
+};
+
+/* ─── MAIN ENTRY ─── */
+function showHighlightsPage() {
+  hideFeedDetailPages();
+  document.getElementById('highlights-page').style.display = 'block';
+  window.scrollTo(0, 0);
+  hlBuildClientDd();
+  hlBuildWebsiteDd();
+  // check for cross-page navigation flag
+  var targetTab = 'sem';
+  if (window.argosNav && window.argosNav.highlightsTab) {
+    targetTab = window.argosNav.highlightsTab;
+    window.argosNav.highlightsTab = null;
+  }
+  hlSetTab(targetTab);
+}
+
+/* ─── SEM RENDER ─── */
 function hlInterpColor(t) {
   return 'rgb('+Math.round(230+(26-230)*t)+','+Math.round(249+(92-249)*t)+','+Math.round(238+(53-238)*t)+')';
 }
@@ -104,12 +419,6 @@ function hlConvValBar(convVal, minVal, maxVal) {
     '<div style="position:absolute;left:0;top:0;bottom:0;width:' + pct + '%;background:linear-gradient(90deg,#e6f9ee,#1a5c35);opacity:0.85;"></div>' +
     '<div style="position:relative;padding:0 12px;line-height:42px;font-size:13px;font-weight:600;color:' + textColor + ';white-space:nowrap;">$' + Math.round(convVal).toLocaleString() + '</div>' +
     '</div>';
-}
-
-function showHighlightsPage() {
-  hideFeedDetailPages();
-  document.getElementById('highlights-page').style.display = 'block';
-  hlRender();
 }
 
 function hlRender() {
@@ -353,4 +662,3 @@ window.hlClearFilters = function() {
   hlRender();
   showToast('Filters cleared');
 };
-

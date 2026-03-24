@@ -1,78 +1,203 @@
 <style>
-#hl-tbody tr.hl-row:hover { background: #f9fafb; }
+  #hl-tbody tr.hl-row:hover { background: #f9fafb; }
+  #hl-seo-tbody tr.hl-row:hover { background: #f9fafb; }
+
+  /* Channel / tab pills */
+  .hl-tab { padding:5px 12px; border:none; background:transparent; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; transition:background 0.15s,color 0.15s; }
+  .hl-tab.hl-tab-active { background:var(--color-blue); color:white; }
+
+  /* Dropdown button */
+  .hl-dd-btn { padding:6px 10px; background:white; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+  .hl-dd-btn:hover { background:var(--color-bg-grey50); }
+
+  /* Dropdown panel */
+  .hl-dd-panel { display:none; position:fixed; z-index:9999; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:4px 0; max-height:280px; overflow-y:auto; }
+
+  /* SEO page type row */
+  .hl-seo-type-row { cursor:pointer; }
+  .hl-seo-type-row:hover td { background:#f0f9ff !important; }
+
+  /* SEO back button */
+  .hl-seo-back-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:8px; font-size:13px; cursor:pointer; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; margin-bottom:16px; }
+  .hl-seo-back-btn:hover { background:#e5e7eb; }
 </style>
-<div id="highlights-page" style="display:none;">
-  <!-- Header row -->
-  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px;">
+
+<div id="highlights-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- Page heading row -->
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px;">
     <div>
-      <h1 style="font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px;">Product Segment Performance</h1>
-      <p class="page-subtitle" style="margin:0 0 4px;">Monitor key metrics to optimize performance</p>
-      <div style="font-size:12px; color:var(--color-text-caption);">
-        <span style="cursor:pointer; color:var(--color-blue);">Reports</span>
-        <span style="margin:0 4px; color:var(--color-text-caption);">›</span>
-        <span>Highlights Table</span>
+      <h1 id="hl-page-heading" style="font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px;">SEM Highlights Table</h1>
+      <p class="page-subtitle" style="margin:0;">Product segment performance and paid search insights</p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-outline" onclick="showToast('Customize coming soon')">⊞ Customize</button>
+      <button style="padding:7px 14px; border:none; border-radius:8px; background:var(--color-blue); color:white; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:5px;"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export</button>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div style="font-size:12px; color:var(--color-text-caption); margin-bottom:20px;">
+    <span style="color:var(--color-blue); cursor:pointer;">Reports</span>
+    <span style="margin:0 4px;">›</span>
+    <span>Highlights Table</span>
+  </div>
+
+  <!-- Controls bar -->
+  <div id="hl-controls-bar" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+
+    <!-- Client dropdown -->
+    <div id="hl-client-wrap" style="position:relative;">
+      <button class="hl-dd-btn" onclick="hlToggleDd('client')">
+        <span id="hl-client-label">Outdoor Research</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div id="hl-client-panel" class="hl-dd-panel"></div>
+    </div>
+
+    <!-- Website dropdown -->
+    <div id="hl-website-wrap" style="position:relative;">
+      <button class="hl-dd-btn" onclick="hlToggleDd('website')">
+        <span id="hl-website-label">OutdoorResearch.com</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div id="hl-website-panel" class="hl-dd-panel"></div>
+    </div>
+
+    <!-- Channel tabs (SEM / SEO) -->
+    <div style="display:flex; gap:4px; background:var(--color-bg-grey50); border-radius:8px; padding:3px;">
+      <button id="hl-tab-sem" class="hl-tab hl-tab-active" onclick="hlSetTab('sem')">SEM</button>
+      <button id="hl-tab-seo" class="hl-tab" onclick="hlSetTab('seo')">SEO</button>
+    </div>
+
+    <!-- Date range dropdown -->
+    <div id="hl-date-wrap" style="position:relative;">
+      <button class="hl-dd-btn" onclick="hlToggleDd('date')">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span id="hl-date-label">Last 30 Days</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div id="hl-date-panel" class="hl-dd-panel" style="min-width:160px;">
+        <div class="pm-dd-item" onclick="hlSelectDate('Last 7 Days')">Last 7 Days</div>
+        <div class="pm-dd-item" onclick="hlSelectDate('Last 30 Days')">Last 30 Days</div>
+        <div class="pm-dd-item" onclick="hlSelectDate('Last 90 Days')">Last 90 Days</div>
+        <div class="pm-dd-item" onclick="hlSelectDate('This Month')">This Month</div>
+        <div class="pm-dd-item" onclick="hlSelectDate('Last Month')">Last Month</div>
       </div>
     </div>
-    <div style="display:flex; align-items:center; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,0.04); overflow:hidden;">
-      <button style="padding:7px 14px; border:none; background:transparent; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:flex; align-items:center; gap:5px;">Client <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-      <div style="width:1px; height:20px; background:var(--color-border);"></div>
-      <button style="padding:7px 14px; border:none; background:transparent; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:flex; align-items:center; gap:5px;">Website <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-    </div>
-  </div>
 
-  <!-- Context bar -->
-  <div style="display:flex; align-items:center; gap:8px; background:#f3f4f6; border-radius:8px; padding:6px 12px; margin-bottom:14px;">
-    <button class="hl-context-btn"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Last 30 Days <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-    <div class="hl-context-sep"></div>
-    <button class="hl-context-btn">Google Ads <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-  </div>
-
-  <!-- Table toolbar -->
-  <div class="hl-toolbar">
-    <input id="hl-search" class="hl-toolbar-search" type="text" placeholder="Search pages by URL or assigned keywords…" oninput="hlRender()">
-    <div style="position:relative; display:inline-block;">
-      <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-level-panel');p.style.display=p.style.display==='block'?'none':'block'">Product Type: <span id="hl-level-label" style="font-weight:600;">L2</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-      <div id="hl-level-panel" style="display:none; position:absolute; top:calc(100% + 4px); left:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:200; min-width:200px; padding:4px 0;">
-        <div class="pm-dd-item" onclick="hlSetLevel('L1')">Product Type L1 <span style="color:var(--color-text-caption);font-size:11px;">4 rows</span></div>
-        <div class="pm-dd-item" onclick="hlSetLevel('L2')">Product Type L2 <span style="color:var(--color-text-caption);font-size:11px;">8 rows</span></div>
-        <div class="pm-dd-item" onclick="hlSetLevel('L3')">Product Type L3 <span style="color:var(--color-text-caption);font-size:11px;">12 rows</span></div>
+    <!-- Comparison dropdown -->
+    <div id="hl-comp-wrap" style="position:relative;">
+      <button class="hl-dd-btn" onclick="hlToggleDd('comp')">
+        <span id="hl-comp-label">vs. Previous Period</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div id="hl-comp-panel" class="hl-dd-panel" style="min-width:180px;">
+        <div class="pm-dd-item" onclick="hlSelectComp('vs. Previous Period')">vs. Previous Period</div>
+        <div class="pm-dd-item" onclick="hlSelectComp('vs. Same Period Last Year')">vs. Same Period Last Year</div>
       </div>
     </div>
-    <div style="position:relative; display:inline-block;">
-      <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-sort-panel');p.style.display=p.style.display==='block'?'none':'block'">Sort by: <span id="hl-sort-label">Impact</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-      <div id="hl-sort-panel" style="display:none; position:absolute; top:calc(100% + 4px); right:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:100; min-width:200px; padding:4px 0;">
-        <div class="pm-dd-item" onclick="hlSetSort('impact','Impact')">Impact (Conv. Val. High-Low)</div>
-        <div class="pm-dd-item" onclick="hlSetSort('cos-desc','COS: High to Low')">COS: High to Low</div>
-        <div class="pm-dd-item" onclick="hlSetSort('cos-asc','COS: Low to High')">COS: Low to High</div>
-        <div class="pm-dd-item" onclick="hlSetSort('convval-desc','Conv. Val.: High to Low')">Conv. Val.: High to Low</div>
-        <div class="pm-dd-item" onclick="hlSetSort('cost-desc','Cost: High to Low')">Cost: High to Low</div>
+
+  </div>
+
+  <!-- ── SEM SECTION ── -->
+  <div id="hl-sem-section">
+
+    <!-- SEM toolbar -->
+    <div class="hl-toolbar">
+      <input id="hl-search" class="hl-toolbar-search" type="text" placeholder="Search pages by URL or assigned keywords…" oninput="hlRender()">
+      <div style="position:relative; display:inline-block;">
+        <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-level-panel');p.style.display=p.style.display==='block'?'none':'block'">Product Type: <span id="hl-level-label" style="font-weight:600;">L2</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div id="hl-level-panel" style="display:none; position:absolute; top:calc(100% + 4px); left:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:200; min-width:200px; padding:4px 0;">
+          <div class="pm-dd-item" onclick="hlSetLevel('L1')">Product Type L1 <span style="color:var(--color-text-caption);font-size:11px;">4 rows</span></div>
+          <div class="pm-dd-item" onclick="hlSetLevel('L2')">Product Type L2 <span style="color:var(--color-text-caption);font-size:11px;">8 rows</span></div>
+          <div class="pm-dd-item" onclick="hlSetLevel('L3')">Product Type L3 <span style="color:var(--color-text-caption);font-size:11px;">12 rows</span></div>
+        </div>
       </div>
+      <div style="position:relative; display:inline-block;">
+        <button class="hl-sort-dd" onclick="var p=document.getElementById('hl-sort-panel');p.style.display=p.style.display==='block'?'none':'block'">Sort by: <span id="hl-sort-label">Impact</span> <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div id="hl-sort-panel" style="display:none; position:absolute; top:calc(100% + 4px); right:0; background:white; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.08); z-index:100; min-width:200px; padding:4px 0;">
+          <div class="pm-dd-item" onclick="hlSetSort('impact','Impact')">Impact (Conv. Val. High-Low)</div>
+          <div class="pm-dd-item" onclick="hlSetSort('cos-desc','COS: High to Low')">COS: High to Low</div>
+          <div class="pm-dd-item" onclick="hlSetSort('cos-asc','COS: Low to High')">COS: Low to High</div>
+          <div class="pm-dd-item" onclick="hlSetSort('convval-desc','Conv. Val.: High to Low')">Conv. Val.: High to Low</div>
+          <div class="pm-dd-item" onclick="hlSetSort('cost-desc','Cost: High to Low')">Cost: High to Low</div>
+        </div>
+      </div>
+      <button class="hl-sort-dd" onclick="hlOpenDrawer()" style="padding:7px 10px;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     </div>
-    <button class="hl-sort-dd" onclick="hlOpenDrawer()" style="padding:7px 10px;"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-    <button style="padding:7px 14px; border:none; border-radius:8px; background:var(--color-blue); color:white; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:5px;"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export</button>
-  </div>
 
-  <!-- Table -->
-  <div class="table-card" style="overflow-x:auto;">
-    <table style="width:100%; border-collapse:collapse; min-width:880px;">
-      <thead>
-        <tr style="background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border);">
-          <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; text-transform:uppercase;">Product Type (<span id="hl-th-level">L2</span>)</th>
-          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('convVal')">Conv. Val. <span id="hl-sort-convVal" style="color:var(--color-blue);">↓</span></th>
-          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('cost')">Cost <span id="hl-sort-cost">↓</span></th>
-          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('conv')">Conv. <span id="hl-sort-conv">↓</span></th>
-          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('convRate')">Conv. Rate <span id="hl-sort-convRate">↓</span></th>
-          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('aov')">AOV <span id="hl-sort-aov">↓</span></th>
-          <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('cos')">COS <span id="hl-sort-cos">↓</span></th>
-          <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; text-transform:uppercase;">90-Day COS <span title="Trend over last 90 days" style="cursor:help;">ⓘ</span></th>
-        </tr>
-      </thead>
-      <tbody id="hl-tbody"></tbody>
-    </table>
-  </div>
-  <div style="margin-top:10px; font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;" id="hl-footer-text">Showing 8 of 8 results</div>
+    <!-- SEM table -->
+    <div class="table-card" style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; min-width:880px;">
+        <thead>
+          <tr style="background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border);">
+            <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; text-transform:uppercase;">Product Type (<span id="hl-th-level">L2</span>)</th>
+            <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('convVal')">Conv. Val. <span id="hl-sort-convVal" style="color:var(--color-blue);">↓</span></th>
+            <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('cost')">Cost <span id="hl-sort-cost">↓</span></th>
+            <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('conv')">Conv. <span id="hl-sort-conv">↓</span></th>
+            <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('convRate')">Conv. Rate <span id="hl-sort-convRate">↓</span></th>
+            <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('aov')">AOV <span id="hl-sort-aov">↓</span></th>
+            <th style="padding:10px 16px; text-align:right; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; cursor:pointer; text-transform:uppercase;" onclick="hlSortByCol('cos')">COS <span id="hl-sort-cos">↓</span></th>
+            <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:600; letter-spacing:0.5px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; white-space:nowrap; text-transform:uppercase;">90-Day COS <span title="Trend over last 90 days" style="cursor:help;">ⓘ</span></th>
+          </tr>
+        </thead>
+        <tbody id="hl-tbody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px; font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;" id="hl-footer-text">Showing 8 of 8 results</div>
 
-  <!-- Filter Modal -->
+  </div><!-- /hl-sem-section -->
+
+  <!-- ── SEO SECTION ── -->
+  <div id="hl-seo-section" style="display:none;">
+
+    <!-- SEO toolbar -->
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+
+      <!-- Page type dropdown -->
+      <div id="hl-seo-pt-wrap" style="position:relative;">
+        <button class="hl-dd-btn" onclick="hlToggleDd('seo-pt')">
+          <span id="hl-seo-pt-label">All Page Types</span>
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div id="hl-seo-pt-panel" class="hl-dd-panel" style="min-width:200px;">
+          <div class="pm-dd-item" onclick="hlSetSeoPageType('all')">All Page Types</div>
+          <div class="pm-dd-item" onclick="hlSetSeoPageType('pdp')">Product Detail Pages</div>
+          <div class="pm-dd-item" onclick="hlSetSeoPageType('category')">Category Pages</div>
+          <div class="pm-dd-item" onclick="hlSetSeoPageType('blog')">Blog Posts</div>
+          <div class="pm-dd-item" onclick="hlSetSeoPageType('landing')">Landing Pages</div>
+          <div class="pm-dd-item" onclick="hlSetSeoPageType('others')">Others</div>
+        </div>
+      </div>
+
+      <input id="hl-seo-search" class="hl-toolbar-search" type="text" placeholder="Search by page type or URL…" oninput="hlRenderSEO()" style="max-width:320px;">
+
+      <button style="padding:7px 14px; border:none; border-radius:8px; background:var(--color-blue); color:white; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:5px; margin-left:auto;"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export</button>
+    </div>
+
+    <!-- Back button (shown when drilled into a page type) -->
+    <div id="hl-seo-back-row" style="display:none;">
+      <button class="hl-seo-back-btn" onclick="hlSetSeoPageType('all')">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to All Page Types
+      </button>
+    </div>
+
+    <!-- SEO table -->
+    <div class="table-card" style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; min-width:900px;">
+        <thead id="hl-seo-thead">
+          <!-- populated by hlRenderSEO -->
+        </thead>
+        <tbody id="hl-seo-tbody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px; font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif;" id="hl-seo-footer-text"></div>
+
+  </div><!-- /hl-seo-section -->
+
+  <!-- Filter Modal (SEM) -->
   <div id="hl-filter-modal" onclick="hlCloseFilters()" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
     <div onclick="event.stopPropagation()" style="background:white; border-radius:12px; width:520px; max-width:calc(100vw - 32px); max-height:85vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.15); font-family:'DM Sans',sans-serif;">
       <!-- Header -->
@@ -134,6 +259,7 @@
       </div>
     </div>
   </div>
+
 </div><!-- /highlights-page -->
 
     </div><!-- /page-content -->

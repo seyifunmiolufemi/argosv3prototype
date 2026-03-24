@@ -1,0 +1,227 @@
+<!-- ════════════ PIVOT TABLE ════════════ -->
+<style>
+  /* ── Dropdown button (mirrors hl-dd-btn) ── */
+  .pv-dd-btn {
+    padding: 6px 10px;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .pv-dd-btn:hover { background: var(--color-bg-grey50); }
+
+  /* ── Fixed panel ── */
+  .pv-dd-panel {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    padding: 4px 0;
+    min-width: 180px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  .pv-dd-item {
+    padding: 7px 14px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .pv-dd-item:hover { background: var(--color-bg-grey50); }
+  .pv-dd-item.pv-selected { color: var(--color-blue); font-weight: 600; }
+
+  /* ── Checkbox list (Dimensions / Metrics panels) ── */
+  .pv-check-opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 1px 4px;
+  }
+  .pv-check-opt:hover { background: var(--color-bg-grey50); }
+  .pv-check-opt input[type="checkbox"] { cursor: pointer; accent-color: var(--color-blue); }
+
+  /* ── Table ── */
+  .pv-table-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+  .pv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .pv-th {
+    padding: 10px 14px;
+    text-align: right;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtitle);
+    background: var(--color-bg-grey50);
+    border-bottom: 1px solid var(--color-border);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .pv-th:hover { background: #e8eaed; }
+  .pv-th-name { text-align: left; min-width: 240px; }
+  .pv-td {
+    padding: 9px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+  .pv-td-name { text-align: left; }
+  .pv-name-cell { display: flex; align-items: center; gap: 4px; }
+
+  /* Nesting */
+  .pv-row-l1 .pv-td-name { border-left: 2px solid var(--color-border); }
+  .pv-row-l2 .pv-td-name { border-left: 2px solid var(--color-border); }
+  .pv-row-l3 .pv-td-name { border-left: 2px solid var(--color-border); }
+  .pv-row-l4 .pv-td-name { border-left: 2px solid var(--color-border); }
+  .pv-row-l1 .pv-name-cell { padding-left: 20px; }
+  .pv-row-l2 .pv-name-cell { padding-left: 40px; }
+  .pv-row-l3 .pv-name-cell { padding-left: 60px; }
+  .pv-row-l4 .pv-name-cell { padding-left: 80px; }
+  .pv-row-l0 .pv-row-label { font-weight: 600; }
+  .pv-row-l1 .pv-row-label,
+  .pv-row-l2 .pv-row-label,
+  .pv-row-l3 .pv-row-label,
+  .pv-row-l4 .pv-row-label { color: var(--color-text-subtitle); font-size: 12.5px; }
+
+  /* Expand button */
+  .pv-exp-btn {
+    background: none; border: none; cursor: pointer; padding: 0;
+    color: var(--color-text-subtitle); display: flex; align-items: center; flex-shrink: 0;
+  }
+  .pv-exp-btn:hover { color: var(--color-text-primary); }
+  .pv-chev { transform: rotate(-90deg); transition: transform 0.18s ease; display: block; }
+  .pv-chev.open { transform: rotate(0deg); }
+  .pv-spacer { display: inline-block; width: 16px; flex-shrink: 0; }
+
+  /* Totals row */
+  .pv-total-row .pv-td { background: var(--color-bg-grey50); font-weight: 600; border-top: 2px solid var(--color-border); border-bottom: none; }
+
+  /* Sort icons */
+  .pv-sort { margin-left: 4px; vertical-align: middle; display: inline-block; opacity: 0.3; }
+  .pv-sort-active { opacity: 1; color: var(--color-blue); }
+
+  /* COS coloring */
+  .pv-cos-good { color: var(--color-text-success) !important; }
+  .pv-cos-warn { color: var(--color-text-warning) !important; }
+</style>
+
+<div id="pivot-page" style="display:none; padding:32px 32px 64px;">
+
+  <!-- Page heading -->
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px;">
+    <div>
+      <h1 style="font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px;">Pivot Table</h1>
+      <p style="font-size:13px; color:var(--color-text-subtitle); margin:0;">Slice your SEM and SEO data by any dimension combination</p>
+    </div>
+    <div>
+      <button id="pivot-export-btn" style="padding:7px 14px; border:1px solid var(--color-border); border-radius:8px; background:white; color:var(--color-text-primary); font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:5px;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div style="font-size:12px; color:var(--color-text-caption); margin-bottom:20px;">
+    <span style="color:var(--color-blue); cursor:pointer;">Tools</span>
+    <span style="margin:0 4px;">›</span>
+    <span>Pivot Table</span>
+  </div>
+
+  <!-- Controls bar -->
+  <div id="pivot-controls" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:24px;">
+
+    <!-- Client dropdown -->
+    <button class="pv-dd-btn" id="pivot-client-btn">
+      <span id="pivot-client-label">Outdoor Research</span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <!-- Website dropdown -->
+    <button class="pv-dd-btn" id="pivot-website-btn">
+      <span id="pivot-website-label">OutdoorResearch.com</span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <!-- Dimensions dropdown -->
+    <button class="pv-dd-btn" id="pivot-dim-btn">
+      <span id="pivot-dim-label">Dimensions</span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <!-- Metrics dropdown -->
+    <button class="pv-dd-btn" id="pivot-metrics-btn">
+      <span>Metrics</span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <!-- Date range dropdown -->
+    <button class="pv-dd-btn" id="pivot-date-btn">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      <span id="pivot-date-label">Last 30 Days</span>
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+  </div>
+
+  <!-- Table -->
+  <div class="pv-table-wrap">
+    <table class="pv-table" id="pivot-table">
+      <thead id="pivot-thead"></thead>
+      <tbody id="pivot-tbody"></tbody>
+      <tfoot id="pivot-tfoot"></tfoot>
+    </table>
+  </div>
+
+  <!-- Chart card -->
+  <div style="border:1px solid var(--color-border); border-radius:8px; padding:20px 24px; margin-top:24px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <span style="font-size:15px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif;">Pivot Chart</span>
+      <button class="pv-dd-btn" id="pivot-chart-metric-btn">
+        <span id="pivot-chart-metric-label">Revenue</span>
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div style="position:relative; height:280px;">
+      <canvas id="pivot-chart-canvas"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Fixed panels (populated by JS) ── -->
+<div class="pv-dd-panel" id="pivot-client-panel"></div>
+<div class="pv-dd-panel" id="pivot-website-panel"></div>
+<div class="pv-dd-panel" id="pivot-dim-panel" style="padding:6px 0;"></div>
+<div class="pv-dd-panel" id="pivot-metrics-panel" style="padding:6px 0;"></div>
+<div class="pv-dd-panel" id="pivot-date-panel"></div>
+<div class="pv-dd-panel" id="pivot-chart-metric-panel"></div>

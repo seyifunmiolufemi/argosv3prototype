@@ -46,6 +46,7 @@
       loadPartial('business-rules-container',     'html/business-rules.html'),
       loadPartial('overview-container',           'html/overview.html'),
       loadPartial('highlights-container',         'html/highlights-table.html'),
+      loadPartial('pivot-container',              'html/pivot.html'),
       loadPartial('modals-container',             'html/modals-shared.html'),
     ]);
     // Load scripts after HTML is in the DOM
@@ -67,6 +68,7 @@
     await loadScript('js/business-rules.js');
     await loadScript('js/overview.js');
     await loadScript('js/highlights-table.js');
+    await loadScript('js/pivot.js');
   })();
   </script>
 

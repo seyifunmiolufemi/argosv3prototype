@@ -4,6 +4,13 @@
 <div class="screen active" id="screen-signin">
   <div class="left-panel">
     <div class="form-inner">
+      <div id="proto-mode-bar" style="width:100%;background:var(--color-bg-grey50);border:1px solid var(--color-border);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px;box-sizing:border-box;margin-bottom:4px;">
+        <span style="font-size:12px;color:var(--color-text-caption);font-family:'DM Sans',sans-serif;white-space:nowrap;">Prototype:</span>
+        <div style="display:flex;gap:4px;">
+          <button id="proto-pill-analyst" data-proto="analyst" style="padding:3px 12px;border-radius:20px;border:1px solid var(--color-blue);background:var(--color-blue);color:#fff;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;">Analyst</button>
+          <button id="proto-pill-client" data-proto="client" style="padding:3px 12px;border-radius:20px;border:1px solid var(--color-border);background:transparent;color:var(--color-text-subtitle);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;">Client</button>
+        </div>
+      </div>
       <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyLjA3MzggMzguMzY5OUM3Ljk4Mjg5IDM2LjU0NTcgNC44MDMzNyAzMy43MzY5IDIuNjE4MSAyOS44NjA1QzAuMDcwMzQxIDI1LjM0MTUgLTAuNjEzMjA0IDIwLjUyMTkgMC41NDY3NTEgMTUuNDYzOUMyLjk0OTUyIDQuOTg1MTUgMTMuMzQ3NyAtMS44NzYzIDI0LjIxMTkgMC40NTU3NTlDMjMuNDc2NiAwLjQxNDMgMjIuNzMwOSAwLjM5MzU3MSAyMS45OTU2IDAuNDQ1Mzk1QzIxLjI0OTkgMC40OTcyMTggMjAuNTI0OSAwLjYyMTU5NSAxOS43OTk5IDAuODA4MTZDMTkuMDc1IDAuOTk0NzI1IDE4LjM3MDcgMS4yNDM0OCAxNy42ODcyIDEuNTU0NDJDMTcuMDE0IDEuODc1NzMgMTYuMzcxOSAyLjIzODQ5IDE1Ljc1MDQgMi42NjM0NUMxNS4xMjkgMy4wOTg3NiAxNC41NTk0IDMuNTg1OTEgMTQuMDMxMiA0LjExNDUxQzEzLjUwMyA0LjY0MzExIDEzLjAzNyA1LjIyMzUzIDEyLjYxMjQgNS44MzUwNUMxMi4xODc3IDYuNDU2OTQgMTEuODM1NiA3LjEwOTkxIDExLjUyNDkgNy44MDQzNUMxMS4yMjQ2IDguNDg4NDIgMTAuOTY1NiA5LjE4Mjg2IDEwLjc5OTkgOS45MDgzOUMxMC4xMDYgMTIuODgzMSAxMC40MTY3IDE1Ljc1NDEgMTEuNzk0MiAxOC40OEMxMy4xODIgMjEuMjA1OSAxNS4zMTU1IDIzLjE1NDUgMTguMTUzMiAyNC4zNTY4QzE2LjEyMzMgMjkuMDIwOSAxNC4xMTQxIDMzLjY3NDcgMTIuMDczOCAzOC4zNjk5WiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzI4NDhfNTczNSkiLz4KPHBhdGggZD0iTTIxLjg2OTEgMTUuNjNDMjMuODg4NyAxMC45NjU4IDI1LjkwODMgNi4zMjI0NCAyNy45Mjc4IDEuNjQ3OTVDMjkuODY0NSAyLjQ2Njc2IDMxLjU5NDEgMy41NzU3OSAzMy4xNTggNC45NTQzQzM1Ljg4MTggNy4zNTg5MSAzNy44MzkyIDEwLjI4MTggMzguOTc4NSAxMy43NDM2QzQwLjE3OTkgMTcuNDEyNyA0MC4zMzUyIDIxLjE0NCAzOS4zNzIgMjQuODc1M0MzNi40NzIxIDM2LjA4OTkgMjUuNDUyNiA0MS44MTEzIDE1LjYzNDQgMzkuNDg5NkMxOC44NTUzIDM5LjgyMTIgMjEuODA3IDM5LjA5NTcgMjQuNDM3NiAzNy4xOTlDMjcuMDY4MiAzNS4zMDIyIDI4LjcwNDYgMzIuNzIxNCAyOS4zMzY0IDI5LjU0OThDMjkuOTE2MyAyNi42NTggMjkuNTEyNCAyMy44Njk5IDI4LjEwMzkgMjEuMjU4QzI2LjcwNTcgMTguNjU2NSAyNC42MjQgMTYuNzgwNCAyMS44NjkxIDE1LjYzWiIgZmlsbD0idXJsKCNwYWludDFfbGluZWFyXzI4NDhfNTczNSkiLz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl8yODQ4XzU3MzUiIHgxPSIzOS44MTQ5IiB5MT0iMi45NTgwMWUtMDciIHgyPSIzMS40MjczIiB5Mj0iNDIuNTAyNCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMTg0NkREIiBzdG9wLW9wYWNpdHk9IjAuMyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxODQ2REQiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDFfbGluZWFyXzI4NDhfNTczNSIgeDE9IjM5Ljg4NzIiIHkxPSIxLjY0Nzk1IiB4Mj0iMjcuODkzMSIgeTI9IjQwLjI2MDciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzE4NDZERCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxODQ2REQiIHN0b3Atb3BhY2l0eT0iMC4zIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+Cg==" alt="StatBid" />
       <div class="heading-group">
         <p class="page-title">Sign in to your StatBid account</p>
@@ -30,7 +37,7 @@
           Forgot password? <button class="link-btn" data-action="goto-forgot-email">Reset it</button>
         </div>
       </div>
-      <div class="link-row" style="padding-top:16px;">
+      <div id="signup-link-row" class="link-row" style="padding-top:16px;">
         Don't have an account? <button class="link-btn" data-action="goto-signup">Sign up</button>
       </div>
     </div>

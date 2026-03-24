@@ -616,7 +616,7 @@ var ISSUES = [
   }
 
   function hideFeedDetailPages() {
-    ['ic-list','db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    ['ic-list','db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page','pivot-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
   }
   window.hideFeedDetailPages = hideFeedDetailPages;
 
@@ -1206,6 +1206,9 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'highlights-table') {
           showHighlightsPage();
+        }
+        if (this.getAttribute('data-nav') === 'pivot') {
+          showPivotPage();
         }
       });
     });
