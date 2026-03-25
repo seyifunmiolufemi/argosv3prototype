@@ -392,6 +392,15 @@
     return state.activeChannel === 'seo' ? SEO_DIMS[0] : SEM_DIMS[0];
   }
 
+  // ── Sync channel tab pill UI ──
+  function pvSyncChannelTabs() {
+    var semBtn = document.getElementById('pv-tab-sem');
+    var seoBtn = document.getElementById('pv-tab-seo');
+    if (!semBtn || !seoBtn) return;
+    semBtn.className = 'pv-channel-tab' + (state.activeChannel === 'sem' ? ' pv-channel-tab-active' : '');
+    seoBtn.className = 'pv-channel-tab' + (state.activeChannel === 'seo' ? ' pv-channel-tab-active' : '');
+  }
+
   // ── Switch active channel, reset cols + chart defaults ──
   function switchChannel(newChannel) {
     if (state.activeChannel === newChannel) return;
@@ -402,6 +411,8 @@
     state.chartGroupBy  = getDefaultGroupBy();
     state.expanded      = {};
     state.sortCol       = null;
+    state.dimensions    = [];
+    pvSyncChannelTabs();
   }
 
   // ── Sort an array of rows ──
@@ -839,11 +850,10 @@
     var panel = document.getElementById('pivot-dim-panel');
     if (!panel) return;
     var html = '';
-    DIM_GROUPS.forEach(function (grp, gi) {
-      var borderTop = gi > 0 ? 'border-top:1px solid var(--color-border); margin-top:4px;' : '';
-      html += '<div style="' + borderTop + 'padding:8px 12px 4px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-caption); user-select:none;">' + escHtml(grp.label) + '</div>';
+    // Only show dimensions for the active channel
+    DIM_GROUPS.filter(function(grp){ return grp.channel === state.activeChannel; }).forEach(function (grp) {
       grp.dims.forEach(function (dim) {
-        var checked = state.dimensions.indexOf(dim) !== -1 && state.activeChannel === grp.channel;
+        var checked = state.dimensions.indexOf(dim) !== -1;
         html += '<label class="pv-check-opt">' +
           '<input type="checkbox" data-dim="' + escHtml(dim) + '" data-dim-channel="' + grp.channel + '"' + (checked ? ' checked' : '') + '>' +
           '<span>' + escHtml(dim) + '</span></label>';
@@ -976,6 +986,26 @@
         togglePanel('pivot-website-btn', 'pivot-website-panel', buildWebsitePanel);
         return;
       }
+      // SEM / SEO channel tab buttons
+      if (e.target.closest('#pv-tab-sem')) {
+        closeAllPanels();
+        switchChannel('sem');
+        updateDimLabel();
+        updateChartGroupByLabel();
+        buildDimPanel();
+        render();
+        return;
+      }
+      if (e.target.closest('#pv-tab-seo')) {
+        closeAllPanels();
+        switchChannel('seo');
+        updateDimLabel();
+        updateChartGroupByLabel();
+        buildDimPanel();
+        render();
+        return;
+      }
+
       // Dimensions button
       if (e.target.closest('#pivot-dim-btn')) {
         togglePanel('pivot-dim-btn', 'pivot-dim-panel', buildDimPanel);
@@ -1072,7 +1102,7 @@
 
       // Close panels on outside click
       var inPanel = PANEL_IDS.some(function (id) { return e.target.closest('#' + id); });
-      var inBtn = ['pivot-client-btn','pivot-website-btn','pivot-dim-btn','pivot-metrics-btn','pivot-date-btn','pivot-chart-metric-btn','pivot-chart-type-bar','pivot-chart-type-line','pivot-chart-groupby-btn']
+      var inBtn = ['pivot-client-btn','pivot-website-btn','pivot-dim-btn','pivot-metrics-btn','pivot-date-btn','pivot-chart-metric-btn','pivot-chart-type-bar','pivot-chart-type-line','pivot-chart-groupby-btn','pv-tab-sem','pv-tab-seo']
         .some(function (id) { return e.target.closest('#' + id); });
       if (!inPanel && !inBtn) closeAllPanels();
     });
@@ -1084,23 +1114,12 @@
         var dim    = dimCb.getAttribute('data-dim');
         var dimCh  = dimCb.getAttribute('data-dim-channel');
         if (dimCb.checked) {
-          if (dimCh !== state.activeChannel && state.dimensions.length > 0) {
-            // Cross-channel conflict: switch channel and clear old dims
-            state.dimConflict = true;
-            switchChannel(dimCh);
-            state.dimensions = [];
-          } else if (dimCh !== state.activeChannel) {
-            switchChannel(dimCh);
-            state.dimConflict = false;
-          } else {
-            state.dimConflict = false;
-          }
           if (state.dimensions.indexOf(dim) === -1) state.dimensions.push(dim);
         } else {
           var idx = state.dimensions.indexOf(dim);
           if (idx !== -1) state.dimensions.splice(idx, 1);
-          state.dimConflict = false;
         }
+        state.dimConflict = false;
         state.chartGroupBy = getDefaultGroupBy();
         state.expanded = {};
         updateDimLabel();
@@ -1148,6 +1167,7 @@
     if (page) page.style.display = 'block';
     window.scrollTo(0, 0);
     if (!initialized) { init(); initialized = true; }
+    pvSyncChannelTabs();
     render();                        // renders table immediately
     loadChartJs(renderChart);        // loads Chart.js if needed, then renders chart
   }
