@@ -886,7 +886,7 @@ body.dark-mode {
 .sb-toggle-btn {
   position: fixed;
   left: 241px; /* 252px - 11px (half of 22px) */
-  top: 50%;
+  top: 30px; /* 18px sidebar padding-top + 12px (half of 24px header height) — aligns with StatBid logo row */
   transform: translateY(-50%);
   z-index: 200;
   background: var(--color-white);
