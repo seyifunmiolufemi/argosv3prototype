@@ -1240,6 +1240,49 @@ var ISSUES = [
         if (lbl) lbl.textContent = document.body.classList.contains('dark-mode') ? 'Disable Dark Mode' : 'Enable Dark Mode';
       });
     }
+
+    /* user profile dropdown */
+    var userRow = $('sb-user-row');
+    if (userRow) {
+      userRow.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var dd    = $('sb-user-dropdown');
+        var caret = $('sb-user-caret');
+        if (!dd) return;
+        var isOpen = dd.style.display !== 'none';
+        dd.style.display = isOpen ? 'none' : 'block';
+        if (caret) caret.classList.toggle('open', !isOpen);
+      });
+    }
+
+    /* logout */
+    var logoutBtn = $('sb-logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        var dd    = $('sb-user-dropdown');
+        var caret = $('sb-user-caret');
+        if (dd)    dd.style.display = 'none';
+        if (caret) caret.classList.remove('open');
+        if (typeof window.goToScreen === 'function') {
+          window.goToScreen('screen-signin');
+        } else {
+          document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+          var si = document.getElementById('screen-signin');
+          if (si) si.classList.add('active');
+          window.scrollTo(0, 0);
+        }
+      });
+    }
+
+    /* close user dropdown on outside click */
+    document.addEventListener('click', function () {
+      var dd    = $('sb-user-dropdown');
+      var caret = $('sb-user-caret');
+      if (dd && dd.style.display !== 'none') {
+        dd.style.display = 'none';
+        if (caret) caret.classList.remove('open');
+      }
+    });
   }
 
   /* ── global click delegation ── */

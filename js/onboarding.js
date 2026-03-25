@@ -74,6 +74,7 @@ function initOnboarding() {
     setTimeout(function() { t.classList.remove('show'); }, 2500);
   }
   window.showToast = showToast;
+  window.goToScreen = goTo;
 
   function checkContinueBtn() {
     var btn = document.getElementById('connect-next-btn');
@@ -145,7 +146,7 @@ function initOnboarding() {
     if (!el) return;
     var action = el.getAttribute('data-action');
 
-    if (action === 'google') { showToast('Redirecting to Google…'); }
+    if (action === 'google') { showToast('Signing in with Google…'); setTimeout(function(){ goTo('screen-dashboard'); }, 700); }
       else if (action === 'signin') {
         var email = document.getElementById('signin-email').value.trim();
         var pw = document.getElementById('signin-password').value;
