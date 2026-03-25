@@ -1058,7 +1058,7 @@ body.sidebar-collapsed .sb-toggle-btn svg { transform: scaleX(-1); }
   margin-bottom: 16px;
 }
 .page-title-heading {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
 }
 .page-h1 {
   font-family: 'Instrument Sans', 'Inter', sans-serif;
@@ -1096,7 +1096,8 @@ body.sidebar-collapsed .sb-toggle-btn svg { transform: scaleX(-1); }
 /* Breadcrumb */
 .breadcrumb {
   display: flex; align-items: center; gap: 4px;
-  margin-bottom: 18px;
+  margin-top: 6px;
+  margin-bottom: 20px;
 }
 .bc-item {
   font-family: 'Inter', sans-serif;

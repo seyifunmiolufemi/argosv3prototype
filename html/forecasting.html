@@ -1,10 +1,10 @@
 <style>
 /* ── Forecasting page ── */
 #forecasting-page { display:none; padding:32px 32px 64px; box-sizing:border-box; }
-.fc-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px; }
+.fc-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
 .fc-title { font-family:'Instrument Sans',sans-serif; font-size:24px; font-weight:600; color:var(--color-text-primary); margin:0; }
-.fc-subtitle { font-size:13px; color:var(--color-text-subtitle); margin:2px 0 0; }
-.fc-breadcrumb { font-size:12px; color:var(--color-text-caption); margin:6px 0 20px; }
+.fc-subtitle { font-size:13px; color:var(--color-text-subtitle); margin:6px 0 0; }
+.fc-breadcrumb { font-size:12px; color:var(--color-text-caption); margin:0 0 20px; }
 .fc-breadcrumb a { color:var(--color-blue); text-decoration:none; cursor:pointer; }
 .fc-header-right a { font-size:13px; color:var(--color-blue); text-decoration:none; cursor:pointer; }
 /* Controls */
@@ -28,8 +28,20 @@
 .fc-input-field { padding:8px 10px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:#ffffff; width:100%; box-sizing:border-box; }
 .fc-input-field:focus { outline:none; border-color:var(--color-blue); }
 .fc-input-field[readonly] { background:var(--color-bg-grey50); color:var(--color-text-caption); cursor:default; }
-.fc-reset-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:transparent; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; }
+.fc-input-field[readonly]:focus { border-color:var(--color-border); outline:none; }
+.fc-reset-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; background:#ffffff; border:1px solid var(--color-blue); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--color-blue); cursor:pointer; }
 .fc-reset-btn:hover { background:var(--color-bg-grey50); }
+.fc-edit-btn { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; background:#ffffff; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; }
+.fc-edit-btn:hover { background:var(--color-bg-grey50); }
+.fc-save-btn { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; background:var(--color-blue); border:1px solid var(--color-blue); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; color:#ffffff; cursor:pointer; }
+.fc-save-btn:hover { opacity:0.9; }
+.fc-cancel-btn { display:inline-flex; align-items:center; padding:5px 12px; background:#ffffff; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; margin-left:6px; }
+.fc-cancel-btn:hover { background:var(--color-bg-grey50); }
+.fc-budget-warn { display:none; align-items:flex-start; gap:6px; background:var(--color-container-warn); color:var(--color-text-warning); border-radius:4px; padding:8px; font-size:12px; font-family:'DM Sans',sans-serif; line-height:1.5; margin-top:4px; }
+.fc-season-cell.fc-pos input { color:var(--color-text-success); }
+.fc-season-cell.fc-neg input { color:var(--color-text-warning); }
+.fc-season-cell.fc-zero input { color:var(--color-text-caption); }
+.fc-season-input-row { display:flex; align-items:center; gap:2px; width:100%; }
 /* Advanced / What-if */
 .fc-advanced-toggle { display:flex; align-items:center; gap:8px; padding:12px 0 0; cursor:pointer; font-size:13px; font-weight:500; color:var(--color-text-primary); user-select:none; border-top:1px solid var(--color-border); margin-top:12px; }
 .fc-advanced-toggle svg { transition:transform 0.2s; }
@@ -42,12 +54,27 @@
 .fc-scenario-cos { width:80px; padding:6px 10px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; }
 .fc-add-scenario-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; background:transparent; border:1px dashed var(--color-border); border-radius:6px; font-size:12px; color:var(--color-text-caption); cursor:pointer; margin-top:12px; }
 .fc-add-scenario-btn:hover { background:var(--color-bg-grey50); }
+/* ── Section toggles ── */
+.fc-toggle { position:relative; width:36px; height:20px; background:var(--color-border); border:none; border-radius:10px; cursor:pointer; padding:0; transition:background 0.2s ease; flex-shrink:0; }
+.fc-toggle.on { background:var(--color-blue); }
+.fc-toggle-thumb { position:absolute; top:2px; left:2px; width:16px; height:16px; background:#ffffff; border-radius:50%; transition:transform 0.2s ease; box-shadow:0 1px 3px rgba(0,0,0,0.15); pointer-events:none; }
+.fc-toggle.on .fc-toggle-thumb { transform:translateX(16px); }
+.fc-off-banner { display:flex; align-items:flex-start; gap:8px; background:var(--color-bg-grey50); color:var(--color-text-caption); border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:12px; font-family:'DM Sans',sans-serif; line-height:1.5; }
+.fc-section-off { color:var(--color-text-inactive); }
+.fc-section-off span, .fc-section-off label, .fc-section-off div { color:var(--color-text-inactive); }
+.fc-section-off input { background:var(--color-bg-grey50) !important; color:var(--color-text-inactive) !important; cursor:not-allowed !important; }
+.fc-section-off button:not([data-fc-toggle]) { opacity:0.45; cursor:not-allowed !important; pointer-events:none; }
+.fc-section-off a[data-fc-reset-season] { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+/* ── Sections ── */
+#fc-scenarios-section { margin-bottom:4px; }
 .fc-seasonality-section { margin-top:16px; }
-.fc-seasonality-title { font-size:13px; font-weight:500; margin-bottom:8px; }
-.fc-season-months { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.fc-season-month { display:flex; align-items:center; gap:8px; font-size:13px; }
-.fc-season-month label { width:30px; color:var(--color-text-caption); font-size:12px; }
-.fc-season-month input { width:70px; padding:5px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; }
+.fc-seasonality-title { font-size:13px; font-weight:500; margin:0; }
+.fc-season-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+.fc-season-cell { display:flex; flex-direction:column; align-items:center; gap:5px; padding:8px 6px; border-radius:6px; }
+.fc-season-cell label { font-size:11px; color:var(--color-text-caption); font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+.fc-season-cell input { width:100%; padding:5px 4px; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; text-align:center; box-sizing:border-box; }
+.fc-season-cell input:focus { outline:none; border-color:var(--color-blue); }
+#fc-info-tooltip { display:none; position:fixed; z-index:9999; background:#ffffff; border:1px solid var(--color-border); border-radius:4px; padding:8px; max-width:300px; font-size:12px; color:var(--color-text-primary); line-height:1.5; font-family:'DM Sans',sans-serif; pointer-events:none; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
 /* Chart */
 .fc-chart-card { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; padding:20px; margin-bottom:16px; }
 .fc-chart-wrap { position:relative; height:380px; }
@@ -109,27 +136,44 @@
 
   <!-- Planning inputs card -->
   <div class="fc-planning-card">
-    <div class="fc-planning-title">Account Defaults</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div class="fc-planning-title" style="margin:0;">Account Defaults</div>
+      <div id="fc-edit-controls">
+        <button class="fc-edit-btn" id="fc-edit-btn">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </button>
+      </div>
+    </div>
     <div class="fc-info-banner">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-top:1px;flex-shrink:0;"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M7 6v4M7 4.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       These values are pulled from your account settings. Adjust them below to model different scenarios.
     </div>
     <div class="fc-input-grid">
       <div class="fc-input-group">
-        <div class="fc-input-label">Google Ads Monthly Budget</div>
-        <input class="fc-input-field" id="fc-budget-google" type="number" value="7200" placeholder="$0.00" />
+        <div class="fc-input-label">Google Ads Avg. Monthly Budget</div>
+        <input class="fc-input-field" id="fc-budget-google" type="number" value="7200" placeholder="No budget set" readonly />
+        <div class="fc-budget-warn" id="fc-warn-google">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          No budget has been set for this account in Argos. Enter a value to include it in your forecast. Without a budget, this account will be excluded from projections.
+        </div>
       </div>
       <div class="fc-input-group">
-        <div class="fc-input-label">Microsoft Ads Monthly Budget</div>
-        <input class="fc-input-field" id="fc-budget-msft" type="number" value="1050" placeholder="$0.00" />
+        <div class="fc-input-label">Microsoft Ads Avg. Monthly Budget</div>
+        <input class="fc-input-field" id="fc-budget-msft" type="number" value="1050" placeholder="No budget set" readonly />
+        <div class="fc-budget-warn" id="fc-warn-msft">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          No budget has been set for this account in Argos. Enter a value to include it in your forecast. Without a budget, this account will be excluded from projections.
+        </div>
       </div>
       <div class="fc-input-group">
         <div class="fc-input-label">Target COS</div>
-        <input class="fc-input-field" id="fc-target-cos" type="number" value="29" placeholder="%" />
+        <input class="fc-input-field" id="fc-target-cos" type="number" value="29" placeholder="%" readonly />
       </div>
       <div class="fc-input-group" style="grid-column:1/span 3;">
-        <div class="fc-input-label">Implied Revenue Target <span style="font-size:11px;color:var(--color-text-caption)">(auto-calculated)</span></div>
+        <div class="fc-input-label" style="display:flex;align-items:center;gap:4px;">Implied Revenue Target <span style="font-size:11px;color:var(--color-text-caption)">(auto-calculated)</span><svg data-fc-tip="Calculated as (Total Average Monthly Budget ÷ Target COS) × 100. The monthly budget represents your average spend per month across the forecast period. If your budget varies by month — for example, higher spend in peak season — use the Monthly Seasonality Adjustment below to model those variations on top of this baseline." width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-text-caption);cursor:pointer;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
         <input class="fc-input-field" id="fc-implied-rev" type="text" readonly value="" />
+        <p id="fc-implied-rev-note" style="display:none;font-size:12px;color:var(--color-text-caption);margin:4px 0 0;font-family:'DM Sans',sans-serif;">Set budgets above to calculate</p>
       </div>
     </div>
     <button class="fc-reset-btn" id="fc-reset-btn">
@@ -143,30 +187,63 @@
       What if? Scenarios
     </div>
     <div class="fc-advanced-body" id="fc-advanced-body">
-      <!-- Scenarios -->
-      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">Scenario Comparison</div>
-      <div style="display:grid;grid-template-columns:140px 130px 100px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--color-border);">
-        <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">NAME</span>
-        <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">MONTHLY BUDGET</span>
-        <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">TARGET COS</span>
-        <span></span>
-      </div>
-      <div id="fc-scenarios-list"></div>
-      <button class="fc-add-scenario-btn" id="fc-add-scenario-btn">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Add Scenario
-      </button>
 
-      <!-- Seasonality -->
-      <div class="fc-seasonality-section">
-        <div class="fc-seasonality-title">Monthly Seasonality Adjustment (%)</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <button class="fc-reset-btn" id="fc-season-prev" style="padding:4px 10px;">‹</button>
-          <span id="fc-season-range-label" style="font-size:12px;color:var(--color-text-caption);"></span>
-          <button class="fc-reset-btn" id="fc-season-next" style="padding:4px 10px;">›</button>
+      <!-- ── Scenario Comparison section ── -->
+      <div id="fc-scenarios-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;">
+            Scenario Comparison
+            <svg data-fc-tip="Model up to 3 spending scenarios side by side. Each scenario uses its own monthly budget and COS target to project a separate forecast line on the chart below. Conservative = lower spend, higher COS target. Aggressive = higher spend, lower COS target." width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-text-caption);cursor:pointer;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="fc-scenarios-toggle-label" style="font-size:12px;color:var(--color-text-caption);">Off</span>
+            <button class="fc-toggle" id="fc-scenarios-toggle" data-fc-toggle="scenarios" aria-pressed="false">
+              <span class="fc-toggle-thumb"></span>
+            </button>
+          </div>
         </div>
-        <div class="fc-season-months" id="fc-season-months"></div>
+        <div class="fc-off-banner" id="fc-scenarios-off-banner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Scenarios are currently off. Enable to model different spend and COS combinations on the forecast chart.
+        </div>
+        <div id="fc-scenarios-content">
+          <div style="display:grid;grid-template-columns:140px 130px 100px 120px auto;gap:8px;padding:6px 0;border-bottom:1px solid var(--color-border);">
+            <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">NAME</span>
+            <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">MONTHLY BUDGET</span>
+            <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">TARGET COS</span>
+            <span style="font-size:11px;color:var(--color-text-caption);font-weight:600;">PROJECTED REVENUE</span>
+            <span></span>
+          </div>
+          <div id="fc-scenarios-list"></div>
+          <button class="fc-add-scenario-btn" id="fc-add-scenario-btn">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Add Scenario
+          </button>
+        </div>
       </div>
+
+      <!-- ── Monthly Seasonality section ── -->
+      <div class="fc-seasonality-section" id="fc-season-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="fc-seasonality-title">Monthly Seasonality Adjustment (%)</span>
+            <svg data-fc-tip="Enter the percentage above or below your average monthly baseline that you expect each month to perform. For example, +22 in October means you expect that month to generate 22% more revenue than your monthly average. Pre-filled values are suggestions based on your last 12 months of historical data — adjust them to match your expectations. Set any month to 0 to use the baseline projection with no adjustment." width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--color-text-caption);cursor:pointer;flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <a data-fc-reset-season href="#" style="font-size:12px;color:var(--color-text-caption);cursor:pointer;text-decoration:none;">Reset seasonality</a>
+            <span id="fc-season-toggle-label" style="font-size:12px;color:var(--color-text-caption);">Off</span>
+            <button class="fc-toggle" id="fc-season-toggle" data-fc-toggle="seasonality" aria-pressed="false">
+              <span class="fc-toggle-thumb"></span>
+            </button>
+          </div>
+        </div>
+        <div class="fc-off-banner" id="fc-season-off-banner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Seasonality is currently off. Enable to apply monthly performance adjustments to the forecast.
+        </div>
+        <div class="fc-season-grid" id="fc-season-months"></div>
+      </div>
+
     </div>
   </div>
 
@@ -178,3 +255,4 @@
   <!-- Summary cards -->
   <div class="fc-summary-row" id="fc-summary-row"></div>
 </div>
+<div id="fc-info-tooltip"></div>
