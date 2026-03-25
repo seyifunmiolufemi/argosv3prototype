@@ -127,9 +127,8 @@
     dateRange: 'Last 12 Months',
     fromDate: '', toDate: '',
     compare: false,
-    cmpClient: 'Biddy Murphy',
-    cmpWebsite: 'BiddyMurphy.com',
-    cmpDateRange: 'Previous Period',
+    cmpPeriod: 'Previous Period',
+    cmpFromDate: '', cmpToDate: '',
     openDd: null,
     tableOpen: false,
     tableSortCol: 0, tableSortDir: 1
@@ -137,7 +136,6 @@
 
   var _lcChart = null;
   var _lcPrimaryData = [];
-  var _lcCmpData = [];
   var _lcWeeks = [];
 
   // Dummy annotations for pins
@@ -209,43 +207,52 @@
     return { dates: rows.map(function(r){ return r.date; }), rows: rows };
   }
 
+  // ── Comparison period helpers ───────────────────────────────────────────────
+  function lcGetComparisonWeeks() {
+    var n = _lcWeeks.length;
+    var weeks = [];
+    var i;
+    if (_lcState.cmpPeriod === 'Previous Period') {
+      for (i = 0; i < n; i++) {
+        var d1 = new Date(_lcWeeks[i]);
+        d1.setDate(d1.getDate() - n * 7);
+        weeks.push(d1);
+      }
+    } else if (_lcState.cmpPeriod === 'Same Period Last Year') {
+      for (i = 0; i < n; i++) {
+        var d2 = new Date(_lcWeeks[i]);
+        d2.setFullYear(d2.getFullYear() - 1);
+        weeks.push(d2);
+      }
+    } else if (_lcState.cmpPeriod === 'Custom Period' && _lcState.cmpFromDate) {
+      var start = new Date(_lcState.cmpFromDate);
+      for (i = 0; i < n; i++) {
+        var d3 = new Date(start);
+        d3.setDate(start.getDate() + i * 7);
+        weeks.push(d3);
+      }
+    } else {
+      // fallback: previous period
+      for (i = 0; i < n; i++) {
+        var d4 = new Date(_lcWeeks[i]);
+        d4.setDate(d4.getDate() - n * 7);
+        weeks.push(d4);
+      }
+    }
+    return weeks;
+  }
+
+  function lcGetDateRangeLabel(weeks) {
+    if (!weeks || !weeks.length) return '';
+    var fmt = function(d) { return d.toLocaleDateString('en-US', { month:'short', day:'numeric' }); };
+    return fmt(weeks[0]) + ' – ' + fmt(weeks[weeks.length - 1]);
+  }
+
   // ── Refresh data ───────────────────────────────────────────────────────────
   function lcRefreshData() {
     var n = lcGetWeekCount();
     _lcWeeks = lcGenWeeks(n);
-    // Pick data source by client
     _lcPrimaryData = (_lcState.client === 'Outdoor Research') ? lcGenOR(_lcWeeks) : lcGenBiddy(_lcWeeks);
-    _lcCmpData = (_lcState.cmpClient === 'Outdoor Research') ? lcGenOR(_lcWeeks) : lcGenBiddy(_lcWeeks);
-  }
-
-  // ── Summary cards ──────────────────────────────────────────────────────────
-  function lcRenderSummary() {
-    var el = document.getElementById('lc-summary-row');
-    if (!el) return;
-    var n = lcGetWeekCount();
-    var half = Math.floor(n / 2);
-    var current = _lcPrimaryData.slice(half);
-    var prev    = _lcPrimaryData.slice(0, half);
-    var html = '';
-    _lcState.metrics.forEach(function(key) {
-      var meta = lcMetaFor(key);
-      var cur = current.reduce(function(s,r){ return s + (r[key]||0); }, 0);
-      var prv = prev.reduce(function(s,r){ return s + (r[key]||0); }, 0);
-      if (['cos','convRate','ctr','seoConvRate','bounceRate'].indexOf(key) !== -1) {
-        cur = cur / (current.length || 1); prv = prv / (prev.length || 1);
-      } else if (['roas','aov','cpc','cpa','seoAov'].indexOf(key) !== -1) {
-        cur = cur / (current.length || 1); prv = prv / (prev.length || 1);
-      }
-      var delta = prv ? (cur - prv) / prv : 0;
-      var dClass = delta >= 0 ? 'lc-delta-pos' : 'lc-delta-neg';
-      var dSign = delta >= 0 ? '↑' : '↓';
-      html += '<div class="lc-stat-card">';
-      html += '<div class="lc-stat-name">' + meta.label + '</div>';
-      html += '<div class="lc-stat-val">' + lcFmt(cur, meta.fmt) + '</div>';
-      html += '<div class="lc-stat-delta ' + dClass + '">' + dSign + ' ' + Math.abs(delta * 100).toFixed(1) + '% vs prev</div>';
-      html += '</div>';
-    });
-    el.innerHTML = html;
   }
 
   // ── Chart ──────────────────────────────────────────────────────────────────
@@ -263,6 +270,17 @@
 
     var gd = lcGetGranData(_lcWeeks, _lcPrimaryData);
     var labels = gd.dates.map(lcDateLabel);
+    var primaryRangeLabel = lcGetDateRangeLabel(_lcWeeks);
+
+    // Comparison data
+    var cmpWeeks = null, cmpRaw = null, gdCmp = null, cmpRangeLabel = '';
+    if (_lcState.compare) {
+      cmpWeeks = lcGetComparisonWeeks();
+      cmpRaw = (_lcState.client === 'Outdoor Research') ? lcGenOR(cmpWeeks) : lcGenBiddy(cmpWeeks);
+      gdCmp = lcGetGranData(cmpWeeks, cmpRaw);
+      cmpRangeLabel = lcGetDateRangeLabel(cmpWeeks);
+    }
+
     var datasets = [];
     var colIdx = 0;
 
@@ -271,9 +289,10 @@
       var col = LC_COLOURS[colIdx % LC_COLOURS.length];
       var rgb = lcHexToRgb(col);
       var data = gd.rows.map(function(r){ return r[key] != null ? r[key] : null; });
+      var axisId = meta.axis === 'left' ? 'yLeft' : 'yRight';
 
       datasets.push({
-        label: meta.label + (_lcState.compare ? ' (' + _lcState.website + ')' : ''),
+        label: meta.label + (_lcState.compare ? ' (' + primaryRangeLabel + ')' : ''),
         data: data,
         borderColor: col,
         backgroundColor: 'rgba(' + rgb + ',0.10)',
@@ -281,60 +300,100 @@
         tension: 0.3,
         pointRadius: 4,
         pointHoverRadius: 6,
-        yAxisID: meta.axis === 'left' ? 'yLeft' : 'yRight',
-        borderWidth: 2,
-        borderDash: []
+        yAxisID: axisId,
+        borderWidth: 2
       });
 
-      if (_lcState.compare) {
-        var gd2 = lcGetGranData(_lcWeeks, _lcCmpData);
-        var data2 = gd2.rows.map(function(r){ return r[key] != null ? r[key] : null; });
+      if (_lcState.compare && gdCmp) {
+        var data2 = gdCmp.rows.map(function(r){ return r[key] != null ? r[key] : null; });
         datasets.push({
-          label: meta.label + ' (' + _lcState.cmpWebsite + ')',
+          label: meta.label + ' (' + cmpRangeLabel + ')',
           data: data2,
           borderColor: col,
-          backgroundColor: 'rgba(' + rgb + ',0.05)',
+          backgroundColor: 'rgba(' + rgb + ',0.04)',
           fill: false,
           tension: 0.3,
           pointRadius: 3,
           pointHoverRadius: 5,
-          yAxisID: meta.axis === 'left' ? 'yLeft' : 'yRight',
+          yAxisID: axisId,
           borderWidth: 2,
-          borderDash: [5,4]
+          borderDash: [5, 4]
         });
       }
       colIdx++;
     });
 
-    // Annotation pin plugins (rendered via afterDraw)
+    // Determine which axes are used
+    var hasLeft  = datasets.some(function(d){ return d.yAxisID === 'yLeft'; });
+    var hasRight = datasets.some(function(d){ return d.yAxisID === 'yRight'; });
+
+    // Annotation pins via afterDraw
     var annotPlugin = {
       id: 'lcAnnotations',
       afterDraw: function(chart) {
         var ctx = chart.ctx;
         var xAxis = chart.scales['x'];
-        var yBottom = chart.chartArea.bottom;
+        var yBottom = chart.chartArea ? chart.chartArea.bottom : 0;
         if (!xAxis) return;
         LC_ANNOTATIONS.forEach(function(ann) {
-          // Find nearest label index
           var annLabel = lcDateLabel(ann.date);
           var idx = labels.indexOf(annLabel);
           if (idx === -1) return;
           var x = xAxis.getPixelForValue(idx);
           if (!x) return;
           ctx.save();
-          ctx.fillStyle = '#f59e0b';
-          // Draw pin (circle + stem)
-          ctx.beginPath();
-          ctx.arc(x, yBottom + 10, 5, 0, Math.PI * 2);
-          ctx.fill();
+          // Stem
           ctx.strokeStyle = '#f59e0b';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
-          ctx.moveTo(x, yBottom + 5);
-          ctx.lineTo(x, yBottom);
+          ctx.moveTo(x, yBottom);
+          ctx.lineTo(x, yBottom + 7);
           ctx.stroke();
+          // Pin head
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.arc(x, yBottom + 12, 5, 0, Math.PI * 2);
+          ctx.fill();
           ctx.restore();
         });
+      }
+    };
+
+    // Hover tooltip for annotation pins
+    var annotHoverPlugin = {
+      id: 'lcAnnotHover',
+      afterEvent: function(chart, args) {
+        var evt = args.event;
+        if (evt.type !== 'mousemove') return;
+        var xAxis = chart.scales['x'];
+        var yBottom = chart.chartArea ? chart.chartArea.bottom : 0;
+        if (!xAxis) return;
+        var tip = document.getElementById('lc-annot-tip');
+        if (!tip) {
+          tip = document.createElement('div');
+          tip.id = 'lc-annot-tip';
+          tip.style.cssText = 'position:fixed;z-index:10000;background:#fff;border:1px solid var(--color-border);border-radius:6px;padding:6px 10px;font-size:12px;font-family:\'DM Sans\',sans-serif;color:var(--color-text-primary);box-shadow:0 2px 8px rgba(0,0,0,0.10);pointer-events:none;display:none;';
+          document.body.appendChild(tip);
+        }
+        var hit = null;
+        LC_ANNOTATIONS.forEach(function(ann) {
+          var annLabel = lcDateLabel(ann.date);
+          var idx = labels.indexOf(annLabel);
+          if (idx === -1) return;
+          var x = xAxis.getPixelForValue(idx);
+          if (!x) return;
+          var dx = evt.x - x, dy = evt.y - (yBottom + 12);
+          if (Math.sqrt(dx*dx + dy*dy) <= 8) hit = ann;
+        });
+        if (hit) {
+          var canvasRect = canvas.getBoundingClientRect();
+          tip.innerHTML = '<strong>' + hit.title + '</strong><br><span style="color:var(--color-text-caption);">' + lcDateLabel(hit.date) + '</span>';
+          tip.style.display = 'block';
+          tip.style.left = (canvasRect.left + xAxis.getPixelForValue(labels.indexOf(lcDateLabel(hit.date))) - 60) + 'px';
+          tip.style.top  = (canvasRect.top + yBottom - 48) + 'px';
+        } else {
+          tip.style.display = 'none';
+        }
       }
     };
 
@@ -343,7 +402,7 @@
     _lcChart = new window.Chart(canvas, {
       type: 'line',
       data: { labels: labels, datasets: datasets },
-      plugins: [annotPlugin],
+      plugins: [annotPlugin, annotHoverPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -360,8 +419,25 @@
             cornerRadius: 4,
             callbacks: {
               label: function(ctx) {
-                var meta = lcMetaFor(_lcState.metrics[Math.floor(ctx.datasetIndex / (_lcState.compare ? 2 : 1))]);
-                return ctx.dataset.label + ': ' + lcFmtFull(ctx.parsed.y, meta.fmt);
+                var step = _lcState.compare ? 2 : 1;
+                var metricIdx = Math.floor(ctx.datasetIndex / step);
+                var isCmp = _lcState.compare && (ctx.datasetIndex % 2 === 1);
+                var key = _lcState.metrics[metricIdx];
+                var meta = lcMetaFor(key);
+                var val = ctx.parsed.y;
+                var fmtVal = lcFmtFull(val, meta.fmt);
+                if (_lcState.compare && !isCmp) {
+                  var cmpDs = ctx.chart.data.datasets[ctx.datasetIndex + 1];
+                  if (cmpDs) {
+                    var cmpVal = cmpDs.data[ctx.dataIndex];
+                    if (cmpVal != null && cmpVal !== 0 && val != null) {
+                      var delta = (val - cmpVal) / Math.abs(cmpVal) * 100;
+                      var sign = delta >= 0 ? '+' : '';
+                      return ctx.dataset.label + ': ' + fmtVal + ' (' + sign + delta.toFixed(1) + '%)';
+                    }
+                  }
+                }
+                return ctx.dataset.label + ': ' + fmtVal;
               }
             }
           }
@@ -372,11 +448,13 @@
             grid: { color: 'rgba(0,0,0,0.05)' }
           },
           yLeft: {
+            display: hasLeft,
             type: 'linear', position: 'left',
             ticks: { font: { family: "'DM Sans', sans-serif", size: 11 }, callback: function(v){ return lcFmt(v,'currency'); } },
             grid: { color: 'rgba(0,0,0,0.05)' }
           },
           yRight: {
+            display: hasRight,
             type: 'linear', position: 'right',
             ticks: { font: { family: "'DM Sans', sans-serif", size: 11 } },
             grid: { drawOnChartArea: false }
@@ -508,7 +586,7 @@
           else { _lcState.metrics.splice(idx,1); cb.checked = false; }
           var lbl = document.getElementById('lc-metric-label');
           if (lbl) lbl.textContent = _lcState.metrics.length + ' Metric' + (_lcState.metrics.length===1?'':'s');
-          lcRefreshData(); lcRenderSummary(); lcRenderChart(); lcRenderTable();
+          lcRefreshData(); lcRenderChart(); lcRenderTable();
         });
         panel.appendChild(item);
       });
@@ -528,7 +606,7 @@
         _lcState.granularity = g;
         document.getElementById('lc-gran-label').textContent = g;
         lcCloseAllDd();
-        lcRefreshData(); lcRenderSummary(); lcRenderChart(); lcRenderTable();
+        lcRefreshData(); lcRenderChart(); lcRenderTable();
       });
       panel.appendChild(item);
     });
@@ -548,25 +626,27 @@
         var row = document.getElementById('lc-custom-date-row');
         if (row) row.style.display = opt === 'Custom Range' ? 'flex' : 'none';
         lcCloseAllDd();
-        if (opt !== 'Custom Range') { lcRefreshData(); lcRenderSummary(); lcRenderChart(); lcRenderTable(); }
+        if (opt !== 'Custom Range') { lcRefreshData(); lcRenderChart(); lcRenderTable(); }
       });
       panel.appendChild(item);
     });
   }
 
-  function lcBuildCmpDateDd() {
-    var panel = document.getElementById('lc-cmp-date-panel');
+  function lcBuildCmpPeriodDd() {
+    var panel = document.getElementById('lc-cmp-period-panel');
     if (!panel) return;
     panel.innerHTML = '';
-    ['Previous Period','Previous Year','Custom Range'].forEach(function(opt) {
+    ['Previous Period', 'Same Period Last Year', 'Custom Period'].forEach(function(opt) {
       var item = document.createElement('div');
-      item.className = 'lc-dd-item' + (opt === _lcState.cmpDateRange ? ' lc-selected' : '');
+      item.className = 'lc-dd-item' + (opt === _lcState.cmpPeriod ? ' lc-selected' : '');
       item.textContent = opt;
       item.addEventListener('click', function(){
-        _lcState.cmpDateRange = opt;
-        document.getElementById('lc-cmp-date-label').textContent = opt;
+        _lcState.cmpPeriod = opt;
+        document.getElementById('lc-cmp-period-label').textContent = opt;
+        var customRow = document.getElementById('lc-cmp-custom-row');
+        if (customRow) customRow.style.display = opt === 'Custom Period' ? 'flex' : 'none';
         lcCloseAllDd();
-        lcRefreshData(); lcRenderChart();
+        lcRenderChart();
       });
       panel.appendChild(item);
     });
@@ -595,7 +675,7 @@
           _lcState.client = name; _lcState.website = firstSite;
           document.getElementById('lc-client-label').textContent = name;
           document.getElementById('lc-website-label').textContent = firstSite;
-          lcRefreshData(); lcRenderSummary(); lcRenderChart(); lcRenderTable();
+          lcRefreshData(); lcRenderChart(); lcRenderTable();
         });
         lcOpenDd('lc-client-panel'); return;
       }
@@ -603,7 +683,7 @@
         lcBuildWebsiteDd('lc-website-panel','lc-website-label',_lcState.client,_lcState.website,function(w){
           _lcState.website = w;
           document.getElementById('lc-website-label').textContent = w;
-          lcRefreshData(); lcRenderSummary(); lcRenderChart(); lcRenderTable();
+          lcRefreshData(); lcRenderChart(); lcRenderTable();
         });
         lcOpenDd('lc-website-panel'); return;
       }
@@ -618,32 +698,17 @@
       }
       if (id === 'lc-compare-btn' || e.target.closest('#lc-compare-btn')) {
         _lcState.compare = !_lcState.compare;
-        var btn = document.getElementById('lc-compare-btn');
-        if (btn) btn.classList.toggle('lc-compare-active', _lcState.compare);
-        var row = document.getElementById('lc-compare-row');
-        if (row) row.style.display = _lcState.compare ? 'flex' : 'none';
-        lcRefreshData(); lcRenderChart(); return;
+        var cmpBtn = document.getElementById('lc-compare-btn');
+        if (cmpBtn) cmpBtn.classList.toggle('lc-compare-active', _lcState.compare);
+        var cmpRow = document.getElementById('lc-compare-row');
+        if (cmpRow) cmpRow.style.display = _lcState.compare ? 'flex' : 'none';
+        var cmpCustomRow = document.getElementById('lc-cmp-custom-row');
+        if (cmpCustomRow && !_lcState.compare) cmpCustomRow.style.display = 'none';
+        lcRenderChart(); return;
       }
-      // Compare dropdowns
-      if (e.target.closest('#lc-cmp-client-btn')) {
-        lcBuildClientDd('lc-cmp-client-panel','lc-cmp-client-label',_lcState.cmpClient, function(name, firstSite){
-          _lcState.cmpClient = name; _lcState.cmpWebsite = firstSite;
-          document.getElementById('lc-cmp-client-label').textContent = name;
-          document.getElementById('lc-cmp-website-label').textContent = firstSite;
-          lcRefreshData(); lcRenderChart();
-        });
-        lcOpenDd('lc-cmp-client-panel'); return;
-      }
-      if (e.target.closest('#lc-cmp-website-btn')) {
-        lcBuildWebsiteDd('lc-cmp-website-panel','lc-cmp-website-label',_lcState.cmpClient,_lcState.cmpWebsite,function(w){
-          _lcState.cmpWebsite = w;
-          document.getElementById('lc-cmp-website-label').textContent = w;
-          lcRefreshData(); lcRenderChart();
-        });
-        lcOpenDd('lc-cmp-website-panel'); return;
-      }
-      if (e.target.closest('#lc-cmp-date-btn')) {
-        lcBuildCmpDateDd(); lcOpenDd('lc-cmp-date-panel'); return;
+      // Compare period dropdown
+      if (e.target.closest('#lc-cmp-period-btn')) {
+        lcBuildCmpPeriodDd(); lcOpenDd('lc-cmp-period-panel'); return;
       }
 
       // Table toggle
@@ -680,10 +745,19 @@
       }
     });
 
-    // Custom date inputs
-    ['lc-from-date','lc-to-date'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.addEventListener('change', function(){ lcRefreshData(); lcRenderSummary(); lcRenderChart(); lcRenderTable(); });
+    // Custom date inputs — primary range
+    ['lc-from-date','lc-to-date'].forEach(function(elId) {
+      var el = document.getElementById(elId);
+      if (el) el.addEventListener('change', function(){ lcRefreshData(); lcRenderChart(); lcRenderTable(); });
+    });
+    // Custom date inputs — comparison range
+    ['lc-cmp-from-date','lc-cmp-to-date'].forEach(function(elId) {
+      var el = document.getElementById(elId);
+      if (el) el.addEventListener('change', function(){
+        _lcState.cmpFromDate = document.getElementById('lc-cmp-from-date') ? document.getElementById('lc-cmp-from-date').value : '';
+        _lcState.cmpToDate   = document.getElementById('lc-cmp-to-date')   ? document.getElementById('lc-cmp-to-date').value   : '';
+        lcRenderChart();
+      });
     });
   }
 
@@ -699,7 +773,6 @@
     lcWireEvents();
     lcLoadChartJs(function() {
       lcRefreshData();
-      lcRenderSummary();
       lcRenderChart();
     });
   };

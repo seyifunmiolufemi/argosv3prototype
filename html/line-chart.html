@@ -19,20 +19,12 @@
 .lc-dd-group-label { padding:8px 14px 4px; font-size:11px; font-weight:600; color:var(--color-text-caption); text-transform:uppercase; letter-spacing:0.05em; }
 .lc-dd-divider { height:1px; background:var(--color-border); margin:4px 0; }
 .lc-compare-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; background:transparent; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
-.lc-compare-btn.lc-compare-active { border-color:var(--color-blue); color:var(--color-blue); }
+.lc-compare-btn.lc-compare-active { border-color:var(--color-blue); color:var(--color-blue); background:#ffffff; }
 /* Sub-row (date range custom / compare) */
 .lc-sub-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px; color:var(--color-text-caption); }
 .lc-sub-row input[type="date"] { padding:5px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:#ffffff; }
 /* Compare row */
 .lc-compare-row { display:flex; align-items:center; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-/* Summary cards */
-.lc-summary-row { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
-.lc-stat-card { flex:1; min-width:120px; background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:8px; padding:12px 14px; }
-.lc-stat-name { font-size:12px; color:var(--color-text-caption); margin-bottom:4px; }
-.lc-stat-val { font-size:20px; font-weight:700; color:var(--color-text-primary); line-height:1.1; }
-.lc-stat-delta { font-size:12px; margin-top:4px; }
-.lc-delta-pos { color:var(--color-text-success); }
-.lc-delta-neg { color:var(--color-text-warning); }
 /* Chart card */
 .lc-chart-card { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; padding:20px; margin-bottom:16px; }
 .lc-chart-wrap { position:relative; height:340px; }
@@ -113,28 +105,17 @@
   <!-- Compare row -->
   <div class="lc-compare-row" id="lc-compare-row" style="display:none;">
     <span style="color:var(--color-text-caption);font-size:13px;">Comparing against:</span>
-    <button class="lc-dd-btn" id="lc-cmp-client-btn">
-      <span id="lc-cmp-client-label">Biddy Murphy</span>
+    <button class="lc-dd-btn" id="lc-cmp-period-btn">
+      <span id="lc-cmp-period-label">Previous Period</span>
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </button>
-    <div class="lc-dd-panel" id="lc-cmp-client-panel"></div>
-    <button class="lc-dd-btn" id="lc-cmp-website-btn">
-      <span id="lc-cmp-website-label">BiddyMurphy.com</span>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    </button>
-    <div class="lc-dd-panel" id="lc-cmp-website-panel"></div>
-    <div id="lc-cmp-date-range-row" style="display:flex;align-items:center;gap:8px;">
-      <button class="lc-dd-btn" id="lc-cmp-date-btn">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 5h10M4 1v2M8 1v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-        <span id="lc-cmp-date-label">Previous Period</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-      <div class="lc-dd-panel" id="lc-cmp-date-panel"></div>
-    </div>
+    <div class="lc-dd-panel" id="lc-cmp-period-panel"></div>
   </div>
-
-  <!-- Summary cards -->
-  <div class="lc-summary-row" id="lc-summary-row"></div>
+  <!-- Compare custom period row -->
+  <div class="lc-sub-row" id="lc-cmp-custom-row" style="display:none;">
+    <span>From</span><input type="date" id="lc-cmp-from-date" />
+    <span>To</span><input type="date" id="lc-cmp-to-date" />
+  </div>
 
   <!-- Chart card -->
   <div class="lc-chart-card">
