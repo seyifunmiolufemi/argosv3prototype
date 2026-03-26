@@ -1,0 +1,244 @@
+<style>
+/* ── Session Monitor ── */
+#session-monitor-page { display:none; padding:32px 32px 64px; box-sizing:border-box; }
+
+/* Header */
+.sm-title { font-family:'Instrument Sans',sans-serif; font-size:22px; font-weight:700; color:var(--color-text-primary); margin:0 0 4px; }
+.sm-subtitle { font-size:13px; color:var(--color-text-subtitle); margin:0; }
+.sm-breadcrumb { font-size:12px; color:var(--color-text-caption); margin:6px 0 0; }
+.sm-breadcrumb a { color:var(--color-blue); cursor:pointer; text-decoration:none; }
+.sm-header-row { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:4px; }
+.sm-header-actions { display:flex; align-items:center; gap:6px; flex-shrink:0; margin-top:2px; }
+.sm-icon-btn { background:none; border:none; cursor:pointer; color:var(--color-text-caption); padding:5px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; }
+.sm-icon-btn:hover { background:var(--color-bg-grey50); color:var(--color-text-primary); }
+.sm-refresh-spin { animation:sm-spin 1s linear infinite; }
+@keyframes sm-spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+
+/* Time filter dropdown */
+.sm-time-btn { display:inline-flex; align-items:center; gap:6px; }
+
+/* Info banner */
+.sm-info-banner { display:none; background:var(--color-bg-grey50); border-left:3px solid var(--color-blue); border-radius:8px; padding:12px 16px; margin-top:14px; margin-bottom:0; }
+.sm-info-banner.sm-open { display:block; }
+.sm-info-heading { font-size:13px; font-weight:500; color:var(--color-text-primary); margin:0 0 6px; }
+.sm-info-body { font-size:13px; color:var(--color-text-caption); line-height:1.55; margin:0 0 10px; }
+.sm-info-warn { display:flex; align-items:flex-start; gap:8px; background:var(--color-container-warn); border-radius:6px; padding:9px 12px; margin-bottom:8px; font-size:13px; color:var(--color-text-warning); line-height:1.5; }
+.sm-info-warn svg { flex-shrink:0; margin-top:1px; }
+.sm-info-note { font-size:12px; color:var(--color-text-caption); margin:0; }
+
+/* Tabs */
+.sm-tabs { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--color-border); margin-top:20px; margin-bottom:20px; }
+.sm-tab { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; font-size:14px; font-family:'DM Sans',sans-serif; font-weight:500; color:var(--color-text-caption); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; background:none; border-top:none; border-left:none; border-right:none; white-space:nowrap; }
+.sm-tab:hover { color:var(--color-text-primary); }
+.sm-tab.sm-tab-active { color:var(--color-blue); border-bottom-color:var(--color-blue); }
+
+/* Search */
+.sm-search-wrap { position:relative; margin-bottom:14px; }
+.sm-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--color-text-caption); pointer-events:none; display:flex; }
+.sm-search-input { width:100%; padding:8px 12px 8px 44px; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:var(--color-white); outline:none; box-sizing:border-box; }
+.sm-search-input:focus { border-color:var(--color-blue); }
+
+/* User table */
+.sm-user-table-wrap { border:1px solid var(--color-border); border-radius:8px; overflow:hidden; }
+.sm-user-table { width:100%; border-collapse:collapse; font-size:13px; font-family:'DM Sans',sans-serif; }
+.sm-user-th { padding:9px 16px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-caption); background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); white-space:nowrap; }
+.sm-user-tr { cursor:pointer; }
+.sm-user-tr:hover .sm-user-td { background:var(--color-bg-grey50); }
+.sm-user-td { padding:12px 16px; border-bottom:1px solid var(--color-border); color:var(--color-text-primary); vertical-align:middle; }
+.sm-user-detail-tr .sm-user-detail-td { padding:20px; border-bottom:1px solid var(--color-border); background:var(--color-white); }
+.sm-user-chev { flex-shrink:0; color:var(--color-text-caption); transition:transform 0.2s ease; display:flex; align-items:center; }
+.sm-user-tr.sm-expanded .sm-user-chev { transform:rotate(90deg); }
+.sm-avatar { width:32px; height:32px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#ffffff; flex-shrink:0; font-family:'DM Sans',sans-serif; letter-spacing:0; }
+.sm-user-info { min-width:0; }
+.sm-user-name { font-size:14px; font-weight:500; color:var(--color-text-primary); display:block; }
+.sm-user-email { font-size:12px; color:var(--color-text-caption); display:block; margin-top:1px; }
+.sm-section-heading { font-size:13px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 10px; }
+.sm-section-sep { margin-top:20px; padding-top:20px; border-top:1px solid var(--color-border); }
+
+/* Sub-tables */
+.sm-sub-table-wrap { border:1px solid var(--color-border); border-radius:6px; overflow:hidden; }
+.sm-sub-table { width:100%; border-collapse:collapse; font-size:13px; font-family:'DM Sans',sans-serif; }
+.sm-sub-th { padding:8px 12px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-caption); background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); position:sticky; top:0; white-space:nowrap; }
+.sm-sub-td { padding:9px 12px; border-bottom:1px solid var(--color-border); color:var(--color-text-primary); vertical-align:top; }
+.sm-sub-tr:last-child .sm-sub-td { border-bottom:none; }
+.sm-sub-tr:hover .sm-sub-td { background:var(--color-bg-grey50); }
+.sm-sub-tr-total .sm-sub-td { background:var(--color-bg-grey50); font-weight:600; border-top:1px solid var(--color-border); border-bottom:none; }
+.sm-mod-name { font-weight:500; color:var(--color-text-primary); }
+.sm-feat-name { font-size:12px; color:var(--color-text-caption); margin-top:1px; }
+
+/* Revoke button */
+.sm-revoke-btn { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; border:none; background:none; cursor:pointer; color:var(--color-text-warning); }
+.sm-revoke-btn:hover { background:var(--color-container-warn); }
+.sm-revoke-btn.sm-revoking { animation:sm-spin 1s linear infinite; cursor:default; }
+.sm-session-row { transition:opacity 0.3s ease; }
+.sm-session-row.sm-fading { opacity:0; }
+
+/* By Feature tab */
+.sm-stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.sm-stat-card { background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:8px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.sm-stat-val { font-size:24px; font-weight:700; color:var(--color-text-primary); line-height:1.1; font-family:'Instrument Sans',sans-serif; }
+.sm-stat-lbl { font-size:13px; color:var(--color-text-caption); margin-top:3px; font-family:'DM Sans',sans-serif; }
+.sm-stat-icon { display:flex; align-items:center; flex-shrink:0; }
+
+/* Feature table */
+.sm-feat-table-card { border:1px solid var(--color-border); border-radius:8px; overflow:hidden; }
+.sm-feat-table { width:100%; border-collapse:collapse; font-size:13px; font-family:'DM Sans',sans-serif; }
+.sm-feat-th { padding:10px 14px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-caption); background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); white-space:nowrap; }
+.sm-feat-th.sm-sortable { cursor:pointer; user-select:none; }
+.sm-feat-th.sm-sortable:hover { background:#e8eaed; }
+.sm-feat-td { padding:10px 14px; border-bottom:1px solid var(--color-border); color:var(--color-text-primary); vertical-align:top; }
+.sm-feat-tr:last-child .sm-feat-td { border-bottom:none; }
+.sm-feat-tr:hover .sm-feat-td { background:var(--color-bg-grey50); }
+.sm-sort-icon { margin-left:3px; vertical-align:middle; display:inline-block; opacity:0.3; }
+.sm-sort-active { opacity:1; color:var(--color-blue); }
+
+/* Dropdown panel */
+.sm-dd-panel { display:none; position:fixed; z-index:9999; background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.10); padding:4px 0; min-width:140px; }
+.sm-dd-item { padding:9px 14px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.sm-dd-item:hover { background:var(--color-bg-grey50); }
+.sm-dd-item.sm-dd-selected { color:var(--color-blue); font-weight:600; }
+
+/* Empty state */
+.sm-empty { padding:40px 24px; font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; }
+</style>
+
+<div id="session-monitor-page">
+
+  <!-- Header -->
+  <div class="sm-header-row">
+    <div>
+      <h1 class="sm-title">Activity Monitor</h1>
+      <p class="sm-subtitle">Track user sessions and feature usage</p>
+    </div>
+    <div class="sm-header-actions">
+      <!-- Time filter dropdown -->
+      <button class="btn-outline sm-time-btn" id="sm-time-btn">
+        <span id="sm-time-label">This Week</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <!-- Info icon -->
+      <button class="sm-icon-btn" id="sm-info-btn" title="About sessions">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </button>
+      <!-- Refresh icon -->
+      <button class="sm-icon-btn" id="sm-refresh-btn" title="Refresh">
+        <svg id="sm-refresh-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="sm-breadcrumb">
+    Monitoring › Session Monitor
+  </div>
+
+  <!-- Info banner (collapsible) -->
+  <div class="sm-info-banner" id="sm-info-banner">
+    <p class="sm-info-heading">About Sessions</p>
+    <p class="sm-info-body">Sessions represent active user logins to the application. Multiple sessions can exist for a single user due to multiple browser tabs, multiple devices, or unexpired tokens from previous logins.</p>
+    <div class="sm-info-warn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Warning: Revoking your own session may require a page refresh to continue using the application.
+    </div>
+    <p class="sm-info-note">All timestamps are displayed in Pacific Time (PT).</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="sm-tabs">
+    <button class="sm-tab sm-tab-active" data-tab="by-user">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      By User
+    </button>
+    <button class="sm-tab" data-tab="by-feature">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      By Feature
+    </button>
+  </div>
+
+  <!-- By User tab content -->
+  <div id="sm-by-user-tab">
+    <div class="sm-search-wrap">
+      <span class="sm-search-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" class="sm-search-input" id="sm-user-search" placeholder="Search users...">
+    </div>
+    <div class="sm-user-table-wrap">
+      <table class="sm-user-table">
+        <thead>
+          <tr>
+            <th class="sm-user-th">User</th>
+            <th class="sm-user-th" style="width:28%;">Last Active</th>
+            <th class="sm-user-th" style="width:10%;">Sessions</th>
+          </tr>
+        </thead>
+        <tbody id="sm-user-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- By Feature tab content -->
+  <div id="sm-by-feature-tab" style="display:none;">
+    <div class="sm-stats-row">
+      <div class="sm-stat-card">
+        <div>
+          <div class="sm-stat-val">46</div>
+          <div class="sm-stat-lbl">Total Visits</div>
+        </div>
+        <div class="sm-stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+      </div>
+      <div class="sm-stat-card">
+        <div>
+          <div class="sm-stat-val">8</div>
+          <div class="sm-stat-lbl">Active Users</div>
+        </div>
+        <div class="sm-stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+      </div>
+      <div class="sm-stat-card">
+        <div>
+          <div class="sm-stat-val">7h 28m</div>
+          <div class="sm-stat-lbl">Total Time</div>
+        </div>
+        <div class="sm-stat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-caption)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="sm-search-wrap">
+      <span class="sm-search-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" class="sm-search-input" id="sm-feat-search" placeholder="Search features or modules...">
+    </div>
+    <div class="sm-feat-table-card">
+      <table class="sm-feat-table">
+        <thead>
+          <tr>
+            <th class="sm-feat-th" style="width:28%;">Module / Feature</th>
+            <th class="sm-feat-th sm-sortable" data-sort="users" style="width:9%;">
+              Users <span class="sm-sort-icon" id="sm-sort-users"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg></span>
+            </th>
+            <th class="sm-feat-th sm-sortable" data-sort="visits" style="width:9%;">
+              Visits <span class="sm-sort-icon sm-sort-active" id="sm-sort-visits"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M19 12l-7 7-7-7"/></svg></span>
+            </th>
+            <th class="sm-feat-th sm-sortable" data-sort="time" style="width:14%;">
+              Total Time <span class="sm-sort-icon" id="sm-sort-time"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg></span>
+            </th>
+            <th class="sm-feat-th" style="width:14%;">Avg Time / Visit</th>
+            <th class="sm-feat-th" style="width:26%;">Last Activity</th>
+          </tr>
+        </thead>
+        <tbody id="sm-feat-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Time filter dropdown panel -->
+<div class="sm-dd-panel" id="sm-time-panel">
+  <div class="sm-dd-item sm-dd-selected" data-time="this-week">This Week</div>
+  <div class="sm-dd-item" data-time="all-time">All Time</div>
+</div>

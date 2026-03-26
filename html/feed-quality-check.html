@@ -1,0 +1,431 @@
+<style>
+/* ── Feed Quality Check page ── */
+#feed-quality-check-page { display:none; padding:32px 32px 64px; box-sizing:border-box; }
+.fqc-title { font-family:'Instrument Sans',sans-serif; font-size:22px; font-weight:700; color:var(--color-text-primary); margin:0 0 4px; }
+.fqc-subtitle { font-size:13px; color:var(--color-text-subtitle); margin:0; }
+.fqc-breadcrumb { font-size:12px; color:var(--color-text-caption); margin:6px 0 20px; }
+.fqc-breadcrumb a { color:var(--color-blue); cursor:pointer; text-decoration:none; }
+
+/* Controls */
+.fqc-controls { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+.fqc-controls-left { display:flex; align-items:center; gap:8px; }
+.fqc-controls-right { display:flex; align-items:center; gap:8px; }
+.fqc-dd-btn { display:inline-flex; align-items:center; gap:6px; padding:7px 10px; background:#ffffff; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.fqc-dd-btn:hover { background:var(--color-bg-grey50); }
+.fqc-dd-panel { display:none; position:fixed; z-index:9999; background:#ffffff; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.10); padding:4px 0; min-width:180px; max-height:300px; overflow-y:auto; }
+.fqc-dd-item { padding:8px 14px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.fqc-dd-item:hover { background:var(--color-bg-grey50); }
+.fqc-dd-item.fqc-selected { color:var(--color-blue); font-weight:600; }
+
+/* Run / Settings buttons use design-system .btn-primary-sm and .btn-outline */
+
+/* Source card (GMC + upload) */
+.fqc-source-card { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; padding:16px 20px; margin-bottom:16px; }
+
+/* GMC row */
+.fqc-gmc-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:4px; }
+.fqc-gmc-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 14px; background:var(--color-blue); border:none; border-radius:20px; font-size:12px; font-family:'DM Sans',sans-serif; font-weight:500; color:#ffffff; cursor:pointer; white-space:nowrap; flex-shrink:0; }
+.fqc-gmc-pill:hover:not(:disabled) { opacity:0.9; }
+.fqc-gmc-pill:disabled { opacity:0.5; cursor:default; }
+.fqc-gmc-fetching { font-size:13px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; display:none; }
+
+/* Loaded feed / uploaded file row */
+.fqc-loaded-row { display:flex; align-items:center; gap:10px; padding:9px 14px; background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:8px; margin-top:10px; }
+.fqc-loaded-label { font-size:11px; font-weight:700; color:var(--color-text-subtitle); text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0; }
+.fqc-loaded-filename { flex:1; font-size:13px; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fqc-loaded-action { background:none; border:none; cursor:pointer; color:var(--color-text-caption); display:inline-flex; align-items:center; padding:4px; border-radius:4px; flex-shrink:0; }
+.fqc-loaded-action:hover { background:var(--color-border); color:var(--color-text-primary); }
+
+/* Or divider */
+.fqc-or-row { display:flex; align-items:center; gap:12px; margin:14px 0; }
+.fqc-or-line { flex:1; height:1px; background:var(--color-border); }
+.fqc-or-text { font-size:11px; font-weight:600; color:var(--color-text-caption); text-transform:uppercase; letter-spacing:0.06em; }
+
+/* Upload zone */
+.fqc-upload-zone { border:2px dashed var(--color-border); background:var(--color-bg-grey50); border-radius:8px; padding:28px 16px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; transition:border-color 0.15s, background 0.15s; }
+.fqc-upload-zone.fqc-dragover { border-color:var(--color-blue); background:#f0f6ff; }
+.fqc-upload-title { font-size:13px; font-weight:500; color:var(--color-text-primary); }
+.fqc-upload-sub { font-size:12px; color:var(--color-text-caption); }
+.fqc-fmt-badges { display:flex; gap:6px; }
+.fqc-fmt-badge { padding:2px 8px; background:#ffffff; border:1px solid var(--color-border); color:var(--color-text-subtitle); font-size:11px; font-family:'DM Sans',sans-serif; border-radius:4px; }
+
+/* Empty state */
+.fqc-empty { display:flex; flex-direction:column; align-items:center; padding:64px 24px; gap:10px; }
+.fqc-empty-title { font-size:15px; font-weight:500; color:var(--color-text-primary); margin:4px 0 0; }
+.fqc-empty-sub { font-size:13px; color:var(--color-text-caption); margin:0; }
+
+/* Progress card */
+.fqc-progress-card { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; padding:20px 24px; margin-bottom:16px; }
+.fqc-progress-heading { font-size:14px; font-weight:500; color:var(--color-text-primary); margin:0 0 4px; }
+.fqc-progress-sub { font-size:12px; color:var(--color-text-caption); margin:0 0 12px; }
+.fqc-progress-track { width:100%; background:var(--color-bg-grey50); border-radius:4px; height:6px; overflow:hidden; }
+.fqc-progress-fill { height:100%; background:var(--color-blue); border-radius:4px; transition:width 0.1s linear; width:0%; }
+.fqc-progress-row { display:flex; justify-content:space-between; margin-top:6px; font-size:12px; color:var(--color-text-caption); }
+
+/* Results */
+#fqc-results {}
+.fqc-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+.fqc-stat-card { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; padding:16px; }
+.fqc-stat-val { font-size:26px; font-weight:700; color:var(--color-text-primary); line-height:1.1; font-family:'Instrument Sans',sans-serif; }
+.fqc-stat-lbl { font-size:12px; color:var(--color-text-caption); margin-top:4px; font-family:'DM Sans',sans-serif; }
+
+/* Table toolbar */
+.fqc-table-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.fqc-search-wrap { flex:1; position:relative; }
+.fqc-search-input { width:100%; padding:7px 12px 7px 44px; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:#ffffff; outline:none; box-sizing:border-box; }
+.fqc-search-input:focus { border-color:var(--color-blue); }
+.fqc-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--color-text-caption); pointer-events:none; display:flex; }
+/* .fqc-dl-report-btn replaced by .btn-primary-sm */
+
+/* Error table */
+.fqc-panel-card { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; }
+.fqc-table-scroll { overflow-x:auto; }
+.fqc-table { width:100%; border-collapse:collapse; font-size:13px; font-family:'DM Sans',sans-serif; }
+.fqc-th { padding:10px 14px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-subtitle); background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); cursor:pointer; user-select:none; white-space:nowrap; }
+.fqc-th:not([data-sort-col]) { cursor:default; }
+.fqc-th:hover:not([data-sort-col="none"]):not(.fqc-th-nosort) { background:#e8eaed; }
+.fqc-td { padding:10px 14px; border-bottom:1px solid var(--color-border); vertical-align:middle; color:var(--color-text-primary); }
+.fqc-td-top { vertical-align:top; }
+.fqc-tr:last-child .fqc-td { border-bottom:none; }
+.fqc-tr:hover .fqc-td { background:var(--color-bg-grey50); }
+.fqc-err-name { font-weight:500; color:var(--color-text-primary); }
+.fqc-badge-warn { display:inline-block; padding:2px 10px; border-radius:12px; background:var(--color-container-warn); color:var(--color-text-warning); font-weight:600; font-size:12px; }
+.fqc-badge-info { display:inline-block; padding:2px 10px; border-radius:12px; background:var(--color-bg-grey50); color:var(--color-text-caption); font-weight:600; font-size:12px; border:1px solid var(--color-border); }
+.fqc-sort-icon { margin-left:3px; vertical-align:middle; display:inline-block; opacity:0.3; }
+.fqc-sort-active { opacity:1; color:var(--color-blue); }
+.fqc-fix-box { background:var(--color-bg-grey50); border-left:3px solid var(--color-blue); padding:8px 10px; border-radius:4px; font-size:12px; color:var(--color-text-primary); line-height:1.5; }
+
+/* Icon action buttons use .btn-primary-sm and .btn-success from design system */
+.fqc-action-cell { display:flex; align-items:center; gap:6px; }
+
+/* Pagination */
+.fqc-pagination { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-top:1px solid var(--color-border); gap:8px; }
+.fqc-page-info { font-size:13px; color:var(--color-text-caption); white-space:nowrap; }
+.fqc-page-btn { padding:5px 10px; border:1px solid var(--color-border); border-radius:6px; background:#ffffff; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.fqc-page-btn:hover:not(:disabled) { background:var(--color-bg-grey50); }
+.fqc-page-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.fqc-page-size { padding:4px 8px; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; background:#ffffff; cursor:pointer; }
+
+/* Download report dropdown */
+.fqc-dl-dropdown { display:none; position:fixed; z-index:9999; background:#ffffff; border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.10); padding:4px 0; min-width:180px; }
+.fqc-dl-opt { padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--color-border); }
+.fqc-dl-opt:last-child { border-bottom:none; }
+.fqc-dl-opt:hover { background:var(--color-bg-grey50); }
+.fqc-dl-opt-title { font-size:13px; color:var(--color-text-primary); font-weight:500; }
+.fqc-dl-opt-sub { font-size:11px; color:var(--color-text-caption); margin-top:2px; }
+
+/* Modal overlay */
+.fqc-modal-overlay { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; }
+.fqc-modal-overlay.fqc-open { display:flex; }
+.fqc-modal { background:#ffffff; border:1px solid var(--color-border); border-radius:8px; display:flex; flex-direction:column; overflow:hidden; }
+.fqc-modal-hdr { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid var(--color-border); gap:12px; flex-shrink:0; }
+.fqc-modal-heading { font-size:15px; font-weight:600; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; }
+.fqc-modal-close { background:none; border:none; cursor:pointer; color:var(--color-text-caption); padding:4px; display:flex; align-items:center; border-radius:4px; }
+.fqc-modal-close:hover { color:var(--color-text-primary); background:var(--color-bg-grey50); }
+.fqc-modal-body { flex:1; overflow-y:auto; }
+.fqc-modal-footer { padding:12px 20px; border-top:1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0; }
+
+/* Report false positives */
+.fqc-report-fp-btn { background:none; border:none; cursor:pointer; color:var(--color-blue); font-size:13px; font-family:'DM Sans',sans-serif; padding:0; white-space:nowrap; }
+.fqc-report-fp-btn:hover { text-decoration:underline; }
+.fqc-modal-title-row { display:flex; align-items:center; gap:8px; flex:1; min-width:0; overflow:hidden; }
+.fqc-modal-title-sep { color:var(--color-border); font-size:16px; flex-shrink:0; }
+
+/* View modal table */
+.fqc-modal-table { width:100%; border-collapse:collapse; font-size:12px; font-family:'DM Sans',sans-serif; }
+.fqc-modal-th { padding:9px 14px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-subtitle); background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); position:sticky; top:0; z-index:1; white-space:nowrap; }
+.fqc-modal-td { padding:9px 14px; border-bottom:1px solid var(--color-border); vertical-align:top; color:var(--color-text-caption); }
+.fqc-modal-td-id { font-weight:500; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; }
+.fqc-modal-tr:hover .fqc-modal-td { background:var(--color-bg-grey50); }
+.fqc-modal-tr:last-child .fqc-modal-td { border-bottom:none; }
+.fqc-flag-btn { padding:4px 8px; border-radius:4px; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+.fqc-flag-btn.fqc-unflagged { background:var(--color-bg-grey50); }
+.fqc-flag-btn.fqc-flagged { background:#fff0f0; }
+.fqc-flag-btn.fqc-unflagged svg { color:var(--color-text-inactive); }
+.fqc-flag-btn.fqc-flagged svg { color:var(--color-text-warning); }
+
+/* Settings modal */
+.fqc-settings-search { padding:10px 20px; border-bottom:1px solid var(--color-border); flex-shrink:0; }
+.fqc-settings-search-input { width:100%; padding:7px 12px; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; background:var(--color-bg-grey50); outline:none; box-sizing:border-box; color:var(--color-text-primary); }
+.fqc-settings-search-input:focus { border-color:var(--color-blue); background:#ffffff; }
+.fqc-settings-meta { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; border-bottom:1px solid var(--color-border); font-size:13px; flex-shrink:0; }
+.fqc-settings-body { overflow-y:auto; max-height:55vh; }
+.fqc-sel-btn { color:var(--color-blue); cursor:pointer; background:none; border:none; font-size:13px; font-family:'DM Sans',sans-serif; padding:0; }
+.fqc-cat-hdr { display:flex; align-items:center; gap:10px; padding:12px 20px; cursor:pointer; background:#ffffff; border-bottom:1px solid var(--color-border); }
+.fqc-cat-hdr:hover { background:var(--color-bg-grey50); }
+.fqc-cat-chev { transition:transform 0.18s ease; display:block; flex-shrink:0; }
+.fqc-cat-chev.fqc-chev-open { transform:rotate(180deg); }
+.fqc-cat-body { display:none; }
+.fqc-cat-body.fqc-cat-open { display:block; }
+.fqc-check-item { display:flex; align-items:center; gap:10px; padding:7px 20px 7px 44px; background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; }
+.fqc-check-item:hover { background:#eef0f4; }
+.fqc-check-item:last-child { border-bottom:none; }
+.fqc-check-item input[type="checkbox"] { cursor:pointer; accent-color:var(--color-blue); flex-shrink:0; }
+</style>
+
+<div id="feed-quality-check-page">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;">
+    <div>
+      <h1 class="fqc-title">Feed Quality Check</h1>
+      <p class="fqc-subtitle">Analyze your product feed for errors and best practice violations</p>
+    </div>
+  </div>
+  <div class="fqc-breadcrumb">
+    <a data-nav="issue-center">Tools</a> › Feed Quality Check
+  </div>
+
+  <!-- Controls bar: dropdowns left, Analyze + Settings right -->
+  <div class="fqc-controls">
+    <div class="fqc-controls-left">
+      <button class="fqc-dd-btn" id="fqc-client-btn">
+        <span id="fqc-client-label">Outdoor Research</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <button class="fqc-dd-btn" id="fqc-website-btn">
+        <span id="fqc-website-label">OutdoorResearch.com</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="fqc-controls-right">
+      <button class="btn-primary-sm" id="fqc-run-btn" disabled>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Analyze
+      </button>
+      <button class="btn-outline" id="fqc-settings-btn" title="Settings" style="padding:0 9px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Feed source card -->
+  <div class="fqc-source-card">
+
+    <!-- GMC fetch row -->
+    <div class="fqc-gmc-row">
+      <button class="fqc-gmc-pill" id="fqc-gmc-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>
+        Fetch from GMC
+      </button>
+      <span class="fqc-gmc-fetching" id="fqc-gmc-fetching-text"></span>
+    </div>
+    <div id="fqc-gmc-loaded-row" style="display:none;"></div>
+
+    <!-- Or divider -->
+    <div class="fqc-or-row">
+      <div class="fqc-or-line"></div>
+      <span class="fqc-or-text">or</span>
+      <div class="fqc-or-line"></div>
+    </div>
+
+    <!-- Upload zone (full-width) -->
+    <div class="fqc-upload-zone" id="fqc-upload-zone">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-text-inactive)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <div class="fqc-upload-title">Drop your file here or click to upload</div>
+      <div class="fqc-upload-sub">Supports CSV, TSV, and ZIP files up to 100 MB</div>
+      <div class="fqc-fmt-badges">
+        <span class="fqc-fmt-badge">CSV</span>
+        <span class="fqc-fmt-badge">TSV</span>
+        <span class="fqc-fmt-badge">ZIP</span>
+      </div>
+      <input type="file" id="fqc-file-input" accept=".csv,.tsv,.zip" style="display:none;">
+    </div>
+    <div id="fqc-upload-loaded-row" style="display:none;"></div>
+
+  </div>
+
+  <!-- Empty state -->
+  <div class="fqc-empty" id="fqc-empty">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-text-inactive)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+    <p class="fqc-empty-title">No analysis results yet</p>
+    <p class="fqc-empty-sub">Fetch your feed from GMC or upload a file, then click Analyze.</p>
+  </div>
+
+  <!-- Progress card -->
+  <div class="fqc-progress-card" id="fqc-progress-card" style="display:none;">
+    <p class="fqc-progress-heading">Analyzing feed...</p>
+    <p class="fqc-progress-sub" id="fqc-progress-sub">Starting analysis...</p>
+    <div class="fqc-progress-track">
+      <div class="fqc-progress-fill" id="fqc-progress-fill"></div>
+    </div>
+    <div class="fqc-progress-row">
+      <span id="fqc-progress-pct">0%</span>
+      <span id="fqc-progress-checks">0 / 47 checks</span>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="fqc-results" style="display:none;">
+
+    <!-- 4 stat cards in a row -->
+    <div class="fqc-stats-row">
+      <div class="fqc-stat-card">
+        <div class="fqc-stat-val">1,284</div>
+        <div class="fqc-stat-lbl">Total Errors</div>
+      </div>
+      <div class="fqc-stat-card">
+        <div class="fqc-stat-val">4,847</div>
+        <div class="fqc-stat-lbl">Total SKUs Checked</div>
+      </div>
+      <div class="fqc-stat-card">
+        <div class="fqc-stat-val">23</div>
+        <div class="fqc-stat-lbl">Failed Checks</div>
+      </div>
+      <div class="fqc-stat-card">
+        <div class="fqc-stat-val">3.84s</div>
+        <div class="fqc-stat-lbl">Processing Time</div>
+      </div>
+    </div>
+
+    <!-- Search + Download Report -->
+    <div class="fqc-table-toolbar">
+      <div class="fqc-search-wrap">
+        <span class="fqc-search-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="text" class="fqc-search-input" id="fqc-search-input" placeholder="Search checks...">
+      </div>
+      <button class="btn-primary-sm" id="fqc-dl-report-btn">
+        Download Report
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Error table -->
+    <div class="fqc-panel-card" style="padding:0;">
+      <div class="fqc-table-scroll" id="fqc-table-scroll">
+        <table class="fqc-table">
+          <thead>
+            <tr>
+              <th class="fqc-th" style="width:38%;" data-sort-col="name">
+                Best Practice
+                <span class="fqc-sort-icon" id="fqc-sort-name">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+                </span>
+              </th>
+              <th class="fqc-th" style="width:16%;" data-sort-col="count">
+                Problem Count
+                <span class="fqc-sort-icon fqc-sort-active" id="fqc-sort-count">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M19 12l-7 7-7-7"/></svg>
+                </span>
+              </th>
+              <th class="fqc-th fqc-th-nosort" style="width:100px;">Action</th>
+              <th class="fqc-th fqc-th-nosort" style="width:46%;">How to Fix</th>
+            </tr>
+          </thead>
+          <tbody id="fqc-errors-tbody"></tbody>
+        </table>
+      </div>
+      <div class="fqc-pagination">
+        <button class="btn-outline btn-sm" id="fqc-prev-btn">← Previous</button>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="fqc-page-info" id="fqc-page-info">Showing 1–20 of 23</span>
+          <select class="fqc-page-size" id="fqc-page-size">
+            <option value="10">10 / page</option>
+            <option value="20" selected>20 / page</option>
+            <option value="50">50 / page</option>
+            <option value="100">100 / page</option>
+          </select>
+        </div>
+        <button class="btn-outline btn-sm" id="fqc-next-btn">Next →</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Dropdown panels -->
+<div class="fqc-dd-panel" id="fqc-client-panel"></div>
+<div class="fqc-dd-panel" id="fqc-website-panel"></div>
+<div class="fqc-dl-dropdown" id="fqc-dl-report-panel">
+  <div class="fqc-dl-opt" data-dl-report="full">
+    <div class="fqc-dl-opt-title">Full Report</div>
+    <div class="fqc-dl-opt-sub">With summary header</div>
+  </div>
+  <div class="fqc-dl-opt" data-dl-report="csv">
+    <div class="fqc-dl-opt-title">CSV Only</div>
+    <div class="fqc-dl-opt-sub">Without summary</div>
+  </div>
+</div>
+
+<!-- View Details Modal -->
+<div class="fqc-modal-overlay" id="fqc-view-modal">
+  <div class="fqc-modal" style="width:80vw;height:80vh;">
+    <div class="fqc-modal-hdr" style="flex-wrap:wrap;gap:8px;">
+      <div class="fqc-modal-title-row">
+        <span class="fqc-modal-heading" id="fqc-view-title">Detailed errors</span>
+        <span class="fqc-modal-title-sep">|</span>
+        <button class="fqc-report-fp-btn" id="fqc-report-fp-btn">Report false positives (0)</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-primary);cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;">
+          <input type="checkbox" id="fqc-flag-all" style="cursor:pointer;accent-color:var(--color-blue);">
+          Flag all on page
+        </label>
+        <span style="font-size:13px;color:var(--color-text-caption);white-space:nowrap;" id="fqc-view-page-info">Page 1 of 1</span>
+        <select class="fqc-page-size" id="fqc-view-page-size">
+          <option value="10" selected>10 / page</option>
+          <option value="20">20 / page</option>
+          <option value="50">50 / page</option>
+        </select>
+        <button class="btn-outline btn-sm" id="fqc-view-dl-btn" title="Download CSV" style="gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          CSV
+        </button>
+        <button class="fqc-modal-close" id="fqc-view-close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div style="padding:8px 20px;border-bottom:1px solid var(--color-border);flex-shrink:0;">
+      <span style="font-size:13px;color:var(--color-text-caption);" id="fqc-view-showing"></span>
+    </div>
+    <div class="fqc-modal-body">
+      <table class="fqc-modal-table">
+        <thead>
+          <tr>
+            <th class="fqc-modal-th" style="width:11%;">Product ID</th>
+            <th class="fqc-modal-th" style="width:26%;">Details</th>
+            <th class="fqc-modal-th" style="width:13%;">Affected Field</th>
+            <th class="fqc-modal-th" style="width:42%;">Value</th>
+            <th class="fqc-modal-th" style="width:70px;">Flag</th>
+          </tr>
+        </thead>
+        <tbody id="fqc-view-tbody"></tbody>
+      </table>
+    </div>
+    <div class="fqc-modal-footer">
+      <button class="btn-outline btn-sm" id="fqc-view-prev">← Previous</button>
+      <span class="fqc-page-info" id="fqc-view-foot-info">Page 1 of 1</span>
+      <button class="btn-outline btn-sm" id="fqc-view-next">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="fqc-modal-overlay" id="fqc-settings-modal">
+  <div class="fqc-modal" style="width:min(900px,80vw);max-height:92vh;">
+    <div class="fqc-modal-hdr" style="flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="fqc-modal-heading">Quality Check Settings</span>
+      </div>
+      <button class="fqc-modal-close" id="fqc-settings-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="fqc-settings-search">
+      <input type="text" class="fqc-settings-search-input" id="fqc-settings-search-input" placeholder="Search checks...">
+    </div>
+    <div class="fqc-settings-meta">
+      <span id="fqc-settings-count" style="color:var(--color-text-caption);font-size:13px;">— checks selected</span>
+      <div style="display:flex;gap:14px;">
+        <button class="fqc-sel-btn" id="fqc-select-all-btn">Select All</button>
+        <button class="fqc-sel-btn" id="fqc-clear-all-btn">Clear All</button>
+      </div>
+    </div>
+    <div class="fqc-settings-body" id="fqc-settings-body"></div>
+  </div>
+</div>
