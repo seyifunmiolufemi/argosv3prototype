@@ -1143,6 +1143,16 @@ var ISSUES = [
     else m.classList.add('open');
   }
 
+  /* ── role-based sidebar visibility ── */
+  function applySidebarRole() {
+    var role = window.APP_ROLE || 'analyst'; // default analyst
+    var clientMgmt = document.getElementById('grp-clientmgmt');
+    var settings   = document.getElementById('grp-settings');
+    if (clientMgmt) clientMgmt.style.display = role === 'client' ? 'none' : '';
+    if (settings)   settings.style.display   = role === 'client' ? '' : 'none';
+  }
+  window.applySidebarRole = applySidebarRole;
+
   /* ── sidebar group toggle ── */
   function initSidebar() {
     document.querySelectorAll('.sb-group-hdr').forEach(function (hdr) {
@@ -1251,6 +1261,9 @@ var ISSUES = [
         }
       });
     });
+
+    /* role-based sidebar visibility */
+    applySidebarRole();
 
     /* collapse toggle */
     var toggleBtn = $('sb-toggle');
