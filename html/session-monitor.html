@@ -35,7 +35,8 @@
 /* Search */
 .sm-search-wrap { display:flex; align-items:center; gap:8px; border:1px solid var(--color-border); border-radius:8px; background:var(--color-white); padding:0 10px; margin-bottom:14px; }
 .sm-search-icon { color:var(--color-text-caption); pointer-events:none; display:flex; flex-shrink:0; }
-.sm-search-input { flex:1; padding:8px 0; border:none; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; }
+/* nested selector beats styles.css input[type="text"] specificity */
+.sm-search-wrap .sm-search-input { flex:1; padding:8px 0; border:none; border-radius:0; height:auto; width:auto; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; box-shadow:none; }
 .sm-search-wrap:focus-within { border-color:var(--color-blue); }
 
 /* User table */

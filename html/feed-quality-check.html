@@ -74,7 +74,8 @@
 .fqc-search-wrap { flex:1; display:flex; align-items:center; gap:8px; border:1px solid var(--color-border); border-radius:8px; background:#ffffff; padding:0 10px; }
 .fqc-search-wrap:focus-within { border-color:var(--color-blue); }
 .fqc-search-icon { color:var(--color-text-caption); pointer-events:none; display:flex; flex-shrink:0; }
-.fqc-search-input { flex:1; padding:7px 0; border:none; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; }
+/* nested selector beats styles.css input[type="text"] specificity */
+.fqc-search-wrap .fqc-search-input { flex:1; padding:7px 0; border:none; border-radius:0; height:auto; width:auto; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; box-shadow:none; }
 /* .fqc-dl-report-btn replaced by .btn-primary-sm */
 
 /* Error table */
