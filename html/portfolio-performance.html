@@ -10,10 +10,7 @@
 .pp-dd-item:hover { background:var(--color-bg-grey50); }
 .pp-dd-item.pp-dd-sel { color:var(--color-blue); font-weight:600; }
 
-/* Primary action button */
-.pp-btn-primary { padding:7px 14px; border:1px solid #1d56c1; border-radius:8px; background:#346ed9; color:#fff; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.12); }
-.pp-btn-primary:hover { background:#2a5cc7; }
-.pp-btn-primary:disabled { opacity:0.55; cursor:default; }
+/* Primary action buttons use design system .btn-primary-sm */
 
 /* Filter bar */
 .pp-filter-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
@@ -82,7 +79,7 @@ body.dark-mode .pp-th { background:var(--color-bg-grey50); }
       <h1 style="font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px;">Portfolio Performance</h1>
       <p style="font-size:13px; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; margin:0;">View performance metrics across all clients or websites in a sorted chart format.</p>
     </div>
-    <button id="pp-export-btn" class="pp-btn-primary">
+    <button id="pp-export-btn" class="btn-primary-sm">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
       Export
     </button>
@@ -174,7 +171,7 @@ body.dark-mode .pp-th { background:var(--color-bg-grey50); }
   <!-- Divider + Analyse button -->
   <div class="pp-divider"></div>
   <div style="margin-bottom:24px;">
-    <button id="pp-analyse-btn" class="pp-btn-primary">
+    <button id="pp-analyse-btn" class="btn-primary-sm">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       <span id="pp-analyse-label">Analyse</span>
     </button>

@@ -71,10 +71,10 @@
 
 /* Table toolbar */
 .fqc-table-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-.fqc-search-wrap { flex:1; position:relative; }
-.fqc-search-input { width:100%; padding:7px 12px 7px 44px; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:#ffffff; outline:none; box-sizing:border-box; }
-.fqc-search-input:focus { border-color:var(--color-blue); }
-.fqc-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--color-text-caption); pointer-events:none; display:flex; }
+.fqc-search-wrap { flex:1; display:flex; align-items:center; gap:8px; border:1px solid var(--color-border); border-radius:8px; background:#ffffff; padding:0 10px; }
+.fqc-search-wrap:focus-within { border-color:var(--color-blue); }
+.fqc-search-icon { color:var(--color-text-caption); pointer-events:none; display:flex; flex-shrink:0; }
+.fqc-search-input { flex:1; padding:7px 0; border:none; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; }
 /* .fqc-dl-report-btn replaced by .btn-primary-sm */
 
 /* Error table */
