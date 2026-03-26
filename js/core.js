@@ -1152,6 +1152,14 @@ var ISSUES = [
         if (this.classList.contains('sb-hdr-direct')) {
           var nav = this.getAttribute('data-nav');
           if (nav === 'client-management') {
+            // Clear all active states, then mark this header active
+            document.querySelectorAll('.sb-group-hdr').forEach(function(h) {
+              h.classList.remove('sb-hdr-active');
+              var c = h.querySelector('.sb-chev'); if (c) c.classList.remove('sb-chev-open');
+            });
+            document.querySelectorAll('.sb-kids').forEach(function(k) { k.classList.remove('sb-kids-open'); });
+            document.querySelectorAll('.sb-kid').forEach(function(k) { k.classList.remove('sb-kid-active'); });
+            this.classList.add('sb-hdr-active');
             if (typeof hideFeedDetailPages === 'function') hideFeedDetailPages();
             var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'none';
             if (typeof showClientManagementPage === 'function') showClientManagementPage();
