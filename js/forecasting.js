@@ -27,13 +27,14 @@
     client: 'Outdoor Research', website: 'OutdoorResearch.com',
     horizon: 'Next 90 Days', metrics: ['convVal','cost','cos'],
     budgetGoogle: 7200, budgetMsft: 1050, targetCos: 29,
-    advancedOpen: false,
+    advancedOpen: false, editMode: false,
+    scenariosOn: false, seasonalityOn: false,
     scenarios: [
       { name:'Conservative', budget: 6000, cos: 32 },
       { name:'Base',         budget: 8250, cos: 29 },
       { name:'Aggressive',   budget:11500, cos: 25 }
     ],
-    seasonality: { 0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0 },
+    seasonality: { 0:-8,1:-5,2:2,3:5,4:8,5:6,6:4,7:10,8:15,9:22,10:18,11:12 },
     seasonPage: 0,
     openDd: null
   };
@@ -52,6 +53,91 @@
   function fcDateLabel(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
   function fcMonthLabel(d){ return MONTH_ABBRS[d.getMonth()] + ' ' + d.getFullYear(); }
 
+  // ── Horizon in months ──────────────────────────────────────────────────────
+  function fcHorizonMonths() {
+    switch (_fcState.horizon) {
+      case 'Next 30 Days':   return 1;
+      case 'Next 60 Days':   return 2;
+      case 'Next 90 Days':   return 3;
+      case 'Next 6 Months':  return 6;
+      case 'Next 12 Months': return 12;
+      default:               return 3;
+    }
+  }
+
+  // ── Projected revenue helpers ──────────────────────────────────────────────
+  function fcScenarioProjRev(sc) {
+    var months = fcHorizonMonths();
+    var cos = (sc.cos || 0) / 100;
+    return cos > 0 ? sc.budget * months / cos : 0;
+  }
+  function fcBaseProjRev() {
+    var months = fcHorizonMonths();
+    var cos = _fcState.targetCos / 100;
+    return cos > 0 ? (_fcState.budgetGoogle + _fcState.budgetMsft) * months / cos : 0;
+  }
+
+  // ── 4-week rolling average ─────────────────────────────────────────────────
+  function fcRollingAvg(data, n) {
+    return data.map(function(_, i) {
+      if (data[i] == null) return null;
+      var slice = data.slice(Math.max(0, i - n + 1), i + 1).filter(function(v){ return v != null; });
+      return slice.length ? slice.reduce(function(a, b){ return a + b; }, 0) / slice.length : null;
+    });
+  }
+
+  // ── Seasonality cell background ────────────────────────────────────────────
+  function fcSeasonCellBg(val) {
+    if (val > 0) return 'var(--color-container-success)';
+    if (val < 0) return '#fff0f0';
+    return 'var(--color-bg-grey50)';
+  }
+  function fcSeasonCellClass(val) {
+    if (val > 0) return 'fc-season-cell fc-pos';
+    if (val < 0) return 'fc-season-cell fc-neg';
+    return 'fc-season-cell fc-zero';
+  }
+
+  // ── Edit mode ──────────────────────────────────────────────────────────────
+  function fcSetEditMode(editing) {
+    _fcState.editMode = editing;
+    var editableIds = ['fc-budget-google', 'fc-budget-msft', 'fc-target-cos'];
+    editableIds.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (editing) { el.removeAttribute('readonly'); }
+      else         { el.setAttribute('readonly', ''); }
+    });
+    var controls = document.getElementById('fc-edit-controls');
+    if (!controls) return;
+    if (editing) {
+      controls.innerHTML =
+        '<button class="fc-save-btn" id="fc-save-btn">Save</button>' +
+        '<button class="fc-cancel-btn" id="fc-cancel-btn">Cancel</button>';
+    } else {
+      controls.innerHTML =
+        '<button class="fc-edit-btn" id="fc-edit-btn">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+        'Edit</button>';
+    }
+  }
+
+  // ── Budget warnings ────────────────────────────────────────────────────────
+  function fcUpdateBudgetWarnings() {
+    var fields = [
+      { id: 'fc-budget-google', warnId: 'fc-warn-google', val: _fcState.budgetGoogle },
+      { id: 'fc-budget-msft',   warnId: 'fc-warn-msft',   val: _fcState.budgetMsft }
+    ];
+    fields.forEach(function(f) {
+      var inp  = document.getElementById(f.id);
+      var warn = document.getElementById(f.warnId);
+      if (!inp || !warn) return;
+      var isEmpty = !f.val || f.val === 0;
+      if (isEmpty && inp.value !== '') inp.value = '';
+      warn.style.display = isEmpty ? 'flex' : 'none';
+    });
+  }
+
   // ── Horizon weeks ──────────────────────────────────────────────────────────
   function fcHorizonWeeks() {
     switch (_fcState.horizon) {
@@ -68,7 +154,7 @@
   function fcSeasonFactor(d) {
     var m = d.getMonth();
     var base = [1.15,0.90,0.88,0.92,0.95,0.98,1.00,1.02,1.05,1.18,1.28,1.22][m];
-    var adj = 1 + (_fcState.seasonality[m] || 0) / 100;
+    var adj = _fcState.seasonalityOn ? 1 + (_fcState.seasonality[m] || 0) / 100 : 1;
     return base * adj;
   }
   function fcNoise(p){ return 1 + (Math.random() - 0.5) * p * 2; }
@@ -140,79 +226,108 @@
 
     var historical = fcGenHistorical();
     var forecast   = fcGenForecast(historical);
-    var allRows = historical.concat(forecast);
-    var todayIdx = historical.length - 1;
-    var labels = allRows.map(function(r){ return fcDateLabel(r.date); });
+    var allRows    = historical.concat(forecast);
+    var todayIdx   = historical.length - 1;
+    var labels     = allRows.map(function(r){ return fcDateLabel(r.date); });
+
+    var cs          = getComputedStyle(document.documentElement);
+    var gridColor   = cs.getPropertyValue('--color-border').trim()       || '#e2e6ef';
+    var tickColor   = cs.getPropertyValue('--color-text-caption').trim() || '#9ca3af';
+    var textPrimary = cs.getPropertyValue('--color-text-primary').trim() || '#0f0f0f';
 
     var datasets = [];
 
     _fcState.metrics.forEach(function(key, mi) {
       var meta = FC_METRICS.find(function(m){ return m.key === key; }) || FC_METRICS[0];
-      var col = ['#346ed9','#f59e0b','#10b981'][mi % 3];
-      var rgb = fcHexRgb(col);
+      var col  = ['#346ed9','#f59e0b','#10b981'][mi % 3];
+      var rgb  = fcHexRgb(col);
+      var colForecast = 'rgba(' + rgb + ',0.7)';
+      var yAxis = meta.axis === 'left' ? 'yLeft' : 'yRight';
 
-      // Historical (solid)
-      var histData = allRows.map(function(r, i){ return i <= todayIdx ? (r[key] || null) : null; });
-      // Forecast (dashed)
-      var fcstData = allRows.map(function(r, i){ return i >= todayIdx ? (r[key] || null) : null; });
-      // Confidence band
-      var hiKey = key + 'Hi', loKey = key + 'Lo';
-      var hiData = allRows.map(function(r, i){ return i >= todayIdx && r[hiKey] != null ? r[hiKey] : null; });
-      var loData = allRows.map(function(r, i){ return i >= todayIdx && r[loKey] != null ? r[loKey] : null; });
-
+      // Historical — solid 1.5px, COS smoothed with 4-week rolling avg
+      var histRaw  = allRows.map(function(r, i){ return i <= todayIdx ? (r[key] != null ? r[key] : null) : null; });
+      var histData = key === 'cos' ? fcRollingAvg(histRaw, 4) : histRaw;
       datasets.push({
         label: meta.label + ' (Historical)',
         data: histData, borderColor: col, backgroundColor: 'transparent',
-        fill: false, tension: 0.3, pointRadius: 3, pointHoverRadius: 5,
-        yAxisID: meta.axis === 'left' ? 'yLeft' : 'yRight',
-        borderWidth: 2, borderDash: [], spanGaps: false
-      });
-      datasets.push({
-        label: meta.label + ' (Forecast)',
-        data: fcstData, borderColor: col, backgroundColor: 'rgba('+rgb+',0.15)',
-        fill: { target: datasets.length + 1, above: 'rgba('+rgb+',0.08)' },
-        tension: 0.3, pointRadius: 2, pointHoverRadius: 5,
-        yAxisID: meta.axis === 'left' ? 'yLeft' : 'yRight',
-        borderWidth: 2, borderDash: [6,4], spanGaps: false
+        fill: false, tension: 0.3, pointRadius: 2, pointHoverRadius: 5,
+        yAxisID: yAxis, borderWidth: 1.5, borderDash: [], spanGaps: false,
+        _fcMetricKey: key, _fcType: 'historical'
       });
 
-      // Scenarios (if advanced open)
-      if (_fcState.advancedOpen) {
+      // Forecast — dashed 2px, 70% opacity
+      var fcstData = allRows.map(function(r, i){ return i >= todayIdx ? (r[key] != null ? r[key] : null) : null; });
+      datasets.push({
+        label: meta.label + ' (Forecast)',
+        data: fcstData, borderColor: colForecast, backgroundColor: 'transparent',
+        fill: false, tension: 0.3, pointRadius: 0, pointHoverRadius: 5,
+        yAxisID: yAxis, borderWidth: 2, borderDash: [5, 4], spanGaps: false,
+        _fcMetricKey: key, _fcType: 'forecast'
+      });
+
+      // Confidence interval: upper fills down to lower (±10%)
+      var hiKey = key + 'Hi', loKey = key + 'Lo';
+      var hiData = allRows.map(function(r, i){ return i > todayIdx && r[hiKey] != null ? r[hiKey] : null; });
+      var loData = allRows.map(function(r, i){ return i > todayIdx && r[loKey] != null ? r[loKey] : null; });
+      datasets.push({
+        label: meta.label + ' CI Upper',
+        data: hiData, borderColor: 'rgba(' + rgb + ',0)', backgroundColor: 'rgba(' + rgb + ',0.12)',
+        fill: '+1', tension: 0.3, pointRadius: 0, pointHoverRadius: 0,
+        yAxisID: yAxis, borderWidth: 0, spanGaps: false,
+        hideInLegend: true, _fcMetricKey: key, _fcType: 'ci'
+      });
+      datasets.push({
+        label: meta.label + ' CI Lower',
+        data: loData, borderColor: 'rgba(' + rgb + ',0)', backgroundColor: 'transparent',
+        fill: false, tension: 0.3, pointRadius: 0, pointHoverRadius: 0,
+        yAxisID: yAxis, borderWidth: 0, spanGaps: false,
+        hideInLegend: true, _fcMetricKey: key, _fcType: 'ci'
+      });
+
+      // Scenarios (if scenarios enabled)
+      if (_fcState.scenariosOn) {
         _fcState.scenarios.forEach(function(sc, si) {
-          var scData = fcGenScenarioForecast(sc, forecast);
-          var scCol = FC_SCENARIO_COLOURS[si % 3];
-          var fcstScData = allRows.map(function(r, i){ return i >= todayIdx ? (scData[i - todayIdx] ? scData[i - todayIdx][key] : null) : null; });
+          var scData     = fcGenScenarioForecast(sc, forecast);
+          var scCol      = FC_SCENARIO_COLOURS[si % 3];
+          var fcstScData = allRows.map(function(r, i){
+            return i >= todayIdx ? (scData[i - todayIdx] ? scData[i - todayIdx][key] : null) : null;
+          });
           datasets.push({
             label: meta.label + ' — ' + sc.name,
             data: fcstScData, borderColor: scCol, backgroundColor: 'transparent',
             fill: false, tension: 0.3, pointRadius: 0,
-            yAxisID: meta.axis === 'left' ? 'yLeft' : 'yRight',
-            borderWidth: 1.5, borderDash: [3,3], spanGaps: false
+            yAxisID: yAxis, borderWidth: 1.5, borderDash: [3, 3], spanGaps: false,
+            _fcMetricKey: key, _fcType: 'scenario'
           });
         });
       }
     });
 
-    // "Today" divider plugin
+    // Forecast region background + Today line
     var todayPlugin = {
       id: 'fcTodayLine',
+      beforeDraw: function(chart) {
+        var ctx = chart.ctx, ca = chart.chartArea, xAxis = chart.scales['x'];
+        if (!xAxis || !ca) return;
+        var x = xAxis.getPixelForValue(todayIdx);
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.03)';
+        ctx.fillRect(x, ca.top, ca.right - x, ca.bottom - ca.top);
+        ctx.restore();
+      },
       afterDraw: function(chart) {
-        var ctx = chart.ctx;
-        var xAxis = chart.scales['x'];
-        if (!xAxis) return;
+        var ctx = chart.ctx, ca = chart.chartArea, xAxis = chart.scales['x'];
+        if (!xAxis || !ca) return;
         var x = xAxis.getPixelForValue(todayIdx);
         ctx.save();
         ctx.strokeStyle = 'rgba(0,0,0,0.25)';
         ctx.lineWidth = 1.5;
-        ctx.setLineDash([4,3]);
-        ctx.beginPath();
-        ctx.moveTo(x, chart.chartArea.top);
-        ctx.lineTo(x, chart.chartArea.bottom);
-        ctx.stroke();
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(x, ca.top); ctx.lineTo(x, ca.bottom); ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = 'rgba(0,0,0,0.45)';
         ctx.font = '11px "DM Sans", sans-serif';
-        ctx.fillText('Today', x + 4, chart.chartArea.top + 14);
+        ctx.fillText('Today', x + 4, ca.top + 14);
         ctx.restore();
       }
     };
@@ -226,40 +341,73 @@
         responsive: true, maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {
-          legend: { position: 'bottom', labels: { boxWidth: 12, font: { family:"'DM Sans',sans-serif", size:12 } } },
-          tooltip: {
-            backgroundColor: '#fff', borderColor: '#e2e6ef', borderWidth: 1,
-            titleColor: '#0f0f0f', bodyColor: '#4b5563', padding: 8, cornerRadius: 4,
-            callbacks: {
-              label: function(ctx) {
-                if (ctx.parsed.y == null) return null;
-                var dsLabel = ctx.dataset.label || '';
-                var isForecast = dsLabel.includes('Forecast') || dsLabel.includes('Conservative') || dsLabel.includes('Base') || dsLabel.includes('Aggressive');
-                var keyIdx = _fcState.metrics.indexOf(['convVal','cost','cos'][Math.floor(ctx.datasetIndex / (isForecast ? 2 : 2))]);
-                var meta = FC_METRICS[keyIdx] || FC_METRICS[0];
-                var suffix = '';
-                var rowIdx = ctx.dataIndex;
-                if (isForecast && rowIdx >= todayIdx) {
-                  var row = forecast[rowIdx - todayIdx];
-                  if (row) {
-                    var hiKey = meta.key + 'Hi', loKey = meta.key + 'Lo';
-                    if (row[hiKey] != null) suffix = ' (' + fcFmt(row[loKey], meta.fmt) + ' – ' + fcFmt(row[hiKey], meta.fmt) + ')';
-                  }
-                }
-                return dsLabel + ': ' + fcFmt(ctx.parsed.y, meta.fmt) + suffix;
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 12,
+              font: { family: "'DM Sans',sans-serif", size: 12 },
+              color: tickColor,
+              filter: function(item, data) {
+                return !data.datasets[item.datasetIndex].hideInLegend;
               }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#ffffff',
+            borderColor: gridColor,
+            borderWidth: 1,
+            titleColor: textPrimary,
+            bodyColor: textPrimary,
+            padding: 8,
+            cornerRadius: 4,
+            callbacks: {
+              label: (function(fc) {
+                return function(ctx) {
+                  if (ctx.parsed.y == null) return null;
+                  var ds = ctx.dataset;
+                  if (ds.hideInLegend || ds._fcType === 'ci') return null;
+                  var meta = FC_METRICS.find(function(m){ return m.key === ds._fcMetricKey; });
+                  if (!meta) return null;
+                  var val    = fcFmt(ctx.parsed.y, meta.fmt);
+                  var rowIdx = ctx.dataIndex;
+                  if (rowIdx <= todayIdx) {
+                    return ' ' + meta.label + ': ' + val + ' (Historical)';
+                  }
+                  var fRow   = fc[rowIdx - todayIdx - 1];
+                  var suffix = '';
+                  if (fRow) {
+                    var loV = fRow[meta.key + 'Lo'], hiV = fRow[meta.key + 'Hi'];
+                    if (loV != null) suffix = ' (range: ' + fcFmt(loV, meta.fmt) + ' – ' + fcFmt(hiV, meta.fmt) + ')';
+                  }
+                  if (ds._fcType === 'scenario') {
+                    var scName = ds.label.split(' — ')[1] || '';
+                    return ' ' + meta.label + ' (' + scName + '): ' + val;
+                  }
+                  return ' ' + meta.label + ' (Forecast): ' + val + suffix;
+                };
+              }(forecast.slice()))
             }
           }
         },
         scales: {
-          x: { ticks: { font:{family:"'DM Sans',sans-serif",size:11}, maxRotation:45, autoSkip:true, maxTicksLimit:14 }, grid: { color:'rgba(0,0,0,0.05)' } },
-          yLeft: { type:'linear', position:'left', ticks:{ font:{family:"'DM Sans',sans-serif",size:11}, callback:function(v){ return fcFmt(v,'currency'); } }, grid:{ color:'rgba(0,0,0,0.05)' } },
-          yRight: { type:'linear', position:'right', ticks:{ font:{family:"'DM Sans',sans-serif",size:11}, callback:function(v){ return (v*100).toFixed(1)+'%'; } }, grid:{ drawOnChartArea:false } }
+          x: {
+            ticks: { font: { family:"'DM Sans',sans-serif", size:11 }, color: tickColor, maxRotation:45, autoSkip:true, maxTicksLimit:14 },
+            grid:  { color: gridColor }
+          },
+          yLeft: {
+            type: 'linear', position: 'left',
+            ticks: { font: { family:"'DM Sans',sans-serif", size:11 }, color: tickColor, callback: function(v){ return fcFmt(v,'currency'); } },
+            grid:  { color: gridColor }
+          },
+          yRight: {
+            type: 'linear', position: 'right',
+            ticks: { font: { family:"'DM Sans',sans-serif", size:11 }, color: tickColor, callback: function(v){ return (v*100).toFixed(1)+'%'; } },
+            grid:  { drawOnChartArea: false }
+          }
         }
       }
     });
 
-    // Render summary cards
     fcRenderSummary(historical, forecast);
   }
 
@@ -300,7 +448,7 @@
       html += '<div class="fc-sum-val '+valClass+'">'+fcFmt(m.val, m.fmt)+'</div>';
       html += dHtml;
       // Scenario values
-      if (_fcState.advancedOpen) {
+      if (_fcState.scenariosOn) {
         html += '<div class="fc-scenario-vals">';
         _fcState.scenarios.forEach(function(sc, si) {
           var scData = fcGenScenarioForecast(sc, forecast.slice(0, fwdWeeks));
@@ -317,49 +465,90 @@
 
   // ── Implied revenue ────────────────────────────────────────────────────────
   function fcUpdateImpliedRev() {
-    var el = document.getElementById('fc-implied-rev');
+    var el     = document.getElementById('fc-implied-rev');
+    var noteEl = document.getElementById('fc-implied-rev-note');
     if (!el) return;
+    var hasBudget = (_fcState.budgetGoogle > 0 || _fcState.budgetMsft > 0);
+    if (!hasBudget) {
+      el.value = '—';
+      if (noteEl) noteEl.style.display = 'block';
+      return;
+    }
+    if (noteEl) noteEl.style.display = 'none';
     var totalBudget = (_fcState.budgetGoogle + _fcState.budgetMsft) * 12;
     var cos = _fcState.targetCos / 100;
     var rev = cos > 0 ? totalBudget / cos : 0;
     el.value = '$' + Math.round(rev).toLocaleString();
   }
 
+  // ── Scenario projected revenue colour (position-based) ────────────────────
+  function fcScenarioRevColor(si, total) {
+    if (total === 1) return 'var(--color-text-primary)';
+    if (si === 0) return 'var(--color-text-warning)';            // Conservative
+    if (si === total - 1) return 'var(--color-text-success)';    // Aggressive
+    return 'var(--color-text-primary)';                          // Base / middle
+  }
+
   // ── Scenarios list ─────────────────────────────────────────────────────────
   function fcRenderScenarios() {
     var list = document.getElementById('fc-scenarios-list');
     if (!list) return;
+    var total = _fcState.scenarios.length;
     list.innerHTML = '';
     _fcState.scenarios.forEach(function(sc, si) {
+      var rev = fcScenarioProjRev(sc);
+      var revColor = fcScenarioRevColor(si, total);
       var row = document.createElement('div');
       row.className = 'fc-scenario-row';
-      row.style.cssText = 'display:grid;grid-template-columns:140px 130px 100px 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--color-border);';
+      row.style.cssText = 'display:grid;grid-template-columns:140px 130px 100px 120px auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--color-border);';
       row.innerHTML =
         '<input class="fc-scenario-name" style="border:1px solid var(--color-border);border-radius:6px;padding:6px 10px;font-family:\'DM Sans\',sans-serif;font-size:13px;color:'+FC_SCENARIO_COLOURS[si]+';font-weight:500;" value="'+sc.name+'" data-sc="'+si+'" data-field="name">'+
         '<input class="fc-scenario-budget" style="border:1px solid var(--color-border);border-radius:6px;padding:6px 10px;font-family:\'DM Sans\',sans-serif;font-size:13px;" value="'+sc.budget+'" data-sc="'+si+'" data-field="budget" type="number">'+
         '<input class="fc-scenario-cos" style="border:1px solid var(--color-border);border-radius:6px;padding:6px 10px;font-family:\'DM Sans\',sans-serif;font-size:13px;" value="'+sc.cos+'" data-sc="'+si+'" data-field="cos" type="number">'+
+        '<span data-sc-rev="'+si+'" style="font-size:13px;font-weight:600;font-family:\'DM Sans\',sans-serif;color:'+revColor+';">'+fcFmt(rev,'currency')+'</span>'+
         '<button style="background:none;border:none;cursor:pointer;color:var(--color-text-caption);font-size:16px;padding:0 4px;" data-remove-sc="'+si+'">×</button>';
       list.appendChild(row);
     });
+    fcApplySectionToggleUI('scenarios', _fcState.scenariosOn);
   }
 
-  // ── Seasonality sliders ────────────────────────────────────────────────────
+  // ── Seasonality grid (all 12 months) ──────────────────────────────────────
   function fcRenderSeasonMonths() {
     var el = document.getElementById('fc-season-months');
-    var label = document.getElementById('fc-season-range-label');
     if (!el) return;
-    var startM = _fcState.seasonPage * 3;
-    if (label) {
-      var endM = Math.min(startM + 2, 11);
-      label.textContent = MONTH_ABBRS[startM] + ' – ' + MONTH_ABBRS[endM];
-    }
     el.innerHTML = '';
-    for (var i = startM; i < startM + 3 && i <= 11; i++) {
+    for (var i = 0; i <= 11; i++) {
+      var val = _fcState.seasonality[i] || 0;
       var div = document.createElement('div');
-      div.className = 'fc-season-month';
-      div.innerHTML = '<label>'+MONTH_ABBRS[i]+'</label><input type="number" style="width:70px;padding:5px 8px;border:1px solid var(--color-border);border-radius:6px;font-size:12px;font-family:\'DM Sans\',sans-serif;" placeholder="0" value="'+(_fcState.seasonality[i]||0)+'" data-season-month="'+i+'">';
+      div.className = fcSeasonCellClass(val);
+      div.style.background = fcSeasonCellBg(val);
+      div.innerHTML = '<label>' + MONTH_ABBRS[i] + '</label>' +
+        '<div class="fc-season-input-row">' +
+        '<input type="number" value="' + val + '" placeholder="0" data-season-month="' + i + '" style="flex:1;min-width:0;">' +
+        '<span style="font-size:12px;color:var(--color-text-caption);flex-shrink:0;">%</span>' +
+        '</div>';
       el.appendChild(div);
     }
+    fcApplySectionToggleUI('seasonality', _fcState.seasonalityOn);
+  }
+
+  // ── Section toggle UI ──────────────────────────────────────────────────────
+  function fcApplySectionToggleUI(section, on) {
+    var isSc      = section === 'scenarios';
+    var toggleId  = isSc ? 'fc-scenarios-toggle'       : 'fc-season-toggle';
+    var labelId   = isSc ? 'fc-scenarios-toggle-label' : 'fc-season-toggle-label';
+    var bannerId  = isSc ? 'fc-scenarios-off-banner'   : 'fc-season-off-banner';
+    var contentId = isSc ? 'fc-scenarios-content'      : 'fc-season-months';
+
+    var toggleEl  = document.getElementById(toggleId);
+    var labelEl   = document.getElementById(labelId);
+    var bannerEl  = document.getElementById(bannerId);
+    var contentEl = document.getElementById(contentId);
+
+    if (toggleEl)  { toggleEl.classList.toggle('on', on); toggleEl.setAttribute('aria-pressed', String(on)); }
+    if (labelEl)   { labelEl.textContent = on ? 'On' : 'Off'; }
+    if (bannerEl)  { bannerEl.style.display = on ? 'none' : 'flex'; }
+    if (contentEl) { contentEl.classList.toggle('fc-section-off', !on); }
   }
 
   // ── Dropdowns ──────────────────────────────────────────────────────────────
@@ -477,6 +666,22 @@
       if (e.target.closest('#fc-horizon-btn')) { fcBuildHorizonDd(); fcOpenDd('fc-horizon-panel'); return; }
       if (e.target.closest('#fc-metric-btn'))  { fcBuildMetricDd();  fcOpenDd('fc-metric-panel');  return; }
 
+      // Section toggles (Scenarios / Seasonality)
+      var togBtn = e.target.closest('[data-fc-toggle]');
+      if (togBtn && !e.target.closest('#fc-advanced-toggle')) {
+        var togSection = togBtn.getAttribute('data-fc-toggle');
+        if (togSection === 'scenarios') {
+          _fcState.scenariosOn = !_fcState.scenariosOn;
+          fcApplySectionToggleUI('scenarios', _fcState.scenariosOn);
+          fcRenderChart();
+        } else if (togSection === 'seasonality') {
+          _fcState.seasonalityOn = !_fcState.seasonalityOn;
+          fcApplySectionToggleUI('seasonality', _fcState.seasonalityOn);
+          fcRenderChart();
+        }
+        return;
+      }
+
       // Advanced toggle
       if (e.target.closest('#fc-advanced-toggle')) {
         _fcState.advancedOpen = !_fcState.advancedOpen;
@@ -505,6 +710,36 @@
         fcRenderScenarios(); fcRenderChart(); return;
       }
 
+      // Edit mode
+      if (e.target.closest('#fc-edit-btn')) {
+        _fcState._prevBudgetGoogle = _fcState.budgetGoogle;
+        _fcState._prevBudgetMsft   = _fcState.budgetMsft;
+        _fcState._prevTargetCos    = _fcState.targetCos;
+        fcSetEditMode(true); return;
+      }
+      if (e.target.closest('#fc-save-btn')) {
+        _fcState.budgetGoogle = parseFloat(document.getElementById('fc-budget-google').value) || 0;
+        _fcState.budgetMsft   = parseFloat(document.getElementById('fc-budget-msft').value)   || 0;
+        _fcState.targetCos    = parseFloat(document.getElementById('fc-target-cos').value)    || 29;
+        fcSetEditMode(false);
+        fcUpdateBudgetWarnings();
+        fcUpdateImpliedRev();
+        if (_fcState.advancedOpen) fcRenderScenarios();
+        fcRenderChart(); return;
+      }
+      if (e.target.closest('#fc-cancel-btn')) {
+        _fcState.budgetGoogle = _fcState._prevBudgetGoogle;
+        _fcState.budgetMsft   = _fcState._prevBudgetMsft;
+        _fcState.targetCos    = _fcState._prevTargetCos;
+        document.getElementById('fc-budget-google').value = _fcState.budgetGoogle || '';
+        document.getElementById('fc-budget-msft').value   = _fcState.budgetMsft   || '';
+        document.getElementById('fc-target-cos').value    = _fcState.targetCos;
+        fcSetEditMode(false);
+        fcUpdateBudgetWarnings();
+        fcUpdateImpliedRev();
+        fcRenderChart(); return;
+      }
+
       // Reset
       if (e.target.closest('#fc-reset-btn')) {
         _fcState.budgetGoogle = FC_DEFAULTS.budgetGoogle;
@@ -513,15 +748,14 @@
         document.getElementById('fc-budget-google').value = FC_DEFAULTS.budgetGoogle;
         document.getElementById('fc-budget-msft').value   = FC_DEFAULTS.budgetMsft;
         document.getElementById('fc-target-cos').value    = FC_DEFAULTS.targetCos;
-        fcUpdateImpliedRev(); fcRenderChart(); return;
+        fcUpdateBudgetWarnings(); fcUpdateImpliedRev(); fcRenderChart(); return;
       }
 
-      // Seasonality prev/next
-      if (e.target.closest('#fc-season-prev')) {
-        if (_fcState.seasonPage > 0) { _fcState.seasonPage--; fcRenderSeasonMonths(); } return;
-      }
-      if (e.target.closest('#fc-season-next')) {
-        if (_fcState.seasonPage < 3) { _fcState.seasonPage++; fcRenderSeasonMonths(); } return;
+      // Reset seasonality
+      if (e.target.closest('[data-fc-reset-season]')) {
+        e.preventDefault();
+        _fcState.seasonality = { 0:-8,1:-5,2:2,3:5,4:8,5:6,6:4,7:10,8:15,9:22,10:18,11:12 };
+        fcRenderSeasonMonths(); fcRenderChart(); return;
       }
 
       // Header nav
@@ -533,7 +767,7 @@
       }
     });
 
-    // Input changes — planning fields
+    // Input changes — planning fields (only active when in edit mode, readonly otherwise)
     ['fc-budget-google','fc-budget-msft','fc-target-cos'].forEach(function(id) {
       var el = document.getElementById(id);
       if (!el) return;
@@ -541,32 +775,75 @@
         _fcState.budgetGoogle = parseFloat(document.getElementById('fc-budget-google').value) || 0;
         _fcState.budgetMsft   = parseFloat(document.getElementById('fc-budget-msft').value)   || 0;
         _fcState.targetCos    = parseFloat(document.getElementById('fc-target-cos').value)    || 29;
-        fcUpdateImpliedRev(); fcRenderChart();
+        fcUpdateBudgetWarnings();
+        fcUpdateImpliedRev();
+        if (_fcState.advancedOpen) fcRenderScenarios();
+        fcRenderChart();
       });
     });
 
-    // Scenario inputs (delegated via change on document)
-    document.addEventListener('change', function(e) {
+    // Reactive input delegation — scenarios + seasonality
+    document.addEventListener('input', function(e) {
       var page = document.getElementById('forecasting-page');
       if (!page || page.style.display === 'none') return;
 
-      var scInput = e.target.closest('[data-sc]');
-      if (scInput && scInput.getAttribute('data-field')) {
-        var si = parseInt(scInput.getAttribute('data-sc'));
+      var scInput = e.target.closest('[data-sc][data-field]');
+      if (scInput) {
+        var si    = parseInt(scInput.getAttribute('data-sc'));
         var field = scInput.getAttribute('data-field');
         if (_fcState.scenarios[si]) {
-          _fcState.scenarios[si][field] = field === 'name' ? scInput.value : parseFloat(scInput.value)||0;
-          fcRenderChart();
+          _fcState.scenarios[si][field] = field === 'name' ? scInput.value : parseFloat(scInput.value) || 0;
+          if (field !== 'name') {
+            var revEl = document.querySelector('[data-sc-rev="' + si + '"]');
+            if (revEl) {
+              var rev = fcScenarioProjRev(_fcState.scenarios[si]);
+              revEl.textContent = fcFmt(rev, 'currency');
+              revEl.style.color = fcScenarioRevColor(si, _fcState.scenarios.length);
+            }
+            fcRenderChart();
+          }
         }
         return;
       }
 
-      // Seasonality
       var seasonInput = e.target.closest('[data-season-month]');
       if (seasonInput) {
         var m = parseInt(seasonInput.getAttribute('data-season-month'));
         _fcState.seasonality[m] = parseFloat(seasonInput.value) || 0;
+        var cell = seasonInput.closest('.fc-season-cell');
+        if (cell) {
+          cell.style.background = fcSeasonCellBg(_fcState.seasonality[m]);
+          cell.className = fcSeasonCellClass(_fcState.seasonality[m]);
+        }
         fcRenderChart(); return;
+      }
+    });
+
+    // Info icon tooltips
+    document.addEventListener('mouseover', function(e) {
+      var page = document.getElementById('forecasting-page');
+      if (!page || page.style.display === 'none') return;
+      var tipEl   = e.target.closest('[data-fc-tip]');
+      var tooltip = document.getElementById('fc-info-tooltip');
+      if (!tooltip) return;
+      if (tipEl) {
+        tooltip.textContent = tipEl.getAttribute('data-fc-tip');
+        tooltip.style.display = 'block';
+        var rect = tipEl.getBoundingClientRect();
+        var ttW = 288;
+        tooltip.style.left = Math.min(rect.left, window.innerWidth - ttW - 8) + 'px';
+        tooltip.style.top  = (rect.bottom + 6) + 'px';
+      } else {
+        tooltip.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('mouseout', function(e) {
+      var page = document.getElementById('forecasting-page');
+      if (!page || page.style.display === 'none') return;
+      if (e.target.closest('[data-fc-tip]')) {
+        var tooltip = document.getElementById('fc-info-tooltip');
+        if (tooltip) tooltip.style.display = 'none';
       }
     });
   }
@@ -580,6 +857,8 @@
     page.style.display = 'block';
     window.scrollTo(0, 0);
     fcWireEvents();
+    fcSetEditMode(false);       // ensure fields start readonly
+    fcUpdateBudgetWarnings();
     fcUpdateImpliedRev();
     fcLoadChartJs(fcRenderChart);
   };
