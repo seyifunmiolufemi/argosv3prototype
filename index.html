@@ -51,8 +51,9 @@
       loadPartial('forecasting-container',        'html/forecasting.html'),
       loadPartial('search-term-grader-container',   'html/search-term-grader.html'),
       loadPartial('feed-quality-check-container',   'html/feed-quality-check.html'),
-      loadPartial('session-monitor-container',      'html/session-monitor.html'),
-      loadPartial('modals-container',               'html/modals-shared.html'),
+      loadPartial('session-monitor-container',         'html/session-monitor.html'),
+      loadPartial('portfolio-performance-container',  'html/portfolio-performance.html'),
+      loadPartial('modals-container',                 'html/modals-shared.html'),
     ]);
     // Load scripts after HTML is in the DOM
     var _v = Date.now();
@@ -79,6 +80,7 @@
     await loadScript('js/search-term-grader.js');
     await loadScript('js/feed-quality-check.js');
     await loadScript('js/session-monitor.js');
+    await loadScript('js/portfolio-performance.js');
   })();
   </script>
 

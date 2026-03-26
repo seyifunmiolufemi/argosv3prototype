@@ -616,7 +616,7 @@ var ISSUES = [
   }
 
   function hideFeedDetailPages() {
-    ['ic-list','db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page','pivot-page','line-chart-page','forecasting-page','search-term-grader-page','feed-quality-check-page','session-monitor-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    ['ic-list','db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page','pivot-page','line-chart-page','forecasting-page','search-term-grader-page','feed-quality-check-page','session-monitor-page','portfolio-performance-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
   }
   window.hideFeedDetailPages = hideFeedDetailPages;
 
@@ -1224,6 +1224,9 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'session-monitor') {
           if (typeof showSessionMonitorPage === 'function') showSessionMonitorPage();
+        }
+        if (this.getAttribute('data-nav') === 'portfolio') {
+          if (typeof showPortfolioPerformancePage === 'function') showPortfolioPerformancePage();
         }
       });
     });
