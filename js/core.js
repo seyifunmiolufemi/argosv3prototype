@@ -616,7 +616,7 @@ var ISSUES = [
   }
 
   function hideFeedDetailPages() {
-    ['ic-list','db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page','pivot-page','line-chart-page','forecasting-page','search-term-grader-page','feed-quality-check-page','session-monitor-page','portfolio-performance-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
+    ['ic-list','db-overview-page','add-import-page','configure-import-page','field-mapping-page','row-detail-page','add-export-page','permission-manager-page','annotations-page','alerts-page','brm-page','overview-page','highlights-page','pivot-page','line-chart-page','forecasting-page','search-term-grader-page','feed-quality-check-page','session-monitor-page','portfolio-performance-page','client-management-page'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; });
   }
   window.hideFeedDetailPages = hideFeedDetailPages;
 
@@ -1148,6 +1148,16 @@ var ISSUES = [
     document.querySelectorAll('.sb-group-hdr').forEach(function (hdr) {
       hdr.addEventListener('click', function (e) {
         e.stopPropagation();
+        // Direct nav headers (no expand/collapse)
+        if (this.classList.contains('sb-hdr-direct')) {
+          var nav = this.getAttribute('data-nav');
+          if (nav === 'client-management') {
+            if (typeof hideFeedDetailPages === 'function') hideFeedDetailPages();
+            var fdp = document.getElementById('feed-data-page'); if (fdp) fdp.style.display = 'none';
+            if (typeof showClientManagementPage === 'function') showClientManagementPage();
+          }
+          return;
+        }
         var grpId = this.getAttribute('data-grp');
         var kids = $('kids-' + grpId);
         if (!kids) return;
@@ -1227,6 +1237,9 @@ var ISSUES = [
         }
         if (this.getAttribute('data-nav') === 'portfolio') {
           if (typeof showPortfolioPerformancePage === 'function') showPortfolioPerformancePage();
+        }
+        if (this.getAttribute('data-nav') === 'client-management') {
+          if (typeof showClientManagementPage === 'function') showClientManagementPage();
         }
       });
     });

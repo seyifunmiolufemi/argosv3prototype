@@ -1,0 +1,741 @@
+<style>
+/* ── Client Management ── */
+#client-management-page { display:none; padding:32px 32px 64px; box-sizing:border-box; }
+
+/* Shared dropdowns */
+.cm-dd-btn { padding:6px 10px; background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; }
+.cm-dd-btn:hover { background:var(--color-bg-grey50); }
+.cm-dd-panel { display:none; position:fixed; z-index:9999; background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:4px 0; max-height:280px; overflow-y:auto; min-width:160px; }
+.cm-dd-item { padding:8px 14px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; }
+.cm-dd-item:hover { background:var(--color-bg-grey50); }
+.cm-dd-item.cm-dd-sel { color:var(--color-blue); font-weight:600; }
+.cm-dd-item.cm-dd-danger { color:#d72225; }
+.cm-dd-divider { height:1px; background:var(--color-border); margin:4px 0; }
+
+/* Buttons */
+.cm-btn-primary { padding:7px 14px; border:1px solid #1d56c1; border-radius:8px; background:#346ed9; color:#fff; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),inset 0 -1px 0 rgba(0,0,0,0.12); }
+.cm-btn-primary:hover { background:#2a5cc7; }
+.cm-btn-primary:disabled { opacity:0.55; cursor:default; }
+.cm-btn-outline { padding:7px 14px; border:1px solid var(--color-border); border-radius:8px; background:var(--color-white); color:var(--color-text-primary); font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+.cm-btn-outline:hover { background:var(--color-bg-grey50); }
+.cm-btn-sm { height:30px; padding:0 10px; font-size:12px; }
+
+/* Page header */
+.cm-page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
+.cm-page-title { font-size:22px; font-weight:700; color:var(--color-text-primary); font-family:'Instrument Sans',sans-serif; margin:0 0 4px; }
+.cm-page-subtitle { font-size:13px; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; margin:0; }
+
+/* Filter bar */
+.cm-filter-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.cm-search-wrap { flex:1; min-width:200px; display:flex; align-items:center; gap:8px; border:1px solid var(--color-border); border-radius:8px; background:var(--color-white); padding:0 10px; }
+.cm-search-wrap:focus-within { border-color:var(--color-blue); }
+.cm-search-wrap .cm-search-input { flex:1; padding:8px 0; border:none; border-radius:0; height:auto; width:auto; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; box-shadow:none; }
+.cm-search-icon { color:var(--color-text-caption); pointer-events:none; display:flex; flex-shrink:0; }
+
+/* Table */
+.cm-table-card { background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; overflow:hidden; }
+.cm-table-scroll { overflow-y:auto; max-height:600px; }
+.cm-table { width:100%; border-collapse:collapse; font-size:13px; font-family:'DM Sans',sans-serif; }
+.cm-thead { position:sticky; top:0; z-index:10; }
+.cm-th { padding:10px 14px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-subtitle); background:var(--color-bg-grey50); border-bottom:1px solid var(--color-border); white-space:nowrap; }
+.cm-td { padding:11px 14px; border-bottom:1px solid var(--color-border); color:var(--color-text-primary); vertical-align:middle; }
+.cm-tr:last-child .cm-td { border-bottom:none; }
+.cm-tr:hover .cm-td { background:var(--color-bg-grey50); }
+.cm-client-name-btn { background:none; border:none; color:var(--color-blue); font-size:13px; font-family:'DM Sans',sans-serif; cursor:pointer; font-weight:500; display:inline-flex; align-items:center; gap:6px; padding:0; }
+.cm-client-name-btn:hover { text-decoration:underline; }
+
+/* Status badges */
+.cm-badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:500; font-family:'DM Sans',sans-serif; }
+.cm-badge-active { background:var(--color-container-success); color:var(--color-text-success); }
+.cm-badge-warn { background:var(--color-container-warn); color:var(--color-text-warning); }
+.cm-badge-inactive { background:var(--color-bg-grey50); color:var(--color-text-caption); border:1px solid var(--color-border); }
+.cm-badge-complete { background:var(--color-container-success); color:var(--color-text-success); }
+.cm-badge-incomplete { background:var(--color-container-warn); color:var(--color-text-warning); }
+
+/* Last modified avatar */
+.cm-avatar { width:24px; height:24px; border-radius:50%; background:var(--color-blue); color:#fff; font-size:10px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'DM Sans',sans-serif; }
+.cm-modified-cell { display:flex; align-items:center; gap:6px; }
+.cm-modified-name { font-size:12px; color:var(--color-text-subtitle); }
+.cm-modified-time { font-size:12px; color:var(--color-text-caption); }
+
+/* 3-dot menu */
+.cm-action-wrap { position:relative; }
+.cm-dots-btn { background:none; border:none; cursor:pointer; color:var(--color-text-caption); padding:4px 8px; border-radius:6px; font-size:16px; display:inline-flex; align-items:center; }
+.cm-dots-btn:hover { background:var(--color-bg-grey50); color:var(--color-text-primary); }
+.cm-action-menu { display:none; position:absolute; right:0; top:calc(100% + 2px); background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,0.1); padding:4px 0; min-width:160px; z-index:200; }
+.cm-action-menu.cm-menu-open { display:block; }
+
+/* Tabs */
+.cm-tabs { display:flex; border-bottom:1px solid var(--color-border); margin-bottom:20px; overflow-x:auto; scrollbar-width:none; }
+.cm-tabs::-webkit-scrollbar { display:none; }
+.cm-tab { padding:9px 14px; font-size:13px; font-weight:500; font-family:'DM Sans',sans-serif; color:var(--color-text-caption); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; background:none; border-top:none; border-left:none; border-right:none; white-space:nowrap; display:inline-flex; align-items:center; gap:6px; }
+.cm-tab:hover { color:var(--color-text-primary); }
+.cm-tab.cm-tab-active { color:var(--color-blue); border-bottom-color:var(--color-blue); }
+.cm-tab.cm-tab-disabled { opacity:0.4; cursor:not-allowed; pointer-events:none; }
+
+/* Progress bar */
+.cm-progress-wrap { background:var(--color-bg-grey50); border-radius:4px; height:6px; margin-bottom:6px; overflow:hidden; }
+.cm-progress-fill { height:100%; background:var(--color-blue); border-radius:4px; transition:width 0.3s ease; }
+.cm-progress-label { font-size:12px; color:var(--color-text-caption); font-family:'DM Sans',sans-serif; margin-bottom:16px; }
+
+/* Form elements */
+.cm-form-field { margin-bottom:16px; }
+.cm-label { display:block; font-size:13px; font-weight:500; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; margin-bottom:6px; }
+.cm-label .cm-req { color:#d72225; margin-left:2px; }
+.cm-input-wrap { display:flex; align-items:center; border:1px solid var(--color-border); border-radius:8px; background:var(--color-white); }
+.cm-input-wrap:focus-within { border-color:var(--color-blue); }
+.cm-input-wrap .cm-input { flex:1; padding:8px 10px; border:none; border-radius:0; height:auto; width:auto; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:transparent; box-shadow:none; }
+.cm-field-error { font-size:12px; color:#d72225; margin-top:4px; display:none; align-items:center; gap:4px; }
+.cm-field-error.cm-err-visible { display:flex; }
+.cm-input-err { border-color:#d72225 !important; }
+
+/* Tag pills (competitors, recipients) */
+.cm-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.cm-tag { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; background:var(--color-bg-grey50); border:1px solid var(--color-border); border-radius:20px; font-size:12px; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; }
+.cm-tag-x { background:none; border:none; cursor:pointer; color:var(--color-text-caption); display:inline-flex; padding:0 0 0 2px; line-height:1; }
+.cm-tag-x:hover { color:var(--color-text-primary); }
+
+/* Ads accounts */
+.cm-account-tabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.cm-account-tab { padding:5px 12px; border:1px solid var(--color-border); border-radius:6px; font-size:12px; font-family:'DM Sans',sans-serif; color:var(--color-text-subtitle); cursor:pointer; background:var(--color-white); }
+.cm-account-tab:hover { background:var(--color-bg-grey50); }
+.cm-account-tab.cm-acct-active { background:var(--color-blue); color:#fff; border-color:var(--color-blue); }
+.cm-account-tab-add { border-style:dashed; }
+.cm-test-result { margin-top:10px; border:1px solid var(--color-border); border-radius:8px; overflow:hidden; display:none; }
+.cm-test-result.cm-test-visible { display:block; }
+.cm-test-result-table { width:100%; border-collapse:collapse; font-size:12px; font-family:'DM Sans',sans-serif; }
+.cm-test-result-table td { padding:7px 12px; border-bottom:1px solid var(--color-border); }
+.cm-test-result-table tr:last-child td { border-bottom:none; }
+.cm-remove-link { background:none; border:none; cursor:pointer; color:#d72225; font-size:12px; font-family:'DM Sans',sans-serif; padding:0; display:inline-flex; align-items:center; gap:4px; }
+.cm-remove-link:hover { text-decoration:underline; }
+
+/* Day pills */
+.cm-day-pills { display:flex; gap:6px; flex-wrap:wrap; }
+.cm-day-pill { padding:5px 12px; border:1px solid var(--color-border); border-radius:20px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-subtitle); cursor:pointer; background:var(--color-white); }
+.cm-day-pill.cm-day-active { background:var(--color-blue); color:#fff; border-color:var(--color-blue); }
+
+/* Budget row */
+.cm-budget-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.cm-budget-row .cm-input { border:1px solid var(--color-border); border-radius:8px; padding:7px 10px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); background:var(--color-white); outline:none; }
+.cm-budget-row .cm-input:focus { border-color:var(--color-blue); }
+
+/* COS targets */
+.cm-cos-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; padding:10px 14px; background:var(--color-bg-grey50); border-radius:8px; }
+.cm-cos-label { flex:1; font-size:13px; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; }
+.cm-cos-input { width:80px; padding:6px 10px; border:1px solid var(--color-border); border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif; text-align:right; outline:none; background:var(--color-white); color:var(--color-text-primary); }
+.cm-cos-input:focus { border-color:var(--color-blue); }
+
+/* Google tools block */
+.cm-tool-block { border:1px solid var(--color-border); border-radius:8px; padding:16px; margin-bottom:12px; background:var(--color-white); }
+.cm-tool-heading { font-size:13px; font-weight:600; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; margin-bottom:10px; }
+.cm-test-success { display:none; background:var(--color-container-success); border-radius:6px; padding:10px 14px; margin-top:8px; font-size:12px; color:var(--color-text-success); font-family:'DM Sans',sans-serif; }
+.cm-test-success.cm-test-shown { display:block; }
+
+/* Avatar option in dropdown */
+.cm-avatar-opt { display:flex; align-items:center; gap:8px; }
+.cm-avatar-sm { width:22px; height:22px; border-radius:50%; background:var(--color-blue); color:#fff; font-size:9px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; font-family:'DM Sans',sans-serif; flex-shrink:0; }
+
+/* Success banner */
+.cm-success-banner { background:var(--color-blue); border-radius:8px; padding:20px 24px; display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+.cm-success-banner-text { color:#fff; }
+.cm-success-title { font-size:16px; font-weight:700; font-family:'Instrument Sans',sans-serif; margin:0 0 2px; }
+.cm-success-sub { font-size:13px; opacity:0.85; margin:0; font-family:'DM Sans',sans-serif; }
+
+/* Summary grid */
+.cm-summary-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px; }
+.cm-summary-card { background:var(--color-white); border:1px solid var(--color-border); border-radius:8px; padding:14px 16px; }
+.cm-summary-card-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--color-text-caption); margin-bottom:8px; font-family:'DM Sans',sans-serif; }
+.cm-summary-row { display:flex; justify-content:space-between; font-size:13px; font-family:'DM Sans',sans-serif; margin-bottom:4px; }
+.cm-summary-key { color:var(--color-text-subtitle); }
+.cm-summary-val { color:var(--color-text-primary); font-weight:500; }
+
+/* Modal */
+.cm-modal-overlay { position:fixed; inset:0; background:rgba(1,3,7,0.4); display:flex; align-items:center; justify-content:center; z-index:9000; }
+.cm-modal-box { background:var(--color-white); border-radius:12px; box-shadow:0 20px 60px rgba(1,3,7,0.2); width:600px; max-width:92vw; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
+.cm-modal-header { display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--color-border); flex-shrink:0; }
+.cm-modal-title { font-size:16px; font-weight:600; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; }
+.cm-modal-close { background:none; border:none; cursor:pointer; color:var(--color-text-caption); display:inline-flex; padding:4px; border-radius:6px; }
+.cm-modal-close:hover { background:var(--color-bg-grey50); color:var(--color-text-primary); }
+.cm-modal-body { padding:20px; overflow-y:auto; flex:1; }
+
+/* Checklist modal */
+.cm-checklist-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--color-border); font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); }
+.cm-checklist-item:last-child { border-bottom:none; }
+.cm-check-done { color:var(--color-text-success); }
+.cm-check-todo { color:var(--color-text-caption); }
+
+/* Back button row */
+.cm-back-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+
+/* Dark mode */
+body.dark-mode .cm-dd-btn { background:var(--color-bg-grey50); }
+body.dark-mode .cm-dd-panel { background:var(--color-bg-grey25); }
+body.dark-mode .cm-table-card { background:var(--color-bg-grey50); }
+body.dark-mode .cm-th { background:var(--color-bg-grey25); }
+body.dark-mode .cm-action-menu { background:var(--color-bg-grey25); }
+body.dark-mode .cm-tool-block { background:var(--color-bg-grey25); }
+body.dark-mode .cm-summary-card { background:var(--color-bg-grey25); }
+body.dark-mode .cm-modal-box { background:var(--color-bg-grey25); }
+body.dark-mode .cm-btn-outline { background:var(--color-bg-grey50); }
+body.dark-mode .cm-account-tab { background:var(--color-bg-grey50); }
+body.dark-mode .cm-day-pill { background:var(--color-bg-grey50); }
+body.dark-mode .cm-budget-row .cm-input { background:var(--color-bg-grey50); }
+body.dark-mode .cm-cos-input { background:var(--color-bg-grey50); }
+body.dark-mode .cm-input-wrap { background:var(--color-bg-grey50); }
+body.dark-mode .cm-search-wrap { background:var(--color-bg-grey50); }
+</style>
+
+<div id="client-management-page" style="display:none; padding:32px 32px 64px; box-sizing:border-box;">
+
+  <!-- ════ VIEW 1: Client List ════ -->
+  <div id="cm-view-list">
+    <div class="cm-page-header">
+      <div>
+        <h1 class="cm-page-title">Client Management</h1>
+        <p class="cm-page-subtitle">Manage clients, websites, and all related assets in one place.</p>
+      </div>
+      <button class="cm-btn-primary" id="cm-add-client-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Client
+      </button>
+    </div>
+
+    <div class="cm-filter-row">
+      <div class="cm-search-wrap" id="cm-search-wrap">
+        <span class="cm-search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input type="text" class="cm-search-input" id="cm-search-input" placeholder="Search clients…">
+      </div>
+      <div style="position:relative;" id="cm-wrap-status">
+        <button class="cm-dd-btn" id="cm-btn-status">
+          <span id="cm-lbl-status">Active</span>
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="cm-dd-panel" id="cm-panel-status"></div>
+      </div>
+      <div style="position:relative;" id="cm-wrap-sort">
+        <button class="cm-dd-btn" id="cm-btn-sort">
+          <span id="cm-lbl-sort">Last Modified</span>
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="cm-dd-panel" id="cm-panel-sort"></div>
+      </div>
+    </div>
+
+    <div class="cm-table-card">
+      <div class="cm-table-scroll">
+        <table class="cm-table">
+          <thead class="cm-thead">
+            <tr>
+              <th class="cm-th">Client</th>
+              <th class="cm-th">Websites</th>
+              <th class="cm-th">Last Modified</th>
+              <th class="cm-th">Status</th>
+              <th class="cm-th" style="width:50px;"></th>
+            </tr>
+          </thead>
+          <tbody id="cm-client-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ VIEW 2: Client Websites List ════ -->
+  <div id="cm-view-websites" style="display:none;">
+    <div class="cm-back-row">
+      <button class="cm-btn-outline" id="cm-back-to-list-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        Back to Clients
+      </button>
+      <button class="cm-btn-primary" id="cm-add-website-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Website
+      </button>
+    </div>
+    <div class="cm-page-header" style="margin-bottom:16px;">
+      <div>
+        <h1 class="cm-page-title" id="cm-websites-title">Client Name</h1>
+        <p class="cm-page-subtitle" id="cm-websites-subtitle">0 websites</p>
+      </div>
+    </div>
+    <div class="cm-table-card">
+      <div class="cm-table-scroll">
+        <table class="cm-table">
+          <thead class="cm-thead">
+            <tr>
+              <th class="cm-th">Website Name</th>
+              <th class="cm-th">Domain</th>
+              <th class="cm-th">Platform</th>
+              <th class="cm-th">Status</th>
+              <th class="cm-th">Last Modified</th>
+              <th class="cm-th" style="width:80px;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="cm-website-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ VIEW 3: Add/Edit Client Form ════ -->
+  <div id="cm-view-client-form" style="display:none;">
+    <div class="cm-back-row">
+      <button class="cm-btn-outline" id="cm-form-back-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        Cancel
+      </button>
+    </div>
+    <div class="cm-page-header" style="margin-bottom:24px;">
+      <div>
+        <h1 class="cm-page-title" id="cm-form-title">Add a Client</h1>
+        <p class="cm-page-subtitle">Set up a new client profile with key details.</p>
+      </div>
+    </div>
+    <div style="max-width:480px;">
+      <div class="cm-form-field">
+        <label class="cm-label" for="cm-f-name">Client Name <span class="cm-req">*</span></label>
+        <div class="cm-input-wrap" id="cm-f-name-wrap">
+          <input type="text" class="cm-input" id="cm-f-name" placeholder="e.g. Outdoor Research" maxlength="30">
+        </div>
+        <div class="cm-field-error" id="cm-f-name-err">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Client name must be 2–30 characters.
+        </div>
+      </div>
+      <div class="cm-form-field">
+        <label class="cm-label">Business Type <span class="cm-req">*</span></label>
+        <div style="position:relative;">
+          <button class="cm-dd-btn" id="cm-btn-biztype" style="width:100%; justify-content:space-between;">
+            <span id="cm-lbl-biztype">Select type…</span>
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="cm-dd-panel" id="cm-panel-biztype"></div>
+        </div>
+        <div class="cm-field-error" id="cm-f-biz-err">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Please select a business type.
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:24px;">
+        <button class="cm-btn-outline" id="cm-form-cancel-btn">Cancel</button>
+        <button class="cm-btn-primary" id="cm-form-next-btn">
+          Next
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ VIEW 4: Website Onboarding ════ -->
+  <div id="cm-view-onboarding" style="display:none;">
+    <div class="cm-back-row" style="justify-content:space-between; align-items:center;">
+      <button class="cm-btn-outline" id="cm-ob-back-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </button>
+      <button class="cm-btn-outline" id="cm-ob-checklist-btn" style="display:none;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span id="cm-ob-checklist-label">Onboarding Checklist 0/7</span>
+      </button>
+    </div>
+    <div class="cm-page-header" style="margin-bottom:12px;">
+      <div>
+        <h1 class="cm-page-title" id="cm-ob-title">Add a Website</h1>
+        <p class="cm-page-subtitle">Complete all steps to finish the onboarding setup.</p>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="cm-progress-wrap"><div class="cm-progress-fill" id="cm-ob-progress-fill" style="width:0%;"></div></div>
+    <div class="cm-progress-label" id="cm-ob-progress-label">Onboarding Checklist 0/7 · 0% complete</div>
+
+    <!-- Onboarding step tabs -->
+    <div class="cm-tabs" id="cm-ob-tabs">
+      <button class="cm-tab cm-tab-active" data-cm-ob-tab="0">Basic Info</button>
+      <button class="cm-tab cm-tab-disabled" data-cm-ob-tab="1">SEO</button>
+      <button class="cm-tab cm-tab-disabled" data-cm-ob-tab="2">Ads Accounts</button>
+      <button class="cm-tab cm-tab-disabled" data-cm-ob-tab="3">Budget &amp; Targets</button>
+      <button class="cm-tab cm-tab-disabled" data-cm-ob-tab="4">Google Tools</button>
+      <button class="cm-tab cm-tab-disabled" data-cm-ob-tab="5">Account Team</button>
+      <button class="cm-tab cm-tab-disabled" data-cm-ob-tab="6">Email Reporting</button>
+    </div>
+
+    <!-- Step panels -->
+    <div id="cm-ob-steps">
+
+      <!-- Step 0: Basic Info -->
+      <div class="cm-step-panel" id="cm-step-0">
+        <div style="max-width:480px;">
+          <div class="cm-form-field">
+            <label class="cm-label">Website Name <span class="cm-req">*</span></label>
+            <div class="cm-input-wrap"><input type="text" class="cm-input" id="cm-ob-site-name" placeholder="e.g. OutdoorResearch.com"></div>
+          </div>
+          <div class="cm-form-field">
+            <label class="cm-label">Domain <span class="cm-req">*</span></label>
+            <div class="cm-input-wrap"><input type="text" class="cm-input" id="cm-ob-domain" placeholder="e.g. outdoorresearch.com"></div>
+          </div>
+          <div class="cm-form-field">
+            <label class="cm-label">Platform <span class="cm-req">*</span></label>
+            <div style="position:relative;">
+              <button class="cm-dd-btn" id="cm-btn-platform" style="width:100%; justify-content:space-between;">
+                <span id="cm-lbl-platform">Select platform…</span>
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="cm-dd-panel" id="cm-panel-platform"></div>
+            </div>
+          </div>
+          <button class="cm-btn-primary" id="cm-step0-save">Save &amp; Continue <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Step 1: SEO -->
+      <div class="cm-step-panel" id="cm-step-1" style="display:none;">
+        <div style="max-width:480px;">
+          <div class="cm-form-field">
+            <label class="cm-label">SEO Start Date <span style="color:var(--color-text-caption);font-weight:400;">(optional)</span></label>
+            <div class="cm-input-wrap"><input type="date" class="cm-input" id="cm-ob-seo-date"></div>
+          </div>
+          <div class="cm-form-field">
+            <label class="cm-label">Competitor Domains <span class="cm-req">*</span></label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="cm-input-wrap" style="flex:1;"><input type="text" class="cm-input" id="cm-ob-comp-input" placeholder="competitor.com, another.com"></div>
+              <button class="cm-btn-primary cm-btn-sm" id="cm-ob-comp-add">Add</button>
+            </div>
+            <div class="cm-tags" id="cm-ob-comp-tags"></div>
+            <div class="cm-field-error" id="cm-ob-comp-err">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Add at least 1 competitor domain.
+            </div>
+          </div>
+          <button class="cm-btn-primary" id="cm-step1-save">Save &amp; Continue <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Step 2: Ads Accounts -->
+      <div class="cm-step-panel" id="cm-step-2" style="display:none;">
+        <div class="cm-account-tabs" id="cm-acct-tabs">
+          <button class="cm-account-tab cm-acct-active" data-cm-acct="0">Account 1</button>
+          <button class="cm-account-tab cm-account-tab-add" id="cm-add-acct-btn">+ Add Account</button>
+        </div>
+        <div id="cm-acct-panels">
+          <div class="cm-acct-panel" id="cm-acct-0" style="max-width:480px;">
+            <div class="cm-form-field">
+              <label class="cm-label">Channel <span class="cm-req">*</span></label>
+              <div style="position:relative;">
+                <button class="cm-dd-btn" id="cm-btn-acct-channel-0" style="width:100%; justify-content:space-between;">
+                  <span id="cm-lbl-acct-channel-0">Select channel…</span>
+                  <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="cm-dd-panel" id="cm-panel-acct-channel-0"></div>
+              </div>
+            </div>
+            <div class="cm-form-field">
+              <label class="cm-label">Account ID <span class="cm-req">*</span></label>
+              <div class="cm-input-wrap"><input type="text" class="cm-input" id="cm-acct-id-0" placeholder="e.g. 693-516-996"></div>
+            </div>
+            <div class="cm-form-field">
+              <label class="cm-label">Start Date</label>
+              <div class="cm-input-wrap"><input type="date" class="cm-input" id="cm-acct-start-0"></div>
+            </div>
+            <button class="cm-btn-outline cm-btn-sm" id="cm-acct-test-0">Test Connection</button>
+            <div class="cm-test-result" id="cm-acct-result-0">
+              <table class="cm-test-result-table">
+                <tr><td style="color:var(--color-text-caption);">Connection</td><td style="color:var(--color-text-success);font-weight:600;">✓ Verified</td></tr>
+                <tr><td style="color:var(--color-text-caption);">30-Day Cost</td><td>$24,871.50</td></tr>
+                <tr><td style="color:var(--color-text-caption);">30-Day Conv. Value</td><td>$138,440.20</td></tr>
+              </table>
+              <div style="padding:10px 12px; border-top:1px solid var(--color-border);">
+                <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer;">
+                  <input type="checkbox" id="cm-acct-confirm-0"> I confirm the connection is correct
+                </label>
+              </div>
+            </div>
+            <button class="cm-remove-link" id="cm-acct-remove-0" style="margin-top:12px; display:none;">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Remove Account
+            </button>
+          </div>
+        </div>
+        <div style="margin-top:20px;">
+          <button class="cm-btn-primary" id="cm-step2-save">Save &amp; Continue <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Step 3: Budget & Targets -->
+      <div class="cm-step-panel" id="cm-step-3" style="display:none;">
+        <div style="max-width:560px;">
+          <div style="margin-bottom:24px;">
+            <div style="font-size:14px; font-weight:600; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; margin-bottom:4px;">Monthly Budgets <span style="font-size:12px; font-weight:400; color:var(--color-text-caption);">(optional)</span></div>
+            <div style="font-size:13px; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; margin-bottom:12px;">Set monthly spend caps per ad account.</div>
+            <div id="cm-budget-rows"></div>
+            <button class="cm-btn-outline cm-btn-sm" id="cm-add-budget-btn">+ Add Budget</button>
+          </div>
+          <div>
+            <div style="font-size:14px; font-weight:600; color:var(--color-text-primary); font-family:'DM Sans',sans-serif; margin-bottom:4px;">COS Targets <span style="font-size:12px; font-weight:400; color:#d72225;"> *</span></div>
+            <div style="font-size:13px; color:var(--color-text-subtitle); font-family:'DM Sans',sans-serif; margin-bottom:12px;">Set cost-of-sale percentage targets per category.</div>
+            <div id="cm-cos-rows"></div>
+          </div>
+          <div style="margin-top:20px;">
+            <button class="cm-btn-primary" id="cm-step3-save">Save &amp; Continue <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Google Tools -->
+      <div class="cm-step-panel" id="cm-step-4" style="display:none;">
+        <div style="max-width:480px;">
+          <!-- GA4 -->
+          <div class="cm-tool-block">
+            <div class="cm-tool-heading">Google Analytics 4 (GA4)</div>
+            <div class="cm-form-field" style="margin-bottom:8px;">
+              <div class="cm-input-wrap"><input type="text" class="cm-input" id="cm-tool-ga4" placeholder="Property ID, e.g. 123456789"></div>
+            </div>
+            <button class="cm-btn-outline cm-btn-sm" id="cm-test-ga4">Test Connection</button>
+            <div class="cm-test-success" id="cm-ga4-success">✓ GA4 property verified — data access confirmed.</div>
+            <div style="margin-top:8px; display:none;" id="cm-ga4-confirm-wrap">
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer;">
+                <input type="checkbox" id="cm-ga4-confirm"> I confirm the GA4 connection is correct
+              </label>
+            </div>
+          </div>
+          <!-- GMC -->
+          <div class="cm-tool-block">
+            <div class="cm-tool-heading">Google Merchant Center (GMC)</div>
+            <div class="cm-form-field" style="margin-bottom:8px;">
+              <div class="cm-input-wrap"><input type="text" class="cm-input" id="cm-tool-gmc" placeholder="Merchant ID, e.g. 987654321"></div>
+            </div>
+            <button class="cm-btn-outline cm-btn-sm" id="cm-test-gmc">Test Connection</button>
+            <div class="cm-test-success" id="cm-gmc-success">✓ GMC account verified — feed access confirmed.</div>
+            <div style="margin-top:8px; display:none;" id="cm-gmc-confirm-wrap">
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer;">
+                <input type="checkbox" id="cm-gmc-confirm"> I confirm the GMC connection is correct
+              </label>
+            </div>
+          </div>
+          <!-- GSC -->
+          <div class="cm-tool-block">
+            <div class="cm-tool-heading">Google Search Console (GSC)</div>
+            <div class="cm-form-field" style="margin-bottom:8px;">
+              <div class="cm-input-wrap"><input type="text" class="cm-input" id="cm-tool-gsc" placeholder="Property URL, e.g. https://example.com/"></div>
+            </div>
+            <button class="cm-btn-outline cm-btn-sm" id="cm-test-gsc">Test Connection</button>
+            <div class="cm-test-success" id="cm-gsc-success">✓ GSC property verified — search data access confirmed.</div>
+            <div style="margin-top:8px; display:none;" id="cm-gsc-confirm-wrap">
+              <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer;">
+                <input type="checkbox" id="cm-gsc-confirm"> I confirm the GSC connection is correct
+              </label>
+            </div>
+          </div>
+          <button class="cm-btn-primary" id="cm-step4-save">Save &amp; Continue <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Step 5: Account Team -->
+      <div class="cm-step-panel" id="cm-step-5" style="display:none;">
+        <div style="max-width:480px;">
+          <div class="cm-form-field">
+            <label class="cm-label">Slack Channel</label>
+            <div style="position:relative;">
+              <button class="cm-dd-btn" id="cm-btn-slack" style="width:100%; justify-content:space-between;">
+                <span id="cm-lbl-slack">Select channel…</span>
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="cm-dd-panel" id="cm-panel-slack"></div>
+            </div>
+          </div>
+          <div class="cm-form-field">
+            <label class="cm-label">CSM <span class="cm-req">*</span></label>
+            <div style="position:relative;">
+              <button class="cm-dd-btn" id="cm-btn-csm" style="width:100%; justify-content:space-between;">
+                <span id="cm-lbl-csm">Select CSM…</span>
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="cm-dd-panel" id="cm-panel-csm"></div>
+            </div>
+          </div>
+          <div class="cm-form-field">
+            <label class="cm-label">SEM Analyst <span class="cm-req">*</span></label>
+            <div style="position:relative;">
+              <button class="cm-dd-btn" id="cm-btn-sem" style="width:100%; justify-content:space-between;">
+                <span id="cm-lbl-sem">Select SEM Analyst…</span>
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="cm-dd-panel" id="cm-panel-sem"></div>
+            </div>
+          </div>
+          <div class="cm-form-field">
+            <label class="cm-label">SEO Analyst <span style="color:var(--color-text-caption);font-weight:400;">(optional)</span></label>
+            <div style="position:relative;">
+              <button class="cm-dd-btn" id="cm-btn-seo" style="width:100%; justify-content:space-between;">
+                <span id="cm-lbl-seo">Select SEO Analyst…</span>
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="cm-dd-panel" id="cm-panel-seo"></div>
+            </div>
+          </div>
+          <button class="cm-btn-primary" id="cm-step5-save">Save &amp; Continue <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Step 6: Email Reporting -->
+      <div class="cm-step-panel" id="cm-step-6" style="display:none;">
+        <div style="max-width:520px;">
+          <div style="margin-bottom:14px;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:13px; font-family:'DM Sans',sans-serif; color:var(--color-text-primary); cursor:pointer;">
+              <input type="checkbox" id="cm-no-email"> No email reporting
+            </label>
+          </div>
+          <div id="cm-email-body">
+            <div class="cm-form-field">
+              <label class="cm-label">Receiving Days</label>
+              <div class="cm-day-pills" id="cm-day-pills">
+                <button class="cm-day-pill" data-day="Mon">Mon</button>
+                <button class="cm-day-pill" data-day="Tue">Tue</button>
+                <button class="cm-day-pill" data-day="Wed">Wed</button>
+                <button class="cm-day-pill" data-day="Thu">Thu</button>
+                <button class="cm-day-pill" data-day="Fri">Fri</button>
+                <button class="cm-day-pill" data-day="Sat">Sat</button>
+                <button class="cm-day-pill" data-day="Sun">Sun</button>
+              </div>
+            </div>
+            <div class="cm-form-field">
+              <label class="cm-label">Report Time</label>
+              <div style="position:relative;">
+                <button class="cm-dd-btn" id="cm-btn-rtime" style="width:100%; max-width:200px; justify-content:space-between;">
+                  <span id="cm-lbl-rtime">08:00</span>
+                  <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="cm-dd-panel" id="cm-panel-rtime" style="max-height:200px;"></div>
+              </div>
+            </div>
+            <div class="cm-form-field">
+              <label class="cm-label">Product Category</label>
+              <div style="position:relative;">
+                <button class="cm-dd-btn" id="cm-btn-prodcat" style="width:100%; justify-content:space-between;">
+                  <span id="cm-lbl-prodcat">Select category…</span>
+                  <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="cm-dd-panel" id="cm-panel-prodcat"></div>
+              </div>
+            </div>
+            <div class="cm-form-field">
+              <label class="cm-label">Email Recipients</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <div class="cm-input-wrap" style="flex:1;"><input type="text" class="cm-input" id="cm-recipient-input" placeholder="name@company.com"></div>
+                <button class="cm-btn-primary cm-btn-sm" id="cm-recipient-add">Add</button>
+              </div>
+              <div class="cm-tags" id="cm-recipient-tags"></div>
+            </div>
+          </div>
+          <button class="cm-btn-primary" id="cm-step6-save">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Complete Onboarding
+          </button>
+        </div>
+      </div>
+
+      <!-- Success state -->
+      <div id="cm-ob-success" style="display:none;">
+        <div class="cm-success-banner">
+          <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="cm-success-banner-text">
+            <div class="cm-success-title" id="cm-success-title">Website | Onboarding Successful</div>
+            <p class="cm-success-sub">All 7 steps have been completed. This website is now fully configured.</p>
+          </div>
+        </div>
+        <div class="cm-summary-grid">
+          <div class="cm-summary-card">
+            <div class="cm-summary-card-title">Website Info</div>
+            <div class="cm-summary-row"><span class="cm-summary-key">Platform</span><span class="cm-summary-val">Shopify</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">Domain</span><span class="cm-summary-val">outdoorresearch.com</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">Last Modified</span><span class="cm-summary-val">Mar 20, 2026</span></div>
+          </div>
+          <div class="cm-summary-card">
+            <div class="cm-summary-card-title">Ad Accounts</div>
+            <div class="cm-summary-row"><span class="cm-summary-key">Google Ads</span><span class="cm-summary-val">693-516-996</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">Start Date</span><span class="cm-summary-val">Jan 1, 2023</span></div>
+          </div>
+          <div class="cm-summary-card">
+            <div class="cm-summary-card-title">Google Tools</div>
+            <div class="cm-summary-row"><span class="cm-summary-key">GA4</span><span class="cm-summary-val">123456789</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">GMC</span><span class="cm-summary-val">987654321</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">GSC</span><span class="cm-summary-val">https://example.com/</span></div>
+          </div>
+          <div class="cm-summary-card">
+            <div class="cm-summary-card-title">Account Team</div>
+            <div class="cm-summary-row"><span class="cm-summary-key">CSM</span><span class="cm-summary-val">Sarah K.</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">SEM</span><span class="cm-summary-val">James R.</span></div>
+            <div class="cm-summary-row"><span class="cm-summary-key">SEO</span><span class="cm-summary-val">Maria T.</span></div>
+          </div>
+        </div>
+        <button class="cm-btn-primary" id="cm-success-back-btn">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          Back to Websites
+        </button>
+      </div>
+
+    </div><!-- /cm-ob-steps -->
+  </div><!-- /cm-view-onboarding -->
+
+</div><!-- /client-management-page -->
+
+<!-- Website Summary Modal -->
+<div id="cm-website-modal" class="cm-modal-overlay" style="display:none;">
+  <div class="cm-modal-box">
+    <div class="cm-modal-header">
+      <span class="cm-modal-title" id="cm-wm-title">Website Domain</span>
+      <button class="cm-modal-close" id="cm-wm-close">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cm-modal-body">
+      <div class="cm-summary-grid">
+        <div class="cm-summary-card">
+          <div class="cm-summary-card-title">Website Info</div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Platform</span><span class="cm-summary-val">Shopify</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Onboarding</span><span class="cm-summary-val">Complete</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Last Modified</span><span class="cm-summary-val">Mar 20, 2026</span></div>
+        </div>
+        <div class="cm-summary-card">
+          <div class="cm-summary-card-title">Ad Accounts</div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Google Ads</span><span class="cm-summary-val">693-516-996</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Start Date</span><span class="cm-summary-val">Jan 1, 2023</span></div>
+        </div>
+        <div class="cm-summary-card">
+          <div class="cm-summary-card-title">Google Tools</div>
+          <div class="cm-summary-row"><span class="cm-summary-key">GA4</span><span class="cm-summary-val">123456789</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">GMC</span><span class="cm-summary-val">987654321</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">GSC</span><span class="cm-summary-val">https://example.com/</span></div>
+        </div>
+        <div class="cm-summary-card">
+          <div class="cm-summary-card-title">Account Team</div>
+          <div class="cm-summary-row"><span class="cm-summary-key">CSM</span><span class="cm-summary-val">Sarah K.</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">SEM</span><span class="cm-summary-val">James R.</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">SEO</span><span class="cm-summary-val">Maria T.</span></div>
+        </div>
+        <div class="cm-summary-card">
+          <div class="cm-summary-card-title">Email Reporting</div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Days</span><span class="cm-summary-val">Mon, Thu</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">Time</span><span class="cm-summary-val">08:00</span></div>
+        </div>
+        <div class="cm-summary-card">
+          <div class="cm-summary-card-title">Competitors</div>
+          <div class="cm-summary-row"><span class="cm-summary-key">1</span><span class="cm-summary-val">competitor1.com</span></div>
+          <div class="cm-summary-row"><span class="cm-summary-key">2</span><span class="cm-summary-val">competitor2.com</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Onboarding Checklist Modal -->
+<div id="cm-checklist-modal" class="cm-modal-overlay" style="display:none;">
+  <div class="cm-modal-box" style="width:420px;">
+    <div class="cm-modal-header">
+      <span class="cm-modal-title" id="cm-cl-title">Onboarding Checklist</span>
+      <button class="cm-modal-close" id="cm-cl-close">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cm-modal-body" id="cm-cl-body"></div>
+  </div>
+</div>
