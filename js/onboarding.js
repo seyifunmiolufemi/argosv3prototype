@@ -62,7 +62,8 @@ function initOnboarding() {
 
   function goTo(screenId) {
     if (screenId === 'screen-dashboard') {
-      window.APP_ROLE = protoMode; // expose role before dashboard renders
+      window.APP_ROLE = protoMode;
+      if (typeof applySidebarRole === 'function') applySidebarRole();
     }
     document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
     var t = document.getElementById(screenId);
