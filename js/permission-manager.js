@@ -244,23 +244,21 @@
     }
   };
 
-  /* ── Permission flyout ── */
+  /* ── Permission modal ── */
+  var _pmCheckIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  var _pmCrossIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
   window.pmShowPermTable = function(role, el) {
-    var flyout = document.getElementById('pm-perm-flyout');
     document.getElementById('pm-flyout-title').textContent = role + ' Permissions';
-    var html = '<tr><th style="text-align:left;">Module</th><th>View</th><th>Edit</th><th>Create</th><th>Delete</th></tr>';
+    var html = '<tr><th style="text-align:left;padding:10px 12px;">Module</th><th style="padding:10px 12px;">View</th><th style="padding:10px 12px;">Edit</th><th style="padding:10px 12px;">Create</th><th style="padding:10px 12px;">Delete</th></tr>';
     html += PM_MODULES.map(function(mod) {
       var perms = PM_PERM[role] ? (PM_PERM[role][mod] || [0,0,0,0]) : [0,0,0,0];
-      return '<tr><td>' + mod + '</td>' +
+      return '<tr><td style="padding:12px 12px;font-size:13px;font-weight:500;color:var(--color-text-primary);">' + mod + '</td>' +
         perms.map(function(p) {
-          return '<td>' + (p ? '<span class="pm-perm-check">✓</span>' : '<span class="pm-perm-cross">✗</span>') + '</td>';
+          return '<td style="padding:12px 12px;text-align:center;">' + (p ? _pmCheckIcon : _pmCrossIcon) + '</td>';
         }).join('') + '</tr>';
     }).join('');
     document.getElementById('pm-flyout-table').innerHTML = html;
-    var rect = el.getBoundingClientRect();
-    flyout.style.top = (rect.bottom + 8) + 'px';
-    flyout.style.left = Math.min(rect.left, window.innerWidth - 360) + 'px';
-    flyout.style.display = 'block';
+    document.getElementById('pm-perm-flyout').style.display = 'flex';
   };
 
   /* ── Client Access tab ── */
@@ -271,7 +269,7 @@
     document.getElementById('pm-ca-title').textContent = user.name;
     document.getElementById('pm-ca-client-section').style.display = allAccess ? 'none' : 'block';
     var access = allAccess ? [] : (user.clientAccess || []);
-    document.getElementById('pm-ca-client-list').innerHTML = CLIENTS.map(function(c) {
+    document.getElementById('pm-ca-client-list').innerHTML = ARGOS_CLIENTS.map(function(c) {
       var checked = allAccess || access.indexOf(c.name) > -1;
       return '<label class="pm-client-row">' +
         '<input type="checkbox"' + (checked ? ' checked' : '') + ' onchange="pmClientCheckChange(this)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0;">' +
@@ -285,7 +283,7 @@
     saveBtn.disabled = false; saveBtn.classList.remove('pm-btn-disabled');
     document.getElementById('pm-ca-client-section').style.display = isAll ? 'none' : 'block';
     if (!isAll) {
-      document.getElementById('pm-ca-client-list').innerHTML = CLIENTS.map(function(c) {
+      document.getElementById('pm-ca-client-list').innerHTML = ARGOS_CLIENTS.map(function(c) {
         return '<label class="pm-client-row"><input type="checkbox" checked onchange="pmClientCheckChange(this)" style="cursor:pointer;width:14px;height:14px;flex-shrink:0;"><span>' + escHtml(c.name) + '</span></label>';
       }).join('');
     }
@@ -304,7 +302,7 @@
     } else {
       var checkboxes = document.querySelectorAll('#pm-ca-client-list input[type="checkbox"]');
       var selected = [];
-      checkboxes.forEach(function(cb, i) { if (cb.checked && CLIENTS[i]) selected.push(CLIENTS[i].name); });
+      checkboxes.forEach(function(cb, i) { if (cb.checked && ARGOS_CLIENTS[i]) selected.push(ARGOS_CLIENTS[i].name); });
       user.clientAccess = selected;
     }
     _pmHasUnsaved = false;
@@ -397,12 +395,18 @@
     pmShowListView();
   };
 
+  /* ── Client list search filter ── */
+  window.pmFilterClientList = function() {
+    var q = (document.getElementById('pm-ca-search').value || '').toLowerCase();
+    document.querySelectorAll('#pm-ca-client-list .pm-client-row').forEach(function(row) {
+      row.style.display = row.textContent.toLowerCase().indexOf(q) > -1 ? '' : 'none';
+    });
+  };
+
   /* ── Outside-click cleanup ── */
   document.addEventListener('click', function(e) {
     var dd = document.getElementById('pm-action-dd');
     if (dd && !e.target.closest('#pm-action-dd') && !e.target.closest('button[onclick*="pmOpenActionMenu"]')) dd.style.display = 'none';
-    var flyout = document.getElementById('pm-perm-flyout');
-    if (flyout && !e.target.closest('#pm-perm-flyout') && !e.target.closest('.pm-view-perms')) flyout.style.display = 'none';
     var assignDd = document.getElementById('pm-assign-dd');
     if (assignDd && !e.target.closest('#pm-assign-dd') && !e.target.closest('#pm-assign-search')) assignDd.classList.remove('open');
   });

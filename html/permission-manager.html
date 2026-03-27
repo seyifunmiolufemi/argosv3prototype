@@ -50,28 +50,26 @@
       <span class="bc-item bc-muted" style="margin:0 4px;">›</span>
       <span class="bc-item">Permission Manager</span>
     </div>
-    <div class="table-card">
-      <h2 style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin:0 0 4px;">Assign Role</h2>
-      <p style="font-size:13px;color:var(--color-text-subtitle);margin:0 0 20px;">Choose a user and assign a role in Statbid</p>
-      <div style="margin-bottom:20px;">
-        <div class="modal-label" style="margin-bottom:6px;">Select User</div>
-        <div style="position:relative;">
-          <div class="search-box">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="pm-assign-search" placeholder="Search users" autocomplete="off" oninput="pmAssignSearch()">
-          </div>
-          <div class="pm-user-search-dd" id="pm-assign-dd"></div>
+    <h2 style="font-size:16px;font-weight:600;color:var(--color-text-primary);margin:0 0 4px;">Assign Role</h2>
+    <p style="font-size:13px;color:var(--color-text-subtitle);margin:0 0 24px;">Choose a user and assign a role in Statbid</p>
+    <div style="margin-bottom:20px;">
+      <div class="modal-label" style="margin-bottom:6px;">Select User</div>
+      <div style="position:relative;">
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="pm-assign-search" placeholder="Search users" autocomplete="off" oninput="pmAssignSearch()">
         </div>
-        <div id="pm-selected-chips" style="margin-top:8px;min-height:8px;"></div>
+        <div class="pm-user-search-dd" id="pm-assign-dd"></div>
       </div>
-      <div style="margin-bottom:24px;">
-        <div class="modal-label" style="margin-bottom:10px;">Select Role</div>
-        <div id="pm-assign-roles"></div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button id="pm-assign-submit" class="btn-primary-sm pm-btn-disabled" onclick="pmSubmitAssign()">Assign Role</button>
-        <button class="btn-outline" style="height:36px;padding:0 16px;" onclick="pmBackToList()">Cancel</button>
-      </div>
+      <div id="pm-selected-chips" style="margin-top:8px;min-height:8px;"></div>
+    </div>
+    <div style="margin-bottom:28px;">
+      <div class="modal-label" style="margin-bottom:10px;">Select Role</div>
+      <div id="pm-assign-roles"></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="pm-assign-submit" class="btn-primary-sm pm-btn-disabled" onclick="pmSubmitAssign()">Assign Role</button>
+      <button class="btn-outline" style="height:36px;padding:0 16px;" onclick="pmBackToList()">Cancel</button>
     </div>
   </div><!-- /pm-assign-view -->
 
